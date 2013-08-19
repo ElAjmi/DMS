@@ -1,0 +1,13 @@
+body {
+    margin: auto;
+    width: 100%;
+}
+
+#etat {
+    text-align:  center;
+}
+
+#bar{
+    width: 100%;
+    height: 30px;
+}
