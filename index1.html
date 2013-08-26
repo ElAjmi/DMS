@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title>OpenGeoPhone</title>
+        <script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+		<script src="js/API/jquery-1.9.1.min.js"></script>
+        <script src="js/API/jquery.mobile-1.3.2.min.js"></script>
+		<script src="js/Request/DMS.Mobile.CreateBD.js"></script>
+		<script src="js/Common/DMS.Mobile.Common.js"></script>
+		
+		<script type="text/javascript" charset="utf-8">
+			function InitConnection(){
+				DMS.Mobile.BD.Initialize();
+				
+				
+			}
+			function redirection(){
+				DMS.Mobile.Common.RedirectToLogin()();
+				}
+		</script>
+    </head>
+    <body>
+    
+		<h1>Data Base Script</h1>
+		<input type="button" id="b" onClick="redirection()" value="redirect"/>
+		<script type="text/javascript" charset="utf-8">
+            document.addEventListener("deviceready", InitConnection , false);
+		</script>
+	    
+	
+	
+    </body>
+</html>

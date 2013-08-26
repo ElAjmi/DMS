@@ -15,7 +15,7 @@ DMS.Mobile.ArticleRequest =
   Connect: function () {
 				var form = this;	
 					alert("this.connexion = " + this.connexion);
-                    //this.connexion = window.openDatabase("BaseDeDonnées", "1.0.0", "OpenGeophone", 100000);
+                    //this.connexion = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
 			       	this.connexion.transaction(function(tx){ form.SelectFromArticle(tx, form) }, this.errorselectFromArticle);
     },
     
@@ -43,10 +43,10 @@ DMS.Mobile.ArticleRequest =
 							var len = results.rows.length;
 							var id;
         
-							alert("Article table: " + len + " rows found.");
+							//alert("Article table: " + len + " rows found.");
 							var myproducts = new Array();
 							for (var i=0; i<len; i++){
-								alert("Row = " + i + " ID = " + results.rows.item(i).ArticleID + " Data =  " + results.rows.item(i).Designation);
+								//alert("Row = " + i + " ID = " + results.rows.item(i).ArticleID + " Data =  " + results.rows.item(i).Designation);
 		   
 								var oArticle = new DMS.Mobile.Article();
 								oArticle.ArticleID = results.rows.item(i).ArticleID;
@@ -59,7 +59,6 @@ DMS.Mobile.ArticleRequest =
        							
         						form.ArticleList.push(oArticle);
         						
-        
 							}
 							
 form.displayArticle(form.ArticleList);
@@ -68,9 +67,23 @@ form.displayArticle(form.ArticleList);
     },
        
     displayArticle : function(array){
-    	for(var i =0;i<array.length;i++)
-			{
-				alert(array[i].Designation);
-			}
+    $("#example").append("<tbody></tbody>");
+    var oArticle = new DMS.Mobile.Article();
+    	for(var i =0;i<array.length;i++){
+    	oArticle = array[i];
+			$("#example tbody").append(""
+					+"<tr id='tr'>"
+					+"<th id='image" + i +"'></th>"
+					+"<td>"+oArticle.Designation+"</td>"
+					+"<td>"+oArticle.PrixUnitaire+"</td>"
+					+"<td>"+oArticle.QteDispo+"</td>"
+					+"<td>"+oArticle.CAB+"</td>"
+					+"</tr>");
+
+		}  
+	
+           
+           
+
     }
 }

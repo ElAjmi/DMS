@@ -1,13 +1,129 @@
-body {
-    margin: auto;
-    width: 100%;
-}
-
-#etat {
-    text-align:  center;
-}
-
-#bar{
-    width: 100%;
-    height: 30px;
-}
+	/* saisie commande */
+		.ui-table-columntoggle-btn {
+		display: none !important;
+		}
+		.trgrey
+		{
+		background-color:#EEEEEE;
+		}
+		#tbody{
+		background-color:#EEEEEE;
+		}
+		#tablecommande th { padding : 15px; }
+		#tablecommande td { vertical-align: top; text-align: center;}
+		#tablecmd td { width:50px; padding:0px;text-align: center;vertical-align: center;}
+		
+	/* liste commandes */
+	table#example {
+		border-collapse: collapse;   
+		}
+		#example #tr:hover {
+			background-color: #A9D0F5;
+		}
+		#example th, #example td {
+			padding: 5px 10px;
+		}
+		#example td:hover {
+			cursor: pointer;
+		}
+		
+	/* login */
+	fieldset {   
+	  -moz-border-radius:20px;  
+	  border-radius: 20px;  
+	  -webkit-border-radius: 30px; 
+	  margin: 0 auto;
+	  width: 50%;
+	  margin: 0 auto;
+	  display: inline-block;
+	}
+	#fieldset{
+	border:solid 1px silver;
+	padding:30px;
+	}
+	#legend{
+	font-size:11; 
+	font-weight:bold;
+	}
+	.wrapper {
+	position:absolute;
+	top:23%;
+	left:35%;
+	}
+	#canvasloader-container {
+	height: 15em;
+	width: 20em;
+	-moz-border-radius: 1em 4em 1em 4em;
+	border-radius: 1em 4em 1em 4em;
+	}
+	/* calendrier */
+		.ui-table-columntoggle-btn {
+		display: none !important;
+		}
+		#td{   
+		  -moz-border-radius:20px;  
+		  border-radius: 20px;  
+		  -webkit-border-radius: 10px; 
+		  text-align:center;
+		  }
+		.td{   
+		  -moz-border-radius:20px;  
+		  border-radius: 20px;  
+		  -webkit-border-radius: 10px; 
+		  text-align:center;
+		  }
+		  
+		#nomargin{
+			margin: 0;
+			padding: 0; 
+		}
+		#table {
+        border-collapse: separate;
+        border-spacing: 3px 3px;
+		}
+		#img{
+		vertical-align:middle;
+		}
+		.redprio {
+		border-left: 15px solid #f00;
+		}
+		.orangeprio {
+		border-left: 15px solid #febf04 ;
+		}
+		.greenprio{
+		border-left: 15px solid #b4df5b;
+		}
+		.orangeprio:hover {
+			background-color: rgba(230,230,250,0.5);
+		}
+		.greenprio:hover {
+			background-color: rgba(230,230,250,0.5);
+		}
+		.redprio:hover {
+			background-color: rgba(230,230,250,0.5);
+		}
+		.dateicon{
+		background-image: url('icon2.png');
+		background-position: 20px 7px;
+		background-repeat: no-repeat;
+		}
+		.smalltable{
+		font-family:Verdana; font-size:12px;
+		
+		}
+		.smalltable td{ width : 30%;}
+		
+		.alertlabel {
+			padding-top: 35px;
+			padding-right: center;
+			padding-bottom: 0px;
+			padding-left: 0px;
+			
+		}
+		.parag{
+		font-size:18px;
+		padding-left: 30px;
+		}
+      
+	  /* liste articles*/
+	  

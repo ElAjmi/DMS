@@ -44,7 +44,7 @@ $.extend(DMS.Mobile.Article.prototype,
     
      Connect: function () {
 
-                    DB = window.openDatabase("BaseDeDonnées", "1.0.0", "OpenGeophone", 100000);
+                    DB = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
 			        DB.transaction(SelectFromArticle, errorselectFromArticle);
     },
     
