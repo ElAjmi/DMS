@@ -15,10 +15,13 @@ $.extend(DMS.Mobile.Mission.prototype,
 	DateCloture : null,
 	Commentaires : null,
 	TypeMissionID : null,
-	Synch : null,
+	Personnel : null,
 	BCKPersonnelID : null,
 	PointVenteID : null,
-	TourneeID : null,		
+	TourneeID : null,	
+	PointVentes : null,
+	Tournees : null,
+	TypeMissions : null	
 	
 						
 

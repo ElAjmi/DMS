@@ -1,7 +1,6 @@
 <!DOCTYPE html> 
 
-<html> 
-    <head> 
+<html><head> 
         <meta name="viewport" content="width=device-width, user-scalable=no" />
         <title>Commande</title> 
         <meta name="viewport" content="width=device-width" />
@@ -11,6 +10,7 @@
 		<link href="css/API/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css" />
         <link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
         <link href="css/style.css" rel="stylesheet" type="text/css" />
+
         
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
        
@@ -36,15 +36,40 @@
 	<script type="text/javascript" src="js/API/xdate.js"></script>
 	<script type="text/javascript" src="js/API/xdate.i18n.js"></script>
 	<script type="text/javascript" src="js/API/mobipick.js"></script>
-	
+	  
+    
+    
+    
 	<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.MissionRequest.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Mission.js"></script>	
 	
 	<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.TourneeRequest.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Tournee.js"></script>	
+    <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Personnel.js"></script>
+    
+	<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PointVenteRequest.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.PointVente.js"></script>	
+    
+    
+	<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ClientRequest.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Client.js"></script>	
+    
+    <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.TypeMissionRequest2.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.TypeMission.js"></script>	
+    
+    <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.VilleRequest.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Ville.js"></script>	
+    
+     <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ActiviteRequest.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Activite.js"></script>	
+    
 	<script src="js/ViewModel/DMS.Mobile.CalendrierViewModel.js"></script>
+    
     <script src="js/Common/DMS.Mobile.Dates.js"></script>
+    <script src="js/Common/DMS.Mobile.Notification.js"></script>
+    
 
+	
 	<script>
 		
   var DB = null;
@@ -62,7 +87,12 @@
 		DMS.Mobile.CalendrierViewModel.$DateFin = $("#datefin");
 		DMS.Mobile.CalendrierViewModel.$Suivant = $("#suivant");
 		DMS.Mobile.CalendrierViewModel.$Precedant = $("#precedant");
+		DMS.Mobile.CalendrierViewModel.$SSuivante = $("#Ssuivant");
+		DMS.Mobile.CalendrierViewModel.$SPrecedante = $("#Sprecedant");
+		DMS.Mobile.CalendrierViewModel.$Periode = $("#periode");
+		DMS.Mobile.CalendrierViewModel.$Details= $("#detmission");
 		DMS.Mobile.CalendrierViewModel.init();
+	
 		
 		
   }      
@@ -72,13 +102,14 @@
 	$(document).ready(function() {  
 	    document.addEventListener("deviceready", InitConnection , false);
 	    document.addEventListener("deviceready", InitViewCalendrier , false);	   
-	
+	//InitConnection();
+	//InitViewCalendrier();
 	
 	});
 	</script>
 		<script>
 		//mobi pick
-			$( document ).on( "pagecreate", "#page", function() {
+			$(document).on( "pagecreate", "#page", function() {
 			SyntaxHighlighter.all();
 
 			$( "input.mobipick-demo-default-date", this ).mobipick();
@@ -110,7 +141,50 @@
 	});
 	});
 	</script>
+ 
+   <script>
+$(document).ready(function() {
+  // get tab container
+  	var container = $("#tabContainer");
+		var tabcon = $(".tabscontent div");
+		//alert(tabcon.childNodes.item(1));
+    // set current tab
+    var navitem = $("#tabHeader_1");
+		
+    //store which tab we are on
+    var ident = $(navitem).attr("id").split("_")[1];
+		//alert(ident);
+    $(navitem).parent().attr("data-current",ident);
+    //set current tab with class of activetabheader
+   $(navitem).attr("class","tabActiveHeader");
 
+    //hide two tab contents we don't need
+   	 
+    	$(tabcon).each(function(index, element) {
+            if (index != 0){
+				$(this).hide();
+			}
+        });
+    //this adds click event to tabs
+    var tabs = $(container).find("li");
+	$(tabs).each(function(index, element) {
+        $(this).click(function(e) {
+            var current = $(this).parent().attr("data-current");
+  //remove class of activetabheader and hide old contents
+  $("#tabHeader_" + current).attr("class","");
+   $("#tabpage_" + current).hide();
+
+  var ident = $(this).attr("id").split("_")[1];
+  //add class of activetabheader to new active tab and show contents
+  $(this).attr("class","tabActiveHeader");
+  $("#tabpage_" + ident).show();
+  $(this).parent().attr("data-current",ident);
+        });;
+    });
+});
+
+// on click of one of tabs
+</script>
 	<style>
 		.ui-input-text { 
 		display: inline-block;
@@ -145,11 +219,11 @@
 
 	<table width="100%" border="0" id="tablecalendrier">
 	<!--header-->
-	<tr><td id="td" class="ui-bar-f"  width="10%" rowspan="2">
-	<a href="#" id="calendar"><img src="css/images/calendar.png" width="100%" alt="Recherche"></a>
+	<tr><td id="td" class="ui-bar-f"  width="10%" rowspan="2" style="border:1px solid #D1D0D0;background-color:white;">
+	<a href="#" id="calendar"><img src="css/images/calendar3.png" alt="Recherche" style="height:auto;"></a>
 	</td >
 	<td id="td" class="ui-bar-b">
-	<span><p></p>Calendrier Commercial <p></p></span>
+	<span><p></p><h3>Calendrier Commercial</h3> <p id ="periode" ></p></span>
 	</td>
 	</tr>
 	<!-- instructions -->
@@ -159,17 +233,29 @@
 	</td>
 	</tr>
 	<tr>
-	<td></td>
-	<td id="td" > 
+	<td id="td"  colspan="2"> 
 	<table width="100%" border="0" id="tablerecherche" style="display:none" class="ui-bar-c"> 
 	<tr>
-	<td><a href="#" id="precedant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="double-angle-left" data-theme="c" data-iconpos="notext">Pr&eacute;c&eacute;dant</a></td>
-	<td>Du&nbsp; 
-	<input id="datedeb" class="mobipick-demo-spanish"  placeholder="Date d&eacute;but" type="text" style="background-image: url('css/images/icon2.png');background-position: 20px 7px;background-repeat: no-repeat;" value="02/12/2013"/>
-	&nbsp;au&nbsp;
-	<input id="datefin" class="mobipick-demo-spanish"  placeholder="Date fin" type="text" style="background-image: url('css/images/icon2.png');background-position: 20px 7px;background-repeat: no-repeat;" value="02/14/2013" />
+	<td>
+      <!--  <a href="#" id="Sprecedant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="arrow-left" data-theme="c" data-iconpos="notext">Semaine Pr&eacute;c&eacute;dante</a>
+    <a href="#" id="precedant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="chevron-left" data-theme="c" data-iconpos="notext">Pr&eacute;c&eacute;dant</a> -->
+        <div data-role="controlgroup" data-type="horizontal">
+            <a href="#" id="precedant" data-role="button" data-icon="arrow-l">Jour Pr&eacute;c&eacute;dant</a>
+            <a href="#" id="Sprecedant" data-role="button" data-icon="back">Semaine Pr&eacute;c&eacute;dante</a>
+            <a href="#" id="Ssuivant" data-role="button" data-icon="forward" data-iconpos="right">Semaine Suivante</a>
+            <a href="#" id="suivant" data-role="button" data-icon="arrow-r" data-iconpos="right">Jour Suivant</a>
+        </div>
+    </td></tr>
+    <tr>
+	<td>Date d&eacute;but &nbsp; 
+	<input id="datedeb" class="mobipick-demo-spanish"  placeholder="Date d&eacute;but" type="text" style="background-image: url('css/images/icon2.png');background-position: 20px 3px;background-repeat: no-repeat;" value="02/12/2013"/>
+	&nbsp;Date fin &nbsp;
+	<input id="datefin" class="mobipick-demo-spanish"  placeholder="Date fin" type="text" style="background-image: url('css/images/icon2.png');background-position: 20px 3px;background-repeat: no-repeat;" value="08/26/2013" />
 	</td>
-	<td><a href="#" id="suivant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="double-angle-right" data-theme="c" data-iconpos="notext">Suivant</a></td>
+	
+   <!--     <a href="#" id="suivant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="chevron-right" data-theme="c" data-iconpos="notext">Jour Suivant</a>
+     <a href="#" id="Ssuivant" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="arrow-right" data-theme="c" data-iconpos="notext">Semaine Suivante</a> -->
+
 	</tr><tr>
 	<td colspan="3"><a href="#" data-role="button" data-inline="true" data-mini="true" data-icon="search" data-iconpos="left" data_theme="b" id="rechercheBtn">Chercher </a>
 	<a href="#" data-role="button" data-inline="true" data-mini="true" data-icon="refresh" data-iconpos="left" data_theme="b" onclick="location.reload();" >Actualiser </a></td>
@@ -179,12 +265,16 @@
 	</tr>
 	</table >
 	<table width="100%" border="0" id="tablemissions">
-
-	
 	</table>
+    
+    	
+   
+    
+    
 	</div>
 		
 	</div>
+    
 
 </body>
 </html>

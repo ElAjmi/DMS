@@ -11,94 +11,182 @@
 		
 		TourneeList :[],
 		connexion: null,
+
 	
-	  Connect: function (callback) {
-					var form = this;	
-						this.connexion.transaction(function(tx){ form.SelectFromTournee(tx, form,callback) }, this.errorselectFromTournee);
+		
+									
+		insertTourneeIntoArray : function(tournee,form,len,callbackViewModel)	
+		{
+			form.TourneeList.push(tournee);
+			if(form.TourneeList.length == len)
+			{
+				callbackViewModel(form.TourneeList);
+							
+			}
 		},
 		
 		
+	///////////////////////////////////////////////////Serveur ////////////////////////////////////////
+	
+	SelectTourneeByPersonnalFromServer : function(callbackViewModel,PersonnelID)
+	{
+		var form = this;
+		var Data = "PersonnelID="+PersonnelID; 	  
+		var methode= "GetListTourneeDTOByPersonnelID?";
+		var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+	    DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createTourneeDTO(JsonObject,Form,callbackViewModel);},URL,form);
+	},
+	
+	createTourneeDTO : function(json,form,callbackViewModel)
+	{
+		if ( json != null)
+		{
+			var synch = "true";
+			var len =json.length;
+			for (var i=0;i<json.length;i++)
+			{
+				var tourneeDTO = new DMS.Mobile.Tournee();
+				
+				tourneeDTO.TourneeID = json[i].TourneeID;
+			
+				var dDebut = DMS.Mobile.Common.ParseDateJson(json[i].DateDebut);
+				tourneeDTO.DateDebut = dDebut;
+	
+                var dFin = DMS.Mobile.Common.ParseDateJson(json[i].DateFin);
+				tourneeDTO.DateFin =  dFin;
+				
+				var dCreation = DMS.Mobile.Common.ParseDateJson(json[i].DateCreation);
+				tourneeDTO.DateCreation = dCreation;
+				
+				tourneeDTO.EtatTournee = json[i].EtatTournee;
+				tourneeDTO.TerminalID = json[i].TerminalID;
+				tourneeDTO.ImprimanteID = json[i].ImprimanteID;
+				tourneeDTO.EquipementID = json[i].EquipementID;
+				
+				tourneeDTO.VehiculeID = json[i].VehiculeID
+				tourneeDTO.PersonnelID = json[i].PersonneID;
+				tourneeDTO.listMission = json[i].Missions;
+				tourneeDTO.listPositions = json[i].Positions;
+				
+			form.InsertTournee(tourneeDTO,synch,form,len,callbackViewModel);							
+
+			}
+			
+		}
+		else{callbackViewModel(form.TourneeList);}	
+	},
+	
+///////////////////////////////////Insert In Local ///////////////////////////////	
+	
+InsertTournee: function (tournee,synch,form,len,callbackViewModel)
+		{
+			form.InsertTourneeIntoLOCAL(tournee,synch,form,len,callbackViewModel);
+	
+		},
+		
+insertTournee: function(Tournee){
+					var form = this;	
+			       	this.InsertTourneeIntoLOCAL(Tournee,"false",form,null,null);
+    },	
+	
+	
+    InsertTourneeIntoLOCAL : function(TourneeObject,synch,formReq,len,callbackViewModel) 
+	{
+			if (synch == "false")
+			{
+				 formReq.connexion.transaction(function(tx){ formReq.InsertIntoTournee(tx, formReq,TourneeObject,synch) ;}, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoTournee");});
+		    }
+			else
+			{
+				 formReq.connexion.transaction(function(tx){ formReq.InsertIntoTournee(tx, formReq,TourneeObject,synch) ;}, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoTournee");},function(){formReq.insertTourneeIntoArray(TourneeObject,formReq,len,callbackViewModel);});
+			}
+								
+    },
+
+ 
+   
+   InsertIntoTournee : function(requete,form,TourneeObject,synch) {
+   
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES('+TourneeObject.TourneeID+',"'+TourneeObject.DateDebut+'","'+TourneeObject.DateFin+'","'+TourneeObject.DateCreation+'",'+TourneeObject.EtatTournee+',"'+synch+'",'+TourneeObject.TerminalID+','+TourneeObject.ImprimanteID+','+TourneeObject.EquipementID+','+TourneeObject.VehiculeID+','+TourneeObject.PersonnelID+')');
+			      																																
+},
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+		
+//////////////////////////////////////////////////////////Slection from Local /////////////////
+
+SelectAll: function (callback) {
+			 
+			var form = this;	
+			this.connexion.transaction(function(tx){ form.SelectFromTournee(tx, form,callback) }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromTournee");});
+		},
 		
 		
-		 SelectFromTournee : function(requete,form,callback) {
-	   
+		SelectFromTournee : function(requete,form,callback) {
 				requete.executeSql('SELECT * FROM Tournees', [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
 		   
 		},
 		
-		   
-	   errorselectFromTournee:function (err) {
-	   alert("errorselectFromTournee : " + err.message);   
-		},
-		
 		
 		querySuccess:function (requete, results,form,callback) {
-			//alert("tx = " + requete);
-								var len = results.rows.length;
 			
-								//alert("Tournee table: " + len + " rows found.");
-								
-								
-									for (var i=0;i<len;i++){
-										var oTournee = new DMS.Mobile.Tournee();
-										oTournee.TourneeID = results.rows.item(i).TourneeID;
-										oTournee.DateDebut = results.rows.item(i).DateDebut;
-										oTournee.DateFin = results.rows.item(i).DateFin;
-										oTournee.DateCreation = results.rows.item(i).DateCreation;
-										oTournee.EtatTournee = results.rows.item(i).EtatTournee;
-										oTournee.Synch = results.rows.item(i).Synch;
-										oTournee.TerminalID = results.rows.item(i).TerminalID;
-										oTournee.ImpimanteID = results.rows.item(i).ImpimanteID;
-										oTournee.EquipementID = results.rows.item(i).EquipementID;
-										oTournee.VehiculeID = results.rows.item(i).VehiculeID;
-										oTournee.PersonnelID = results.rows.item(i).PersonnelID;								
-										form.TourneeList.push(oTournee);}
-									
-								
-	//form.displayTournee(form.TourneeList,form);
-			callback(form.TourneeList);
-			//form.TourneeList = [];
-						
-		},
-	
-		displayTournee : function(array,form){
-		
-		for(var i =0;i<array.length;i++){
-			var obj1 = form.objToString(array[i]);
-			//var obj2 = form.objToString(array[i].listMission);
-			alert(array[i].listMission);  
+			var len = results.rows.length;
 			
-					
-	   /* $("#tablemissions").append(""
-		+"<tr>"
-		+"<td  width='10%' class='ui-bar-c td'>"+array[i].DateDebut+"</div></td>"
-		+"<td class='ui-bar-f td' style='padding-right:5px;padding-left:5px;'>"
-		
-		+"<div data-role='collapsible' data-theme='c' data-content-theme='d' data-collapsed-icon='arrow-d' data-expanded-icon='arrow-u' data-iconpos='right'>"
-		+"<h4><table id ='table' border='0' width='100%'><tr><td><img src='css/images/task2.png' id='img'></td><td width='95%'> Missions</td></tr></table></h4>"
-		+"<div id='divmissions"+i+"'></div>"
-		+"<br/></div></td></tr>").trigger('create');
-		
-		$("#divmissions"+i).append("<ul  data-role='listview' data-inset='false' id='ulmission'>"
-			+"<li class='redprio'><h3>Mission "+ i +" : </h3>"
-			+"<p class='parag'> Etat Mission : " + array[i].Mission.EtatMission + " | Date Cloture : " + array[i].Mission.DateCloture + " | Commentaires : " + array[i].Mission.Commentaires + " | Type Mission : <a href='#' style='color: blue ; text-decoration: none;'>" + array[i].Mission.TypeMissionID + "</a> | Point Vente : <a href='#' style='color: blue ; text-decoration: none;'>" + array[i].Mission.PointVenteID +"</a></p>"
-			+"</li>"
-			+"</ul>").trigger('create');
-		  
-		*/
-		}
-			
-			}  ,
-			   
-		   objToString :function(obj) {
-			var str = '';
-			for (var p in obj) {
-				if (obj.hasOwnProperty(p)) {
-					str += p + ':' + obj[p] + '\n';
+			for (var i=0;i<len;i++){
+				var oTournee = new DMS.Mobile.Tournee();
+				oTournee.listMission = [];	
+				oTournee.TourneeID = results.rows.item(i).TourneeID;
+				oTournee.DateDebut = results.rows.item(i).DateDebut;
+				oTournee.DateFin = results.rows.item(i).DateFin;
+				oTournee.DateCreation = results.rows.item(i).DateCreation;
+				oTournee.EtatTournee = results.rows.item(i).EtatTournee;
+				oTournee.Synch = results.rows.item(i).Synch;
+				oTournee.TerminalID = results.rows.item(i).TerminalID;
+				oTournee.ImpimanteID = results.rows.item(i).ImpimanteID;
+				oTournee.EquipementID = results.rows.item(i).EquipementID;
+				oTournee.VehiculeID = results.rows.item(i).VehiculeID;
+				oTournee.PersonnelID = results.rows.item(i).PersonnelID;
+				
+				
+		DMS.Mobile.MissionRequest.connexion = form.connexion;
+		DMS.Mobile.MissionRequest.SelectMission(function(tournee){form.insertTourneeIntoTourneeList(tournee,form,len,callback);},oTournee);							
+				
 				}
-			}
-			return str;
-			}     
-	
+		},
 		
+		insertTourneeIntoTourneeList : function(tournee,form,len,callback)	
+		{
+			
+			form.TourneeList.push(tournee);
+			if(form.TourneeList.length == len)
+			{
+				callback(form.TourneeList);
+							
+			}
+		},
+///////////////////////////////////////////////////////////////////////////////////////		
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+		
+//////////////////////////////////////////////////////////Update In Local /////////////////
+
+		UpdateTournee: function (Etat,TourneeID) {
+			 
+			var form = this;	
+			this.connexion.transaction(function(tx){ form.UpdateEtatTournee(tx, form,Etat,TourneeID) }, function(err){ DMS.Mobile.Common.errors(err,"UpdateTournee");});
+		},
+		
+		
+		UpdateEtatTournee : function(requete,form,Etat,TourneeID) {
+				requete.executeSql(' UPDATE Tournees SET EtatTournee= ? WHERE TourneeID = ?', [Etat,TourneeID], function(tx, results) {form.querySuccessUpdate(tx,results,form,Etat,TourneeID);});
+		   
+		},
+		
+		querySuccessUpdate :function (requete, results,form,Etat,TourneeID) {
+			//alert("update succes !")
+		
+		},
+		
+		
+///////////////////////////////////////////////////////////////////////////////////////		
+
 	}

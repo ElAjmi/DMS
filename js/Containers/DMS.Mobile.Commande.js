@@ -22,7 +22,7 @@ $.extend(DMS.Mobile.Commande.prototype,
     Personnel : null,
 	PointVentes : null,
     ListLignesCommande: [],
-    ListLivraisons : [],
-    connexion: null
+    ListLivraisons : []
+
 
 });

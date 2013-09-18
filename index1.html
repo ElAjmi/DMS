@@ -11,18 +11,28 @@
 		<script type="text/javascript" charset="utf-8">
 			function InitConnection(){
 				DMS.Mobile.BD.Initialize();
-				
-				
-			}
-			function redirection(){
-				DMS.Mobile.Common.RedirectToLogin()();
 				}
+				
+			function redirectionToCalendrier(){
+				DMS.Mobile.Common.RedirectToCalendrier();
+				}
+				
+				function redirectionToLogin(){
+				DMS.Mobile.Common.RedirectToLogin();
+				}
+				
+				function redirectionToCommande(){
+				DMS.Mobile.Common.RedirectToCommande();
+				}
+				
 		</script>
     </head>
     <body>
     
 		<h1>Data Base Script</h1>
-		<input type="button" id="b" onClick="redirection()" value="redirect"/>
+		<input type="button" id="b" onClick="redirectionToCalendrier()" value="redirect calendrier"/>
+		<input type="button" id="b" onClick="redirectionToLogin()" value="redirect login"/>
+		<input type="button" id="b" onClick="redirectionToCommande()" value="redirect commande"/>
 		<script type="text/javascript" charset="utf-8">
             document.addEventListener("deviceready", InitConnection , false);
 		</script>

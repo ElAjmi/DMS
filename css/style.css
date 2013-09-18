@@ -6,13 +6,13 @@
 		{
 		background-color:#EEEEEE;
 		}
-		#tbody{
+		.tbody{
 		background-color:#EEEEEE;
 		}
 		#tablecommande th { padding : 15px; }
 		#tablecommande td { vertical-align: top; text-align: center;}
 		#tablecmd td { width:50px; padding:0px;text-align: center;vertical-align: center;}
-		
+		.shadow{text-decoration: none;color : white;}
 	/* liste commandes */
 	table#example {
 		border-collapse: collapse;   
@@ -46,10 +46,10 @@
 	font-weight:bold;
 	}
 	.wrapper {
-	position:absolute;
-	top:23%;
-	left:35%;
-	}
+			position:absolute;
+			top:50%;
+			left:50%;
+		}
 	#canvasloader-container {
 	height: 15em;
 	width: 20em;
@@ -81,32 +81,33 @@
         border-collapse: separate;
         border-spacing: 3px 3px;
 		}
-		#img{
+		.img{
+		position:absolute;
+		top:40%;
+		left :95%;
+		}
+		#img2{
 		vertical-align:middle;
 		}
 		.redprio {
-		border-left: 15px solid #f00;
+		border-left: 1px solid #f00;
+		border-right: 1px solid #f00;
+		border-top: 1px solid #f00;
+		border-bottom: 1px solid #f00;
 		}
 		.orangeprio {
-		border-left: 15px solid #febf04 ;
+		border-left: 1px solid #febf04 ;
+		border-right: 1px solid #febf04; 
+		border-top: 1px solid #febf04;
+		border-bottom: 1px solid #febf04; 
 		}
 		.greenprio{
-		border-left: 15px solid #b4df5b;
+		border-left: 1px solid #b4df5b;
+		border-right: 1px solid #b4df5b;
+		border-top: 1px solid #b4df5b;
+		border-bottom: 1px solid #b4df5b;
 		}
-		.orangeprio:hover {
-			background-color: rgba(230,230,250,0.5);
-		}
-		.greenprio:hover {
-			background-color: rgba(230,230,250,0.5);
-		}
-		.redprio:hover {
-			background-color: rgba(230,230,250,0.5);
-		}
-		.dateicon{
-		background-image: url('icon2.png');
-		background-position: 20px 7px;
-		background-repeat: no-repeat;
-		}
+		
 		.smalltable{
 		font-family:Verdana; font-size:12px;
 		
@@ -121,9 +122,68 @@
 			
 		}
 		.parag{
-		font-size:18px;
-		padding-left: 30px;
+		font-size:14px;
+		
 		}
+		.smallLabel{
+		font-size:12px;
+		}
+		#mybuttonNextJ {
+    background: url('images/next.png') no-repeat scroll 0 0 transparent;
+    background-position: center center; 
+	}
+	#mybuttonNextS {
+    background: url('images/nextS.png') no-repeat scroll 0 0 transparent;
+    background-position: center center; 
+	}
+	#mybuttonPrevJ {
+    background: url('images/prev.png') no-repeat scroll 0 0 transparent;
+    background-position: center center; 
+	}
+	#mybuttonPrevS {
+    background: url('images/prevS.png') no-repeat scroll 0 0 transparent;
+    background-position: center center; 
+	}
+	
+	.ui-input-text
+	{
+	width: 150px !important;
+	}
+	.invisible {
+    position: absolute;
+    left: -9999px;
+    }
+	
+	.hide{
+	  display: none;
+	  }
+	.show{
+	  display: block;
+	}
+	
+
       
-	  /* liste articles*/
+	/*font size */
+	
+	body,
+.ui-loader-verbose h1,
+.ui-bar,
+.ui-bar h1, .ui-bar h2, .ui-bar h3, .ui-bar h4, .ui-bar h5, .ui-bar h6,
+/*.ui-header .ui-title, .ui-footer .ui-title,*/
+.ui-btn-inner,
+.ui-fullsize .ui-btn-inner,
+label.ui-submit,
+.ui-collapsible-heading,
+.ui-controlgroup-label,
+.ui-controlgroup .ui-checkbox label, .ui-controlgroup .ui-radio label,
+.ui-popup .ui-title,
+label.ui-select,
+label.ui-input-text,
+input.ui-input-text, textarea.ui-input-text,
+.ui-li-heading,
+label.ui-slider,
+.ui-field-contain input.ui-slider-input,
+span.ui-slider-label {
+font-size: 14px;
+}
 	  

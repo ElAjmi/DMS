@@ -12,19 +12,13 @@ $.extend(DMS.Mobile.Tournee.prototype,
 	DateFin : null,
 	DateCreation : null,
 	EtatTournee : null,
-	Synch : null,
 	TerminalID : null,
-	ImpimanteID : null,
+	ImprimanteID : null,
 	EquipementID : null,
 	VehiculeID : null,
 	PersonnelID : null,
 	listMission : [],
-	
-	
-								
-	
-						
-
-	
+	listPositions : []
+		
 	
 });

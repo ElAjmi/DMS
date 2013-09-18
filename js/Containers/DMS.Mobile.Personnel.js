@@ -18,12 +18,16 @@ $.extend(DMS.Mobile.Personnel.prototype,
 	Email : null,
 	Adresse : null,
     Matricule : null,
-   // Synch : null,
     ProfilID : null,
     ListCommandes : [],
     ListMissions : [],
+	ListTournees : [],
     ListObjectifs : [],
     Profils : null,
-    ListReclamations : []
+    ListReclamations : [],
+	ListTournees : [],
+	Zones : null
+	
+
 	
 });

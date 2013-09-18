@@ -1,0 +1,245 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8" />
+        <title>Commande</title> 
+        <meta name="viewport" content="width=device-width" />
+              
+       
+        
+           
+	    <link href="css/API/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css" />
+        <link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+         
+      
+		<script src="js/API/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="js/API/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
+      
+        
+                        
+		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+        
+        
+        <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.LigneCommande.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.LigneCommandeRequest.js"></script>
+              
+        <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Client.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ClientRequest.js"></script>
+        
+        <script src="js/Request/DMS.Mobile.ArticleRequest.js"></script>
+        <script src="js/Containers/DMS.Mobile.Article.js"></script>
+        
+        <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.PointVente.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PointVenteRequest.js"></script>
+        
+         <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.CommandeRequest.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Commande.js"></script>
+        
+       	<script type="text/javascript" charset="utf-8" src="js/ViewModel/DMS.Mobile.CommandeViewModel.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/ViewModel/DMS.Mobile.LoginViewModel.js"></script>
+        
+       
+        
+		<script src="js/Request/DMS.Mobile.CreateBD.js"></script>
+        <script src="js/Common/DMS.Mobile.Common.js"></script>
+        
+
+	<link href="css/API/mobipick.css" rel="stylesheet" type="text/css" />
+	<link href="css/API/shCoreDefault.css" rel="stylesheet" type="text/css" />
+	<link href="css/API/shThemeDefault.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/API/shCore.js"></script>
+	<script type="text/javascript" src="js/API/shBrushJScript.js"></script>
+	<script type="text/javascript" src="js/API/shBrushXml.js"></script>
+	<script type="text/javascript" src="js/API/modernizr.custom.min.js"></script>
+	<script type="text/javascript" src="js/API/xdate.js"></script>
+	<script type="text/javascript" src="js/API/xdate.i18n.js"></script>
+	<script type="text/javascript" src="js/API/mobipick.js"></script>
+
+	<script type="text/javascript">
+	 $(document).ready(function () {
+		$( "input.mobipick-demo-default-date", this ).mobipick({
+				locale: "fr",
+				dateFormat: "dd-MM-yyyy"
+			});
+		
+	});
+	</script>
+       
+        <script>
+            $(document).ready(function () {
+                $.mobile.ajaxEnabled = false;
+            });  
+        </script>
+       				
+		<script>
+		  
+           
+ function InitPage(){
+       	
+		DMS.Mobile.BD.initConnection();
+		DMS.Mobile.CommandeViewModel.connexion = DMS.Mobile.BD.connexion;
+		DMS.Mobile.CommandeViewModel.$PVInfos = $("#PVInfos");
+		DMS.Mobile.CommandeViewModel.$SelectPointVente = $("#selectPointVente");
+        DMS.Mobile.CommandeViewModel.$SelectClient = $("#selectClient");
+		DMS.Mobile.CommandeViewModel.$EnvoyerCommande = $("#envoyerCommande");
+		
+		DMS.Mobile.CommandeViewModel.$tablecommande = $("#tablecommande");
+		DMS.Mobile.CommandeViewModel.$IdPersonnelSession = $("#IdPersonnelSession");
+		
+		DMS.Mobile.CommandeViewModel.$PrixTotalHT = $("#ptht");
+		DMS.Mobile.CommandeViewModel.$PrixTotalTTC = $("#ptttc");
+		DMS.Mobile.CommandeViewModel.$TotalTVA = $("#ttva");
+		DMS.Mobile.CommandeViewModel.$DateLivraisonPrevue = $("#DateLivraisonPrevu");
+		DMS.Mobile.CommandeViewModel.Init();
+			
+           } 
+           
+    </script>
+  
+    </head> 
+    
+<body> 
+	<script type="text/JavaScript" charset="utf-8">
+	
+	$(document).ready(function() {  
+	    document.addEventListener("deviceready", InitPage , false);
+	
+	});
+	
+	</script>
+    
+  
+   
+   <div data-role="page" data-theme="c">
+    
+		<!-- header -->
+        <div data-role="header" data-theme="b">
+        
+    
+        	<h1>Commandes</h1>
+			<!--<a href="#panelmenu" class="jqm-navmenu-link" data-icon="home" data-iconpos="notext">Navigation</a>-->
+			<a href="#panelmenu" data-role="button" data-inline="true" data-mini="true" data-icon="home" data-iconpos="left">Menu</a>
+             <a href="login.html" align="right" data-role="button" data-inline="true" data-mini="true" data-icon="lock" data-iconpos="left">Se d&eacute;connecter </a>
+
+        </div>
+        <!---->
+		
+		<!-- panel client -->
+		<div data-theme="c" data-display="overlay" data-position="right" id="panel" data-role="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
+			<h3>Date de livraison prevu</h3>
+                  
+                 	<input class="mobipick-demo-default-date" type="text" id="DateLivraisonPrevu" placeholder="Date livraison pr&eacute;vue" />
+                  
+             
+            <h3>Choisir un Client</h3>
+                
+                                 
+                <select id="selectClient"> 
+                  <option selected="selected">Choisir Client</option> 
+                </select>
+                
+                <h3>Choisir un Point de Vente</h3>
+             
+                <select id="selectPointVente"> 
+                    <option selected="selected">Choisir PV</option> 
+                </select>
+                
+                <div id='PVInfos'>
+                
+                </div>
+                
+               
+            
+            <center>
+			
+			</center>
+		
+		</div>
+		
+		<!-- panel menu -->
+		<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
+		<ul data-role="listview" data-theme="c" class="nav-search">
+            <li data-icon="delete" data-theme="e"><a href="#" data-rel="close">Fermer menu</a></li>
+                <li data-icon="edit"><a href="saisie_commande.html">Saisie commandes</a></li>
+                <li data-icon="page"><a href="liste_commandes.html">Liste commandes</a></li>
+                <li data-icon="calendar"><a href="Calendrier.html">Calendrier</a></li>  
+		</ul>
+		</div>
+
+		<!-- page content -->
+		
+        <div data-role="content">
+            <form id="form">
+            
+     
+          
+     			<center>
+            
+                       
+			<table border="0" width="100%" id="tablecommande">
+
+
+
+
+
+			<tr><td colspan="3"></td></tr>
+			<tr><td colspan="3" style="text-align: right;">
+			<a href="#panel" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="info" data-theme="b" data-iconpos="notext">D&eacute;tails client</a>
+          
+			</td>
+            </tr>
+            <!-- insertion -->
+			</table>
+			</center>
+			</form>
+        </div>
+       
+        <table border="0" width="100%">
+		<tr>
+		<td></td>
+		<td style="text-align: right;" width="10%">
+		<a href="#" data-role="button" id="envoyerCommande" data-icon="check" data-theme="c">Envoyer</a>
+		</td>
+		<td style="text-align: right;" width="10%">
+		<a href="#" data-role="button" id="AnnulerCommande" data-icon="delete" data-theme="c">Annuler</a>
+		
+		</td>
+		</tr>
+		</table>
+		<br/><br/><br/>
+        <!-- popup -->
+
+		<div data-role="popup" id="popupInfo" class="ui-content" data-theme="d" style="max-width:350px;">
+		<center><img src="http://www.myshop.tn/img/p/2261-3441-thickbox.jpg" style="max-width:320px;"></center>
+		<fieldset style="border:solid 1px silver; padding:30px;"> 
+			<legend style="font-size:11; font-weight:bold;" align="left">D&eacute;tails article :</legend> 
+		<ul>
+			<li><b>D&eacute;signation :</b> SAIDA CEREALES</li>
+			<li><b>Quantit&eacute; disponible :</b> 120</li>
+			<li><b>Prix unitaire :</b> 0.650 DT</li>
+		</ul>
+		</fieldset>
+		</div>
+
+		<!-- Footer -->
+        <div data-role="footer" data-theme="b" data-position="fixed" data-fullscreen="true" data-tap-toggle="false">
+        	<table width="100%" border="0">
+                                  
+			<tr>
+			<td align="center"><p id="ptht"></p></td>
+			
+			<td align="center"><p id="ttva"></p></td>
+			
+			<td align="center"><p id="ptttc"></p></td>
+			</tr>
+			
+			</table>
+			
+        </div>
+
+    </div>
+
+</body>
+</html>

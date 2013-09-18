@@ -8,82 +8,125 @@ DMS.Mobile.ArticleRequest = {};
 DMS.Mobile.ArticleRequest = 
 {
 
-	
-	ArticleList :[],
+	Article : null,
+	ListArticle :[],
 	connexion: null,
 
-  Connect: function () {
+  SelectAll: function (callback) {
 				var form = this;	
-					alert("this.connexion = " + this.connexion);
-                    //this.connexion = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-			       	this.connexion.transaction(function(tx){ form.SelectFromArticle(tx, form) }, this.errorselectFromArticle);
+			       	this.connexion.transaction(function(tx){ form.SelectFromArticle(tx, form,callback) },  function(err){ DMS.Mobile.Common.errors(err,"SelectFromArticle");});
+    },
+    
+      SelectFromArticle : function(requete,form,callback) {
+				requete.executeSql('SELECT * FROM Article', [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
+    
     },
     
     
-    
-    
-     SelectFromArticle : function(requete,form) {
-       	
-       	
-			
-					requete.executeSql('SELECT * FROM Article', [], function(tx, results) {form.querySuccess(tx,results,form);});
-        
-        
-        
-    },
-    
-    
-    errorselectFromArticle:function (err) {
-   alert("errorselectFromArticle : " + err.message);   
-    },
-    
-    
-    querySuccess:function (requete, results,form) {
-        alert("tx = " + requete);
+    querySuccess:function (requete, results,form,callback) {
+ 
 							var len = results.rows.length;
 							var id;
-        
-							//alert("Article table: " + len + " rows found.");
 							var myproducts = new Array();
 							for (var i=0; i<len; i++){
-								//alert("Row = " + i + " ID = " + results.rows.item(i).ArticleID + " Data =  " + results.rows.item(i).Designation);
 		   
 								var oArticle = new DMS.Mobile.Article();
 								oArticle.ArticleID = results.rows.item(i).ArticleID;
 								oArticle.Designation = results.rows.item(i).Designation;
-								oArticle.PrixUnitaire = results.rows.item(i).PrixUnitaire;
+								oArticle.PrixUnitaireHT = results.rows.item(i).PrixUnitaireHT;
+								oArticle.PrixUnitaireTTC = results.rows.item(i).PrixUnitaireTTC;
 								oArticle.CAB = results.rows.item(i).CAB;
-								oArticle.QteDispo = results.rows.item(i).QteDispo;
+								oArticle.QuantiteDisponible = results.rows.item(i).QteDispo;
 								oArticle.FamilleID = results.rows.item(i).FamilleID;
 								oArticle.Synch = results.rows.item(i).Synch;
        							
-        						form.ArticleList.push(oArticle);
+        						form.ListArticle.push(oArticle);
         						
 							}
 							
-form.displayArticle(form.ArticleList);
-        
-                    
+callback(form.ListArticle);                
     },
-       
-    displayArticle : function(array){
-    $("#example").append("<tbody></tbody>");
-    var oArticle = new DMS.Mobile.Article();
-    	for(var i =0;i<array.length;i++){
-    	oArticle = array[i];
-			$("#example tbody").append(""
-					+"<tr id='tr'>"
-					+"<th id='image" + i +"'></th>"
-					+"<td>"+oArticle.Designation+"</td>"
-					+"<td>"+oArticle.PrixUnitaire+"</td>"
-					+"<td>"+oArticle.QteDispo+"</td>"
-					+"<td>"+oArticle.CAB+"</td>"
-					+"</tr>");
-
-		}  
 	
-           
-           
+	
 
-    }
+   
+	
+	GetListArticleFromServer : function()
+	{
+		DMS.Mobile.Common.Alert("get list Article from server");
+		 var methode = "GetListArticleDTO?";
+		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 
+		 var form = this;
+		    DMS.Mobile.Common.CallService(this.CreateArticleDTO,URL,form);
+		
+	},
+	
+	CreateArticleDTO : function (json,form)
+	{
+		if ( json != null)
+		{
+			var synch = "true";
+
+			for (var i=0;i<json.length;i++)
+			{
+			var articleDTO = new DMS.Mobile.Article();
+			
+			articleDTO.ArticleID = json[i].ArticleID;
+			articleDTO.Designation = json[i].Designation;
+			articleDTO.FamilleID = json[i].FamilleID;
+			articleDTO.PrixUnitaireHT = json[i].PrixUnitaireHT;
+			articleDTO.PrixUnitaireTTC = json[i].PrixUnitaireTTC;
+			articleDTO.CAB = json[i].CAB;
+			articleDTO.UniteMesureID = json[i].UniteMesureID;
+			articleDTO.QuantiteDisponible = json[i].QuantiteDisponible;
+			articleDTO.Quota = json[i].Quota;
+			articleDTO.CodeArticle = json[i].CodeArticle;
+			articleDTO.CodeTVA = json[i].CodeTVA;
+			articleDTO.Familles = json[i].Familles;
+			articleDTO.UniteMesure = json[i].UniteMesure;
+			articleDTO.ListFacings = json[i].Facing;
+			articleDTO.ListLignesCommande = json[i].LignesCommande;
+			articleDTO.ListLivraisons = json[i].Livraisons;
+			articleDTO.ListPromotions = json[i].Promotions;
+			articleDTO.ListReleveLineaire = json[i].ReleveLineaire;
+			articleDTO.ListRelevePresencePrixConcurrents = json[i].RelevePresencePrixConcurrents;
+			articleDTO.ListRelevePrix = json[i].RelevePrix;
+			articleDTO.ListReleveStock = json[i].ReleveStock;
+			articleDTO.CodeTVA1 = json[i].CodeTVA1;
+			
+			
+			form.ListArticle.push(articleDTO);
+			}
+			form.SaveListArticleInLocal(form.ListArticle,synch,form);
+		}
+		else{return null;}	
+	},
+	
+	    	SaveListArticleInLocal : function(ListArticle,synch,form)
+	{
+	DMS.Mobile.Common.Alert("length : " +ListArticle.length);
+		for (var i=0; i<ListArticle.length;i++)
+		{
+		form.InsertArticle(ListArticle[i],synch,form);
+		DMS.Mobile.Common.Alert("Fin insertion de Article : "+i); 
+		}
+	},
+		
+			 InsertArticle: function(ArticleObject,synch,formReq) {
+
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoArticle(tx, formReq,ArticleObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoArticle");}); 
+					   
+					
+           },
+
+	InsertIntoArticle : function(requete,form,ArticleObject,synch) {
+   
+			requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES( '+ArticleObject.ArticleID+',"'+ArticleObject.Designation+'",'+ArticleObject.PrixUnitaireHT+','+ArticleObject.PrixUnitaireTTC+',"'+ArticleObject.CAB+'",'+ArticleObject.QuantiteDisponible+','+ArticleObject.FamilleID+',"'+synch+'")');
+			
+    DMS.Mobile.Common.Alert("Fin insertion article");       																																
+    },
+	 
+	
+		
 }

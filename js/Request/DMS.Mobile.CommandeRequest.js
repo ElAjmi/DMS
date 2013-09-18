@@ -10,38 +10,132 @@ DMS.Mobile.CommandeRequest =
 
 	
 	CommandeList :[],
-	connexion: null,
+	connexion: null,    
+	
+	
+	
+///////////////////////////////////////////////////////// SERVEUR //////////////////////////
+	SelectCommandeByPersonnalFromServer : function(callbackViewModel,PersonnelID)
+	{
+		var form = this;
+		var Data = "PersonnelID="+PersonnelID; 	  
+		var methode= "GetListCommandeDTOByPersonnelID?";
+		var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+	    DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createCommandeDTO(JsonObject,Form,callbackViewModel);},URL,form);
+	},
+	
+	createCommandeDTO : function (json,form,callbackViewModel)
+	{
+		if ( json != null)
+	    {
+			var synch = "true";
+			var len =json.length;
+			
+			for (var i=0;i<json.length;i++)
+			{
+				var commandeDTO = new DMS.Mobile.Commande();
+				
+				commandeDTO.CommandeID = json[i].CommandeID;
+				commandeDTO.CAB = json[i].CAB;
+				commandeDTO.DateCreation = json[i].DateCreation;
+				commandeDTO.DateLivraisonPrevue = json[i].DateLivraisonPrevue;
+				commandeDTO.EtatCommande = json[i].EtatCommande;
+				commandeDTO.PrixTotalTTC = json[i].PrixTotalTTC;
+				commandeDTO.PrixTotalHT = json[i].PrixTotalHT;
+				commandeDTO.CodeCommande = json[i].CodeCommande;
+				
+				commandeDTO.TotalTVA = json[i].TotalTVA;
+				commandeDTO.PointVenteID = json[i].PointVenteID;
+				commandeDTO.CommercialID = json[i].CommercialID;
+				commandeDTO.Personnel = json[i].Personnel;
+				commandeDTO.PointVentes = json[i].PointVentes;
+				commandeDTO.ListLignesCommande = json[i].LignesCommande;
+				commandeDTO.ListLivraisons = json[i].Livraisons;
 
-  Connect: function () {
-				var form = this;	
-					//alert("this.connexion = " + this.connexion);
-                    //this.connexion = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-			       	this.connexion.transaction(function(tx){ form.SelectFromCommande(tx, form) }, this.errorselectFromCommande);
+		       
+				form.insertCommande(commandeDTO,synch,form,len,callbackViewModel);
+
+			}
+	
+		}
+		else{callbackViewModel(form.CommandeList);}	
+		},
+		
+		
+		insertCommandeIntoArray : function (commande,form,len,callbackViewModel)
+		{
+			form.CommandeList.push(commande);
+			
+			if(form.CommandeList.length == len)
+			{
+				callbackViewModel(form.CommandeList);
+					
+							
+			}
+		},
+		
+		
+////////////////////////////////////////////////////////////////////////////////////////////	
+	
+/////////////////////////////////////////Insertion LOCAL ////////////////////////////////
+
+
+insertCommande : function (commande,synch,form,len,callbackViewModel)
+		{
+			form.InsertCommandeIntoLOCAL(commande,synch,form,len,callbackViewModel);
+	
+		},
+		
+InsertCommande: function(Commande){
+					var form = this;	
+			       	this.InsertCommandeIntoLOCAL(Commande,"false",form,null,null);
     },
-    
-    
-    
-    
-     SelectFromCommande : function(requete,form) {
+	
+	
+InsertCommandeIntoLOCAL: function(CommandeObject,synch,formReq,len,callbackViewModel) 
+{
+	if (synch == "false")
+	{
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoCommande(tx, formReq,CommandeObject,synch) },  function(err){ DMS.Mobile.Common.errors(err,"InsertIntoCommande");}); 					   	}
+	else
+	{
+		 formReq.connexion.transaction(function(tx){ formReq.InsertIntoCommande(tx, formReq,CommandeObject,synch) },  function(err){ DMS.Mobile.Common.errors(err,"InsertIntoCommande");}, function(){formReq.insertCommandeIntoArray(CommandeObject,formReq,len,callbackViewModel);}); 
+	}
+},
+
+
+InsertIntoCommande : function(requete,form,CommandeObject,synch) 
+{
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES('+CommandeObject.CommandeID+',"'+CommandeObject.CAB+'","'+CommandeObject.DateCreation+'","'+CommandeObject.DateLivraisonPrevue+'",'+CommandeObject.EtatCommande+','+CommandeObject.PrixTotalTTC+','+CommandeObject.PrixTotalHT+','+CommandeObject.TotalTVA+',"'+CommandeObject.CodeCommande+'","'+synch+'",'+CommandeObject.CommercialID+','+CommandeObject.PointVenteID+')');
+			
+    DMS.Mobile.Common.Alert("Fin insertion Commandes");       																																
+},
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////SELECT From LOcal //////////////////////////////////////////   
+
+	SelectAll : function (callback)
+	{
+		var form = this;
+		this.connexion.transaction(function(tx){ form.SelectFromCommande(tx, form,callback); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromCommande");});
+	}, 
+	
+     SelectFromCommande : function(requete,form,callback) {
    
-   			requete.executeSql('SELECT * FROM Commandes', [], function(tx, results) {form.querySuccess(tx,results,form);});
+   			requete.executeSql('SELECT * FROM Commandes', [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
        
-    },
+},
     
     
-    errorselectFromCommande:function (err) {
-   alert("errorselectFromCommande : " + err.message);   
-    },
-    
-    
-    querySuccess:function (requete, results,form) {
-        //alert("tx = " + requete);
+    querySuccess:function (requete, results,form,callback) {
+  
 							var len = results.rows.length;
         
-							//alert("Commande table: " + len + " rows found.");
+							
 						
 							for (var i=0; i<len; i++){
-								//alert("Row = " + i + " ID = " + results.rows.item(i).CommandeID);
+								
 		   
 								var oCommande = new DMS.Mobile.Commande();
 								oCommande.CommandeID = results.rows.item(i).CommandeID;
@@ -54,44 +148,14 @@ DMS.Mobile.CommandeRequest =
 							    oCommande.CommercialID = results.rows.item(i).CommercialID;
         						form.CommandeList.push(oCommande);
         						
-							}
-							
-form.displayCommande(form.CommandeList,form);
-        
+							}							
+callback(form.CommandeList);       
                     
     },
        
-    displayCommande : function(array,form){
-   	/*for(var i =0;i<array.length;i++){
-    	var obj = form.objToString(array[i]);
-    	alert(obj);
-		} */
-		
-		//$("#example").append("<tbody></tbody>");
-    	for(var i =0;i<array.length;i++){
-    	
-			$("#example tbody").append(""
-					+"<tr id='tr'>"
-					+"<td>"+ array[i].CAB+"<a href ='Article.html' data-transition='slide' data-direction='reverse'></a></td>"
-					+"<td>"+ array[i].DateLivraisonPrevue+"</td>"
-					+"<td>"+ array[i].PointVenteID+"</td>"
-					+"<td>"+ array[i].PrixTotalHT+"</td>"
-					+"<td>"+ array[i].PrixTotalTTC+"</td>"
-					+"</tr>");
-			}
-		
-		}  ,
-	       
-      objToString :function(obj) {
-	    
-	    var str = '';
-	    for (var p in obj) {
-	        if (obj.hasOwnProperty(p)) {
-	            str += p + '::' + obj[p] + '\n';
-	        }
-	    }
-	    return str;
-		}     
+       
+   
 
-    
+       
+       
 }
