@@ -124,8 +124,8 @@ DMS.Mobile.Login =
 								  sessionStorage.setItem("ListMission", JSON.stringify(listMission));
 								  sessionStorage.setItem("ListClient", JSON.stringify(listClient));
 								//  DMS.Mobile.Common.RedirectToCalendrier();
-								alert("verifyIntoPointVente");
-								DMS.Mobile.PositionRequest.VerifyIntoPointVente();
+								alert("InitializeGetPosition");
+								DMS.Mobile.PositionRequest.InitializeGetPosition();
 				 
 			 },personnel.PersonnelID);	 
 			 },personnel.PersonnelID);	 

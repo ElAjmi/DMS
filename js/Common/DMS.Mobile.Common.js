@@ -11,7 +11,7 @@ DMS.Mobile.Common =
 	modeDebug : false,
 	ServeurUrl : "http://192.168.1.8:80/ninject/Service1.svc/",
 	//ServeurUrl : "http://127.0.0.1:32173/Service1.svc/",
-	PositionDelay : 3000,
+	PositionDelay : 120000,
 	Perimetre : 5,
 	
 		

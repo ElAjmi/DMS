@@ -12,18 +12,20 @@
 		
 		InitializeGetPosition : function ()
 		{
+			alert("apperl Initisalise get postion");
 			var form = this;
 			DMS.Mobile.PositionRequest.connexion = this.connexion;
+			
 			setInterval(DMS.Mobile.PositionRequest.GetPositionFromGPS(function(position){form.VerifyIntoPointVente(position,form);}), DMS.Mobile.Common.PositionDelay);
 		},
 	
 	
 	
-	//	VerifyIntoPointVente : function(position,form)
-		VerifyIntoPointVente : function()
+		VerifyIntoPointVente : function(position,form)
+		//VerifyIntoPointVente : function()
 		{
 				alert("verify into pv");
-			var form = this;
+			//var form = this;
 			
 			var listPointVente = JSON.parse(sessionStorage.getItem("ListPointVente"));
 			var listMission = JSON.parse(sessionStorage.getItem("ListMission"));
@@ -32,10 +34,11 @@
 			 {
 				 var DistanceMin = DMS.Mobile.Common.Perimetre;
 				var pointVenteID = 0;
-				//var lat2 = position.Latitude;
-				//var long2 = position.Longitude;
-				var lat2 = 36.837866465399735;
-				var long2 = 10.166752338409424;
+				var lat2 = position.Latitude;
+				var long2 = position.Longitude;
+				alert ("latitute gps = "+lat2+" longitude gps = "+long2);
+				//var lat2 = 36.837866465399735;
+				//var long2 = 10.166752338409424;
 				for (var i = 0;i<listPointVente.length;i++)
 				{
 					
@@ -250,22 +253,26 @@
 		
 		GetPositionFromGPS : function (ReturnPosition,form)
 		{
+			alert("get position from gps");
 			 navigator.geolocation.getCurrentPosition(function(position){form.InsertPosition(ReturnPosition,form,position);}, form.errors);
 		},
 		
 		
 		InsertPosition : function(ReturnPosition,form,position)
 		{
+			alert("insert position");
 			form.connexion.transaction(function(tx){ form.InsertPositionIntoLocal(tx, form,position) ;}, form.errors,function(){form.SucessInsert(ReturnPosition,form,position);});
 		},
 		
 		InsertPositionIntoLocal : function (requete, form,position)
 		{
+			alert("insert position into local");
 			requete.executeSql('INSERT INTO Positions (PersonnelID,Latitude,Longitude,Date,IMEI) VALUES('+sessionStorage.getItem("userID")+',"'+position.coords.latitude+'","'+position.coords.longitude+'","'+DMS.Mobile.Dates.Dayformat(new Date())+'","")');
 		},
 		
 		SucessInsert : function(ReturnPosition,form,position)
 		{
+			alert("secess insert position");
 			var oPosition = new DMS.Mobile.Position();
 			oPosition.PersonnelID = sessionStorage.getItem("userID");
 			oPosition.Latitude = position.coords.latitude;
