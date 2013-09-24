@@ -25,7 +25,7 @@
             });  
     	</script>
 	
-	
+    	
 	<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.MissionRequest.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Mission.js"></script>	
 	
@@ -47,19 +47,14 @@
 	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Ville.js"></script>	
     
      <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ActiviteRequest.js"></script>
-	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Activite.js"></script>	
-    
-     <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Position.js"></script>
-     <script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PositionRequest.js"></script>
-    
-	<script src="js/ViewModel/DMS.Mobile.CalendrierViewModel2.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Activite.js"></script>
     
     <script src="js/Common/DMS.Mobile.Dates.js"></script>
     <script src="js/Common/DMS.Mobile.Notification.js"></script>
     <script src="js/Common/DMS.Mobile.Common.js"></script>
     <script src="js/Common/DMS.Mobile.Constante.js"></script>
     
-    
+    <script src="js/ViewModel/DMS.Mobile.MissionsParPointVenteViewModel.js"></script>
 
 	
 	<script>
@@ -68,11 +63,12 @@
   
   function InitConnection() {
 		DB = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-		DMS.Mobile.CalendrierViewModel.connexion = DB;
+		DMS.Mobile.MissionsParPointVenteViewModel.connexion = DB;
    }
            
   function InitViewCalendrier(){
-		DMS.Mobile.CalendrierViewModel.init();
+	  DMS.Mobile.MissionsParPointVenteViewModel.$MissionsContainer = ("#tablemissions");
+		DMS.Mobile.MissionsParPointVenteViewModel.init();
 		
   }      
   </script>
@@ -86,9 +82,16 @@
 	</script>
 
 		
-</head> 
+  	    </head> 
 <body> 
-
-
+<div data-role='page' data-content-theme='c' id='page'>
+		<div data-role='header' data-theme='b'>
+			<h1>Missions Par Point De Vente</h1>
+		 </div>
+		 <div data-role='content'>
+         	<div><h3>Missions tri&eacute;es par degr&eacute; d'urgence :</h3></div>
+			<div id='tablemissions'></div>
+		</div>
+		</div>
 </body>
 </html>

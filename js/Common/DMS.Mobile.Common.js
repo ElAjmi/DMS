@@ -7,33 +7,146 @@ DMS.Mobile.Common = {};
 
 DMS.Mobile.Common = 
 {
-	AcceeServeur: true,
+	 
+	AcceeServeur: null,
 	modeDebug : false,
-	ServeurUrl : "http://192.168.1.8:80/ninject/Service1.svc/",
-	//ServeurUrl : "http://127.0.0.1:32173/Service1.svc/",
-	PositionDelay : 120000,
-	Perimetre : 5,
+//	configuration : this.GetConfiguration,
+	//ServeurUrl : "http://192.168.1.8:80/ninject/Service1.svc/",
+	//PositionDelay :12000 ,
+	//Perimetre : 5,
+	//ServeurUrl : configuration.URL,
+	//PositionDelay : configuration.Frequence,
+	//Perimetre : configuration.Perimetre,
 	
+	
+	
+	init : function(callback)
+	{
+		try
+		{
+			var Conf = JSON.parse(localStorage.getItem("Configuration"));
+			
+			if (Conf == null)
+			{
+					configurationDTO = new DMS.Mobile.Configuration();
+	
+						configurationDTO.Frequence = 12000;
+						configurationDTO.Perimetre = 5;
+						configurationDTO.URL = "http://192.168.1.8:80/ninject/Service1.svc/";
+						
+						
+						  localStorage.setItem("Configuration", JSON.stringify(configurationDTO));
+			}
+	
+		   callback();
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+		}
+	
+	},
+		
+		
+		
 		
 		ParseDateJson : function(d)
 		{
-			var date = new Date(parseInt(d.slice(6, -2)));
-				var day = date.getDate() ;
-				var month = (1+date.getMonth());
-				var year = date.getFullYear().toString();
-				
-				if ((1<= day)&&(day<=9))
+			try
+			{
+				//var date = new Date(eval(d.split('/').reverse().join('')));
+				var date = eval("new "+ d.split('/').reverse().join(''));
+					var day = date.getDate();
+					var month = (1+date.getMonth());
+					var year = date.getFullYear().toString();
+					
+					if (day < 10)
+					{
+						 day = "0"+day;
+					}
+					if (month < 10)
+					{
+						 month = "0"+month;
+					}
+					
+						return(day + '/' + month + '/'  + year);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+			}
+		},
+		ParseHeureJson : function(d)
+		{
+			try
+			{
+				var date = eval("new "+ d.split('/').reverse().join(''));
+				var hours = (date.getHours())+1;
+				var minutes = date.getMinutes();
+				if(hours < 10)
 				{
-					var day = "0"+day;
+					hours = "0"+hours;
 				}
-				if ((1<= month)&&(month<=9))
+				if(minutes < 10)
 				{
-					var month = "0"+month;
+					minutes = "0"+minutes;
 				}
 				
-				 	return(day + '/' + month + '/'  + year);
+				return(hours+':'+minutes);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+			}
 		},		
-		
+		currentHours : function()
+		{
+			try
+			{
+				var date = new Date;
+				var hours = (date.getHours())+1;
+				var minutes = date.getMinutes();
+				if(hours < 10)
+				{
+					hours = "0"+hours;
+				}
+				if(minutes < 10)
+				{
+					minutes = "0"+minutes;
+				}
+				
+				return(hours+':'+minutes);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+			}
+		},
+		currentDate : function()
+		{
+			try
+			{
+				var date = new Date;
+				var day = date.getDate();
+					var month = (1+date.getMonth());
+					var year = date.getFullYear().toString();
+					
+					if (day < 10)
+					{
+						 day = "0"+day;
+					}
+					if (month < 10)
+					{
+						 month = "0"+month;
+					}
+					
+						return(day + '/' + month + '/'  + year);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+			}
+		},
 		
 	DisplayProperty :function(obj)
 	 {
@@ -74,6 +187,15 @@ DMS.Mobile.Common =
 		window.location = './FormulaireCommande.html';
 	},
 	
+	RedirectToListeCommandes : function()
+	{
+		window.location = './Commande.html';
+	},
+	
+	RedirectionToMissionsParPointVente: function()
+	{
+		window.location = './MissionsPV.html';
+	},
 	
 	DrawLoading : function()
 
@@ -111,9 +233,14 @@ DMS.Mobile.Common =
 						dataType: "jsonp",
 				
 						success: function(msg) {
+							form.AcceeServeur = true;
 							DMS.Mobile.Common.Alert("result = " + msg);
 							form.ServiceSucceeded(msg,callback,form1);
 						},  
+						 error: function (msg) {
+							 form.AcceeServeur = false;
+                             form.ServiceFailed(msg);
+                        }
 					});
 			
 	         
@@ -140,33 +267,29 @@ DMS.Mobile.Common =
 			   callback(JsonObject,form);			   
 		},
 	
-	/*TestServer: function()
+	TestServer: function(callback)
 	{
+		var form = this;
+		var methode = "TestServer?";
+		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 
+		 var form = this;
+		    DMS.Mobile.Common.CallService(function(Json,Form){callback(form.AcceeServeur);},URL,form);
+	},
 		
-		}*/
-		
-/*	Pinger_ping : function(ip, callback) 
-	{
-
-			  if(!this.inUse) {
-			
-				this.inUse = true;
-				this.callback = callback
-				this.ip = ip;
-			
-				var _that = this;
-			
-				this.img = new Image();
-			
-				this.img.onload = function() {_that.good();};
-				this.img.onerror = function() {_that.good();};
-			
-				this.start = new Date().getTime();
-				this.img.src = "http://" + ip;
-				this.timer = setTimeout(function() { _that.bad();}, 1500);
-			
-			  }
-	}
+	/*	TestServerFunction : function(json,form)
+		{
+			if ( json != null)
+			{
+				form.AcceeServeur = json;
+			}
+		    else 
+		    {
+				form.AcceeServeur = false;
+			}
+			   
+		},
+	
 	*/
 	
 	

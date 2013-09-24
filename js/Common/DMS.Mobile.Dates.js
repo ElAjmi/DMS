@@ -60,8 +60,16 @@ SplitDate : function(date){
 	jour = elem[0];
 	mois = elem[1];
 	annee = elem[2];
-	return ''+mois+'/'+jour+'/'+annee;//format yyyy-mm-dd
-	}
-	
+	return ''+jour+'/'+mois+'/'+annee;//format yyyy-mm-dd
+	},
+
+DateSpliting : function(date){
+	//var elem = date.split('/');
+	var elem = date.split('-');
+	jour = elem[0];
+	mois = elem[1];
+	annee = elem[2];
+	return ''+jour+'/'+mois+'/'+annee;//format yyyy-mm-dd
+	}	
 
 }

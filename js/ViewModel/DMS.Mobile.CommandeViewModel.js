@@ -25,6 +25,7 @@ DMS.Mobile.CommandeViewModel =
     
 	$tablecommande:null,
 	
+	LastCommande : null,
 	
 	$EnvoyerCommande : null,
 	$PVInfos : null,
@@ -54,6 +55,14 @@ DMS.Mobile.CommandeViewModel =
     	//alert("in init");
 		var form = this ;
 		
+		DMS.Mobile.CommandeRequest.connexion = form.connexion;
+		DMS.Mobile.CommandeRequest.SelectLastCommande(function(oCommande){ //----------------------->
+			 //alert("* "+oCommande.CommandeID);
+			form.LastCommande = oCommande; 
+			//alert("* "+form.LastCommande.CommandeID);
+		});
+		
+		
 		DMS.Mobile.ClientRequest.connexion = this.connexion;
 		DMS.Mobile.ClientRequest.SelectAllClient(function(ListClient){form.initializeClient(ListClient,form)});
 		
@@ -61,10 +70,12 @@ DMS.Mobile.CommandeViewModel =
 		DMS.Mobile.PointVenteRequest.SelectAllPointVente(function(ListPointVente){form.initializePointVente(ListPointVente,form)});
 		
 		DMS.Mobile.ArticleRequest.connexion = this.connexion;
-		DMS.Mobile.ArticleRequest.SelectAll(function(ListArticle){form.Initialize(ListArticle,form)});
+		DMS.Mobile.ArticleRequest.SelectAllArticles(function(ListArticle){form.Initialize(ListArticle,form)});
 		
 		DMS.Mobile.CommandeRequest.connexion = this.connexion;
-			
+		
+		
+       
 		
 		//----------------Hamza	
 		form.getSessionStorage(form);
@@ -102,12 +113,14 @@ DMS.Mobile.CommandeViewModel =
 		form.InsertArticle(form.ArticleArray,form);
 		form.InitializeEvents(form.ArticleArray,form);
 		
-		alert("from Initialize is "+form);
+		//alert("from Initialize is "+form);
 	},
 	
 	InitializeEvents: function (ListArticle,Form) {
 		var form = Form;
-		alert("from InitializeEvents is "+form);
+		form.Commande.CommandeID = (form.LastCommande.CommandeID)+1 ;//------------------------------------>
+		
+		//alert("from InitializeEvents is "+form);
 		form.InsertDetailsArticle(ListArticle,form);
 		
 		$('#tablecommande .quantite').change(function() {
@@ -122,7 +135,7 @@ DMS.Mobile.CommandeViewModel =
 			 
 					var selectClientID = $('#selectClient :selected').val();
 					form.Commande.ClientID =  $('#selectClient :selected').val();
-					alert("Client ID is "+form.Commande.ClientID);
+					//alert("Client ID is "+form.Commande.ClientID);
 					$(form.$SelectPointVente).empty();
 					$(form.$PVInfos).empty();
 					
@@ -134,7 +147,7 @@ DMS.Mobile.CommandeViewModel =
 		 $(form.$SelectPointVente).change(function() {
 					var selectPointVenteID = $('#selectPointVente :selected').val();
 					form.Commande.PointVenteID =  $('#selectPointVente :selected').val();
-					alert("PV is "+form.Commande.PointVenteID);
+					//alert("PV is "+form.Commande.PointVenteID);
 				//	alert("selected is"+$('#selectPointVente :selected').val());
 				//	alert("FillPointVenteInfos");
 					$(form.$PVInfos).empty();
@@ -146,27 +159,41 @@ DMS.Mobile.CommandeViewModel =
 	//----------------Hamza	
 		
         $(form.$EnvoyerCommande).click(function () {
-
-        	
-			alert("commande " + form.Commande);
-			alert("lignescommandes " + form.ListLigneCommande);
-			//-------
-			form.Commande.CAB ="abc";
-			form.Commande.DateCreation ="16/09/2013";
-			form.Commande.EtatCommande = 1;
-			form.Commande.CodeCommande = 5566;
+		
+			//alert("commande " + form.Commande);
+			//alert("lignescommandes " + form.ListLigneCommande);
+			//------------------------------------------------------------------------>
+			var curr = new Date();
+			var DateCreation = DMS.Mobile.Dates.Dayformat(curr);
+			DateCreation = DMS.Mobile.DateSpliting(DateCreation.toString());
+			
+			var DateLivraisonPrevue = DMS.Mobile.DateSpliting($(form.$DateLivraisonPrevue).val());
+			
+			form.Commande.CAB = null ;
+			form.Commande.DateCreation = DateCreation;
+			form.Commande.EtatCommande = DMS.Mobile.Constante.EtatCommande.NonValidee;
+			form.Commande.CodeCommande = null;
 			form.Commande.CommercialID = 9999;
 			form.Commande.synch = "false";
-			form.Commande.DateLivraisonPrevue = $(form.$DateLivraisonPrevue).val();
+			
+			form.Commande.DateLivraisonPrevue = DateLivraisonPrevue;
 			//----------------
-
+			
+			for(var i=0;i<form.ListLigneCommande.length;i++){
+				form.ListLigneCommande[i].CommandeID = form.Commande.CommandeID ;
+			}
+			
 			DMS.Mobile.CommandeRequest.connexion = form.connexion;
+			DMS.Mobile.LigneCommandeRequest.connexion = form.connexion;
 
 			DMS.Mobile.CommandeRequest.InsertCommande(function(){
-				for(var i=0;i<form.ListLigneCommande.length;i++){
+				
+				for(var i=0;i<form.ListLigneCommande.length;i++)
+				{
 				DMS.Mobile.LigneCommandeRequest.insertLigneCommande(form.ListLigneCommande[i]);
 				}
-				},form.Commande)
+				
+				},form.Commande);
 			
 			
 
@@ -240,13 +267,17 @@ DMS.Mobile.CommandeViewModel =
 	UpdateCommandedArticle :function (element,form)
 	{
 		
-
+		
+		
+		
 		var articleID = $(element).attr("id").substr(5);
 		//alert("UpdateCommandedArticle " + articleID);
 		var quantite = $.trim($(element).val());
 		//alert("quantite " + quantite);
 		var PrixunitaireHT = parseFloat($(element).parent().parent().find("input:eq(1)").val());
+		var PrixunitaireTTC = parseFloat($(element).parent().parent().find("input:eq(2)").val());
 		//alert("PrixunitaireHT " + PrixunitaireHT);
+		//alert("PrixunitaireTTC " + PrixunitaireTTC);
 		if (quantite != "" && quantite != 0){
 			quantite = parseInt(quantite);
 		}
@@ -260,8 +291,8 @@ DMS.Mobile.CommandeViewModel =
 		
 		for(var i = 0;i<form.ListLigneCommande.length;i++)
 		{
-			alert("Article ID 1 "+form.ListLigneCommande[i].ArticleID);
-			alert("Article ID 2 "+articleID);
+			//alert("Article ID 1 "+form.ListLigneCommande[i].ArticleID);
+			//alert("Article ID 2 "+articleID);
 
 			
 			if(form.ListLigneCommande[i].ArticleID == articleID)
@@ -284,9 +315,10 @@ DMS.Mobile.CommandeViewModel =
 				
 
 				ligneCommande.Quantite = quantite;
-				ligneCommande.PrixTotalArticleTTC = 0;
-				ligneCommande.PrixTotalArticleHT = (PrixunitaireHT*quantite);
-				//alert("PrixTotalArticleHT is "+ligneCommande.PrixTotalArticleHT);
+				ligneCommande.PrixTotalArticleTTC = (PrixunitaireTTC * quantite).toFixed(3)
+				ligneCommande.PrixTotalArticleHT = (PrixunitaireHT * quantite).toFixed(3)
+				ligneCommande.PrixTotalArticleTTC  = parseFloat(ligneCommande.PrixTotalArticleTTC);
+				ligneCommande.PrixTotalArticleHT  = parseFloat(ligneCommande.PrixTotalArticleHT);
 				ligneCommande.ArticleID = articleID;
 				form.ListLigneCommande.push(ligneCommande);
 			}
@@ -300,8 +332,10 @@ DMS.Mobile.CommandeViewModel =
 
 				
 				ligneCommande.Quantite = quantite;
-				ligneCommande.PrixTotalArticleTTC = null;
-				ligneCommande.PrixTotalArticleHT = (PrixunitaireHT*quantite);
+				ligneCommande.PrixTotalArticleTTC = (PrixunitaireTTC * quantite).toFixed(3);
+				ligneCommande.PrixTotalArticleHT = (PrixunitaireHT * quantite).toFixed(3);
+				ligneCommande.PrixTotalArticleTTC  = parseFloat(ligneCommande.PrixTotalArticleTTC);
+				ligneCommande.PrixTotalArticleHT  = parseFloat(ligneCommande.PrixTotalArticleHT);
 				ligneCommande.ArticleID = articleID;
 				form.ListLigneCommande[index]= ligneCommande;
 			}
@@ -331,16 +365,23 @@ DMS.Mobile.CommandeViewModel =
 
 			//alert("totalTTC"+totalTTC);
 		}
-		 totalTVA = ((totalHT / totalTTC) * 100);
+		
+		 
+		 totalHT = totalHT.toFixed(3);
+		 totalTTC = totalTTC.toFixed(3);
+		 totalTVA =  totalTTC - totalHT ;
+		 totalTVA  = totalTVA.toFixed(3);
 		 form.Commande.PrixTotalHT = totalHT;
 		 form.Commande.PrixTotalTTC = totalTTC;
-		 form.Commande.TotalTVA = 0;
-		 form.$PrixTotalHT.text("Prix Total HT : "+totalHT);
-		 form.$PrixTotalTTC.text("Prix Total TTC : "+totalTTC );
-		 form.$TotalTVA.text("Total TVA : "+totalTVA+"%");
+		 form.Commande.TotalTVA = totalTVA;
+		 
+		
+		 
+		 form.$PrixTotalHT.text("Prix Total HT : "+totalHT+" DT");
+		 form.$PrixTotalTTC.text("Prix Total TTC : "+totalTTC+" DT");
+		 form.$TotalTVA.text("Total TVA : "+totalTVA+" DT");
 
 	},
-	
 	
 	
 	InsertDetailsArticle : function (ListArticle,form) {
@@ -408,7 +449,7 @@ DMS.Mobile.CommandeViewModel =
 	  FillPointVente : function (ListPointVente,form,selectClientID){
 		  for (var i=0; i<ListPointVente.length ; i++ ){
 		  if (ListPointVente[i].ClientID == selectClientID){
-								$(form.$SelectPointVente).append("<option value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Adresse+"</option>").trigger('create'); 
+			$(form.$SelectPointVente).append("<option value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Adresse+"</option>").trigger('create'); 
 							}
 						}
 		  },  
@@ -477,9 +518,10 @@ DMS.Mobile.CommandeViewModel =
 				for(var j=0;j<tmpArray.length;j++){
 					var tmpID = tmpArray[j].ArticleID;
 					var tmpPu = tmpArray[j].PrixUnitaireHT;
+					var tmpPuttc = tmpArray[j].PrixUnitaireTTC;
 				  // alert("tmpPu"+tmpPu);
 				
-					$("#tbody"+familleID).append("<tr><th id='th"+tmpID+"'>"+""+"</th><td id='td"+tmpID+"'><input type='number' id='input"+tmpID+"' data-clear-btn='true' class='ui-input-text ui-body-c quantite'/><input id='pu"+tmpID+"'  type='hidden' value='"+tmpPu+"'/></td></tr>").trigger('create');
+					$("#tbody"+familleID).append("<tr><th id='th"+tmpID+"'>"+""+"</th><td id='td"+tmpID+"'><input type='number' id='input"+tmpID+"' data-clear-btn='true' class='ui-input-text ui-body-c quantite'/><input id='pu"+tmpID+"'  type='hidden' value='"+tmpPu+"'/><input id='puttc"+tmpID+"'  type='hidden' value='"+tmpPuttc+"'/></td></tr>").trigger('create');
 					}
 			
 				if(k%2==0){

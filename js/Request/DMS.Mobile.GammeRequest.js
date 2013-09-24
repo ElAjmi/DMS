@@ -11,23 +11,26 @@ DMS.Mobile.GammeRequest =
 		ListGamme : [],
 				
 	
-GetListGammeFromServer : function()
+GetListGammeFromServer : function(callbackViewModel)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		var ServeurURL	= Conf.URL;
 		DMS.Mobile.Common.Alert("get list gamme from server");
-		 var methode = "GetListGammeDTO";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		var methode = "GetListGammeDTO";
+		var URL = ServeurUrl+methode;
 		 
 		 var form = this;
-		    DMS.Mobile.Common.CallService(this.CreateGammeDTO,URL,form);
+		    DMS.Mobile.Common.CallService(function(json,Form){form.CreateGammeDTO(JsonObject,Form,callbackViewModel);},URL,form);
 		
 	},
 	
 	
-CreateGammeDTO : function (json,form)
+CreateGammeDTO : function (json,form,callbackViewModel)
 	{
 		if ( json != null)
 		{
 			var synch = "true";
+			var len =json.length;
 
 			for (var i=0;i<json.length;i++)
 			{
@@ -40,33 +43,38 @@ CreateGammeDTO : function (json,form)
 			gammeDTO.ListRelevePresencePrixConcurrents = json[i].RelevePresencePrixConcurrents;
 			gammeDTO.ListRelevePrix = json[i].RelevePrix;
 			
-			form.ListGamme.push(gammeDTO);
+			form.insertGamme(gammeDTO,synch,form,len,callbackViewModel);
 			}
-			form.SaveListGammeInLocal(form.ListGamme,synch,form);
+
 		}
-		else{return null;}	
+		else{callbackViewModel(form.ListGamme);}	
 	},
 	
-	SaveListGammeInLocal : function(gammeDTO,synch,form)
+	
+	insertGammeIntoArray : function(Gamme,form,len,callbackViewModel)
 	{
-	DMS.Mobile.Common.Alert("length : " +gammeDTO.length);
-		for (var i=0; i<gammeDTO.length;i++)
+		form.ListGamme.push(Gamme)
+		if(form.ListGamme.length == len)
 		{
-		form.InsertGamme(gammeDTO[i],synch,form);
-		DMS.Mobile.Common.Alert("Fin insertion de Gamme : "+i); 
+			callbackViewModel(form.ListGamme);
 		}
+	},
+	
+	insertGamme : function(gamme,synch,form,len,callbackViewModel)
+	{
+	      form.InsertGammeIntoLOCAL(gamme,synch,form,len,callbackViewModel);
 	},
 	
 		
-InsertGamme: function(GammmeObject,synch,formReq) {
+InsertGammeIntoLOCAL: function(GammeObject,synch,formReq,len,callbackViewModel) {
        
-	     formReq.connexion.transaction(function(tx){ formReq.InsertIntoGamme(tx, formReq,GammmeObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoGamme");}); 
+	     formReq.connexion.transaction(function(tx){ formReq.InsertIntoGamme(tx, formReq,GammeObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoGamme");},function(){formReq.insertGammeIntoArray(GammeObject,formReq,len,callbackViewModel);}); 
 					   		
 },
 
-InsertIntoGamme : function(requete,form,GammmeObject,synch) {
+InsertIntoGamme : function(requete,form,GammeObject,synch) {
    
-			requete.executeSql('INSERT INTO Gammes (GammeID, Designation, Synch) VALUES('+GammmeObject.GammeID+',"'+GammmeObject.Designation+'","'+synch+'")');
+			requete.executeSql('INSERT INTO Gammes (GammeID, Designation, Synch) VALUES('+GammeObject.GammeID+',"'+GammeObject.Designation+'","'+synch+'")');
 			
     DMS.Mobile.Common.Alert("Fin insertion Gamme dans la BD");       																																
 },

@@ -8,7 +8,7 @@ DMS.Mobile.BD = {};
 DMS.Mobile.BD = 
 {
 	connexion : null,
-	InsertTestElement :false,
+	InsertTestElement : false,
 	
 	Initialize : function()
 	{
@@ -46,6 +46,7 @@ DMS.Mobile.BD =
 			form.connexion.transaction(form.insertIntoMissions, form.InsertErrorFunction);
 			form.connexion.transaction(form.insertIntoActivite, form.InsertErrorFunction);
 			form.connexion.transaction(form.insertIntoClient, form.InsertErrorFunction);
+			form.connexion.transaction(form.insertIntoLigneCommande, form.InsertErrorFunction);
 			
 		}
 	},
@@ -152,8 +153,11 @@ DMS.Mobile.BD =
 		requete.executeSql(	"	CREATE TABLE IF NOT EXISTS [Tournees] ("+
 								"[TourneeID] INTEGER  PRIMARY KEY  NOT NULL,"+
 								"[DateDebut] DATE  NULL,"+
+								"[HeureDebut] NVARCHAR(50)  NULL,"+
 								"[DateFin] DATE NULL,"+
+								"[HeureFin] NVARCHAR(50) NULL,"+
 								"[DateCreation] DATE  NULL,"+
+								"[HeureCreation] NVARCHAR(50)  NULL,"+
 								"[EtatTournee] INTEGER  NOT NULL,"+
 								"[Synch] BOOLEAN NOT NULL,"+
 								"[TerminalID] INTEGER  NULL,"+
@@ -171,8 +175,9 @@ DMS.Mobile.BD =
 								"[Latitude] FLOAT NULL,"+
 								"[Longitude] FLOAT  NULL,"+
 								"[Date] DATE NULL,"+
+								"[Heure]  NVARCHAR(50) NULL,"+
 								"[IMEI] VARCHAR(50)  NULL,"+
-								"[Synch] BOOLEAN NOT NULL,"+
+								"[Synch] BOOLEAN  NULL,"+
 								"FOREIGN KEY(PersonnelID) REFERENCES Personnel(PersonnelID)"+
 							")"	);
 
@@ -180,15 +185,17 @@ DMS.Mobile.BD =
 		                            
 									"[CommandeID] INTEGER  PRIMARY KEY  NOT NULL,"+
 									
-									"[CAB] VARCHAR(30)  NOT NULL,"+
+									"[CAB] VARCHAR(30)  NULL,"+
 									"[DateCreation] DATE  NOT NULL,"+
+									"[HeureCreation] VARCHAR(50)  NOT NULL,"+
 									"[DateLivraisonPrevue] DATE  NOT NULL,"+
+									"[HeureLivraisonPrevue] VARCHAR(50)  NOT NULL,"+
 									"[EtatCommande] INTEGER  NOT NULL,"+
 									
 									"[PrixTotalTTC] FLOAT  NOT NULL,"+
 									"[PrixTotalHT] FLOAT  NOT NULL,"+
 									"[TotalTVA] FLOAT  NULL,"+
-									"[CodeCommande] NVARCHAR(50)  NULL,"+
+									"[CodeCommande] NVARCHAR(50) NULL,"+
 									
 									"[Synch] BOOLEAN NOT NULL,"+
 									"[CommercialID] INTEGER  NOT NULL,"+
@@ -201,7 +208,7 @@ DMS.Mobile.BD =
 								   
 				requete.executeSql( "CREATE TABLE IF NOT EXISTS [LigneCommande] ("+
 									
-									"[LigneCommandeID] INTEGER PRIMARY KEY AUTOINCREMENT,"+
+									"[LigneCommandeID] INTEGER PRIMARY KEY NOT NULL,"+
 									"[Quantite] INTEGER  NOT NULL,"+
 									"[PrixTotalArticleTTC] FLOAT  NOT NULL,"+
 									"[PrixTotalArticleHT] FLOAT  NOT NULL,"+
@@ -220,8 +227,11 @@ DMS.Mobile.BD =
 								"[MissionID] INTEGER  NOT NULL PRIMARY KEY ,"+
 								"[EtatMission] INTEGER  NULL,"+
 								"[DateCreation] DATE NOT NULL,"+
+								"[HeureCreation] VARCHAR(50) NOT NULL,"+
 								"[DegreUrgence] INTEGER  NULL,"+
 								"[DateCloture] DATE  NULL,"+
+								"[HeureCloture] NVARCHAR(50)  NULL,"+
+								
 							    "[Commentaires] TEXT  NULL,"+
 								"[TypeMissionID] INTEGER  NOT NULL,"+
 								"[Synch] BOOLEAN NOT NULL,"+
@@ -268,6 +278,15 @@ DMS.Mobile.BD =
 						"[Designation] NVARCHAR(100)  NOT NULL,"+
 						"[Synch] BOOLEAN NOT NULL"+
 						")");
+						
+			requete.executeSql("CREATE TABLE IF NOT EXISTS [Configuration] ("+
+						"[ConfigurationID] INTEGER NOT NULL PRIMARY KEY,"+
+						"[URL] NVARCHAR(200)  NOT NULL,"+
+						"[Synch] BOOLEAN NOT NULL,"+
+						"[Perimetre] INTEGER  NOT NULL,"+
+						"[Frequence] INTEGER NOT NULL"+
+						
+						")");
 			
 			
 																							       
@@ -281,14 +300,14 @@ DMS.Mobile.BD =
 	insertIntoArticle : function (requete) {
       alert("insertIntoArticle");
             
-            requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1271, "Crostina lait", 12,12, "w4e5r6", 12, 1223, "True")');
-            requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1272, "Crostina Vanille", 13,13, "gzt654", 45, 1223, "True")');
-             requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1285, "Sablito Fraise", 13,13, "gzt654", 45, 1224, "True")');
-			  requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1286, "Sablito Chocolat", 13,13, "gzt654", 45, 1224, "True")');
-			   requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1287, "Major Banane", 13,13, "gzt654", 45, 1225, "True")');
-      			requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1246, "Major Fraise", 13,13, "gzt654", 45, 1225, "True")');
-			   requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1247, "Major Chocolat", 13,13, "gzt654", 45, 1225, "True")');
-			     requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1220, "Gauchou", 13,13, "gzt654", 45, 1226, "True")');
+            requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1271, "Crostina lait", 0.700,0.720, "w4e5r6", 12, 1223, "True")');
+            requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1272, "Crostina Vanille", 0.230,0.250, "gzt654", 45, 1223, "True")');
+             requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1285, "Sablito Fraise", 0.870,0.900, "gzt654", 45, 1224, "True")');
+			  requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1286, "Sablito Chocolat", 0.200,0.250, "gzt654", 45, 1224, "True")');
+			   requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1287, "Major Banane", 0.900,1.000, "gzt654", 45, 1225, "True")');
+      			requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1246, "Major Fraise", 1.080,1.120, "gzt654", 45, 1225, "True")');
+			   requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1247, "Major Chocolat", 0.500,0.600, "gzt654", 45, 1225, "True")');
+			     requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1220, "Gauchou", 0.600,0.700, "gzt654", 45, 1226, "True")');
 },
     
   insertIntoFamille : function (requete) {
@@ -345,13 +364,13 @@ insertIntoPersonnel : function (requete) {
 insertIntoTournees : function (requete) {
       alert("insertIntoTournee"); 
             
-            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (1,"16/09/2013","14/02/2013","11/02/2013",1,"false",1,1,1,1,1223)');
-            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (22,"17/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
-			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (3,"18/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
-			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (4,"19/09/2013","14/02/2013","11/02/2013",1,"false",1,1,1,1,1223)');
-            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (5,"20/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
-			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (66,"21/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
-			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (7,"22/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
+            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (1,"23/09/2013","14/02/2013","11/02/2013",1,"false",1,1,1,1,1223)');
+            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (2,"24/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (3,"25/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (4,"26/09/2013","14/02/2013","11/02/2013",1,"false",1,1,1,1,1223)');
+            requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (5,"27/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (6,"28/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (7,"29/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
              
        
 },
@@ -415,8 +434,21 @@ insertIntoPointVentes : function (requete) {
 
 insertIntoCommande : function (requete) {
       alert("insertIntoCommande"); 
-            requete.executeSql('INSERT INTO Commandes (CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,CommandeID,Synch,CommercialID,PointVenteID) VALUES (1213,"12/02/2012","14/02/2012",1,10.500,11.200,1.504,12,10,"false",1223,235)');
-          	      
+            requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (1,1111,"12/02/2012","14/02/2012",0,10.500,11.200,0.504,12,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (2,2222,"12/02/2012","14/02/2012",1,10.500,11.200,1.504,12,"true",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (3,3333,"12/02/2012","14/02/2012",2,10.500,11.200,2.504,12,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (4,4444,"12/02/2012","14/02/2012",3,10.500,11.200,3.504,12,"true",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (5,5555,"12/02/2012","14/02/2012",4,10.500,11.200,4.504,12,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (6,6666,"12/02/2012","14/02/2012",5,10.500,11.200,5.504,12,"false",1223,235)');
+			
+},
+
+insertIntoLigneCommande : function (requete){
+	alert("insertIntoLigneCommande"); 
+	requete.executeSql('INSERT INTO LigneCommande (LigneCommandeID,Quantite,PrixTotalArticleTTC,PrixTotalArticleHT,Synch,CommandeID,ArticleID) VALUES (1,15,20.500,20.000,"false",1,1271)');
+	requete.executeSql('INSERT INTO LigneCommande (LigneCommandeID,Quantite,PrixTotalArticleTTC,PrixTotalArticleHT,Synch,CommandeID,ArticleID) VALUES (2,100,50.500,42.000,"false",1,1272)');
+	
 }
+
 
 }

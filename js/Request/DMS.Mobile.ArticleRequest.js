@@ -12,24 +12,24 @@ DMS.Mobile.ArticleRequest =
 	ListArticle :[],
 	connexion: null,
 
-  SelectAll: function (callback) {
+  SelectAll: function (callback,oLigneCommande) {
 				var form = this;	
-			       	this.connexion.transaction(function(tx){ form.SelectFromArticle(tx, form,callback) },  function(err){ DMS.Mobile.Common.errors(err,"SelectFromArticle");});
+			       	this.connexion.transaction(function(tx){ form.SelectFromArticle(tx, form,callback,oLigneCommande) },  function(err){ DMS.Mobile.Common.errors(err,"SelectFromArticle");});
     },
     
-      SelectFromArticle : function(requete,form,callback) {
-				requete.executeSql('SELECT * FROM Article', [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
+      SelectFromArticle : function(requete,form,callback,oLigneCommande) {
+				requete.executeSql('SELECT * FROM Article WHERE ArticleID =?', [oLigneCommande.ArticleID], function(tx, results) {form.querySuccess(tx,results,form,callback,oLigneCommande);});
     
     },
     
     
-    querySuccess:function (requete, results,form,callback) {
+    querySuccess:function (requete, results,form,callback,oLigneCommande) {
  
 							var len = results.rows.length;
-							var id;
-							var myproducts = new Array();
-							for (var i=0; i<len; i++){
-		   
+							var i =0;
+							
+		   						if(len>0){
+									
 								var oArticle = new DMS.Mobile.Article();
 								oArticle.ArticleID = results.rows.item(i).ArticleID;
 								oArticle.Designation = results.rows.item(i).Designation;
@@ -39,33 +39,82 @@ DMS.Mobile.ArticleRequest =
 								oArticle.QuantiteDisponible = results.rows.item(i).QteDispo;
 								oArticle.FamilleID = results.rows.item(i).FamilleID;
 								oArticle.Synch = results.rows.item(i).Synch;
-       							
-        						form.ListArticle.push(oArticle);
+								
+								oLigneCommande.ArticleObject= oArticle;
+       							 
+								}
+								callback(oLigneCommande);
         						
-							}
 							
-callback(form.ListArticle);                
+							
+               
+    },
+	//-------------------------------------------- select all articles
+	
+	 SelectAllArticles: function (callback) {
+				var form = this;	
+			       	this.connexion.transaction(function(tx){ form.SelectAllFromArticles(tx, form,callback) },  function(err){ DMS.Mobile.Common.errors(err,"SelectFromArticle");});
+    },
+    
+      SelectAllFromArticles : function(requete,form,callback) {
+				requete.executeSql('SELECT * FROM Article', [], function(tx, results) {form.querySuccessAllArticles(tx,results,form,callback);});
+    
+    },
+    
+    
+    querySuccessAllArticles:function (requete, results,form,callback) {
+ 
+							var len = results.rows.length;
+							var i =0;
+							
+		   						if(len>0){
+									
+									for(var i=0;i<len;i++)
+									{	
+									var oArticle = new DMS.Mobile.Article();
+									oArticle.ArticleID = results.rows.item(i).ArticleID;
+									oArticle.Designation = results.rows.item(i).Designation;
+									oArticle.PrixUnitaireHT = results.rows.item(i).PrixUnitaireHT;
+									oArticle.PrixUnitaireTTC = results.rows.item(i).PrixUnitaireTTC;
+									oArticle.CAB = results.rows.item(i).CAB;
+									oArticle.QuantiteDisponible = results.rows.item(i).QteDispo;
+									oArticle.FamilleID = results.rows.item(i).FamilleID;
+									oArticle.Synch = results.rows.item(i).Synch;
+									
+									form.ListArticle.push(oArticle);
+									 
+									}
+									callback(form.ListArticle);
+								
+								}
+        						
+							
+							
+               
     },
 	
-	
-
+//////////////////////////////////////////////////////////////////////////////////////
    
 	
-	GetListArticleFromServer : function()
+	GetListArticleFromServer : function(callbackViewModel)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		DMS.Mobile.Common.Alert("get list Article from server");
 		 var methode = "GetListArticleDTO?";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 var URL = ServeurUrl+methode;
 		 
 		 var form = this;
-		    DMS.Mobile.Common.CallService(this.CreateArticleDTO,URL,form);
+		    DMS.Mobile.Common.CallService(function(Json,Form){form.CreateArticleDTO(Json,Form,callbackViewModel);},URL,form);
 		
 	},
 	
-	CreateArticleDTO : function (json,form)
+	CreateArticleDTO : function (json,form,callbackViewModel)
 	{
+		form.ListArticle = [];
 		if ( json != null)
 		{
+			var len = json.length;
 			var synch = "true";
 
 			for (var i=0;i<json.length;i++)
@@ -96,26 +145,30 @@ callback(form.ListArticle);
 			articleDTO.CodeTVA1 = json[i].CodeTVA1;
 			
 			
-			form.ListArticle.push(articleDTO);
+			  form.insertArticle(articleDTO,synch,form,len,callbackViewModel);
 			}
-			form.SaveListArticleInLocal(form.ListArticle,synch,form);
+		
 		}
-		else{return null;}	
+		else{insertArticle(form.ListArticle);}	
 	},
 	
-	    	SaveListArticleInLocal : function(ListArticle,synch,form)
+	insertArticleIntoArray : function(Article,synch,form,len,callbackViewModel)
 	{
-	DMS.Mobile.Common.Alert("length : " +ListArticle.length);
-		for (var i=0; i<ListArticle.length;i++)
+		form.ListArticle.push(Article);
+		if(form.ListArticle.length == len)
 		{
-		form.InsertArticle(ListArticle[i],synch,form);
-		DMS.Mobile.Common.Alert("Fin insertion de Article : "+i); 
+			callbackViewModel(form.ListArticle);
 		}
 	},
+	
+	insertArticle : function(article,synch,form,len,callbackViewModel)
+	{
+            form.InsertArticleIntoLocal(article,synch,form,len,callbackViewModel);
+	},
 		
-			 InsertArticle: function(ArticleObject,synch,formReq) {
+			 InsertArticleIntoLocal: function(ArticleObject,synch,formReq,len,callbackViewModel) {
 
-					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoArticle(tx, formReq,ArticleObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoArticle");}); 
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoArticle(tx, formReq,ArticleObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoArticle");},function(){formReq.insertArticleIntoArray(ArticleObject,synch,formReq,len,callbackViewModel);}); 
 					   
 					
            },

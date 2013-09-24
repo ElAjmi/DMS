@@ -22,12 +22,14 @@
 
 		////////////////////////////////////////Serveur ////////////////////////
 	
-		SelectActiviteByPersonnelFromServer :function(callbackViewModel,PersonnelID)
-	{		
+	SelectActiviteByPersonnelFromServer :function(callbackViewModel,PersonnelID)
+	{
+		 var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;	
 		 var form = this;
          var Data = "PersonnelID="+PersonnelID; 
 		 var methode = "GetListActiviteDTOByPersonnelID?";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		 var URL = ServeurUrl+methode+Data;
 		 
 	 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createActiviteDTO(JsonObject,Form,callbackViewModel);},URL,form);
 			

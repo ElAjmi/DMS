@@ -20,7 +20,7 @@ DMS.Mobile.MissionRequest =
 		}
 	},
 
-	InsertMissionIntoArray : function(oTournee,mission,form,len,callback)	
+	InsertMissionIntoMissionList : function(oTournee,mission,form,len,callback)	
 	{
 		oTournee.listMission.push(mission);
 		if(oTournee.listMission.length == len)
@@ -32,13 +32,15 @@ DMS.Mobile.MissionRequest =
 	//////////////////////////////////////////////////serveur ////////////////////////////////////////
 	SelectMissionByPersonnelFromServer : function(callbackViewModel,PersonnelID)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		var form = this;
 		
         var Data = "PersonnelID="+PersonnelID; 
 	  
 		var methode= "GetListMissionDTOByPersonnelID?";
 
-		var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		var URL = ServeurUrl+methode+Data;
 
 		 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createMissionDTO(JsonObject,Form,callbackViewModel);},URL,form);
 	},
@@ -55,9 +57,19 @@ DMS.Mobile.MissionRequest =
 			
 				missionDTO.MissionID = json[i].MissionID ;
 				missionDTO.EtatMission = json[i].EtatMission;
-				missionDTO.DateCreation = json[i].DateCreation;
+				
+				var dCreation = DMS.Mobile.Common.ParseDateJson(json[i].DateCreation);			
+				missionDTO.DateCreation = dCreation;
+				var hCreation = DMS.Mobile.Common.ParseHeureJson(json[i].DateCreation);	
+				missionDTO.HeureCreation = hCreation;
+				
 				missionDTO.DegreUrgence = json[i].DegreUrgence; 
-				missionDTO.DateCloture = json[i].DateCloture; 
+				
+				var dCloture = DMS.Mobile.Common.ParseDateJson(json[i].DateCloture);	
+				missionDTO.DateCloture = dCloture; 
+				var hCloture = DMS.Mobile.Common.ParseHeureJson(json[i].DateCloture);	
+				missionDTO.HeureCloture = hCloture;
+				
 				missionDTO.Commentaires = json[i].Commentaires;
 				missionDTO.TypeMissionID = json[i].TypeMissionID;
 				missionDTO.BCKPersonnelID = json[i].BCKPersonnelID;
@@ -109,7 +121,7 @@ DMS.Mobile.MissionRequest =
 
 	InsertIntoMission : function(requete,form,MissionObject,synch) {
    
-			requete.executeSql('INSERT INTO Missions(MissionID,EtatMission,DateCreation,DegreUrgence,DateCloture,Commentaires,TypeMissionID,Synch,BCKPersonnelID,PointVenteID,TourneeID) VALUES( '+MissionObject.MissionID+','+MissionObject.EtatMission+',"'+MissionObject.DateCreation+'",'+MissionObject.DegreUrgence+',"'+MissionObject.DateCloture+'","'+MissionObject.Commentaires+'",'+MissionObject.TypeMissionID+',"'+synch+'",'+MissionObject.BCKPersonnelID+','+MissionObject.PointVenteID+','+MissionObject.TourneeID+')');
+			requete.executeSql('INSERT INTO Missions(MissionID,EtatMission,DateCreation,DegreUrgence,DateCloture,HeureCreation,HeureCloture,Commentaires,TypeMissionID,Synch,BCKPersonnelID,PointVenteID,TourneeID) VALUES( '+MissionObject.MissionID+','+MissionObject.EtatMission+',"'+MissionObject.DateCreation+'",'+MissionObject.DegreUrgence+',"'+MissionObject.DateCloture+'","'+MissionObject.HeureCreation+'","'+MissionObject.HeureCloture+'","'+MissionObject.Commentaires+'",'+MissionObject.TypeMissionID+',"'+synch+'",'+MissionObject.BCKPersonnelID+','+MissionObject.PointVenteID+','+MissionObject.TourneeID+')');
 			    																																
     },
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +166,7 @@ DMS.Mobile.MissionRequest =
 				
 		DMS.Mobile.TypeMissionRequest.SelectTypeMission(function(mission){
 			
-				DMS.Mobile.PointVenteRequest.SelectPointVente(function(miss){form.InsertMissionIntoArray(oTournee,mission,form,len,callback)},mission);
+				DMS.Mobile.PointVenteRequest.SelectPointVente(function(miss){form.InsertMissionIntoMissionList(oTournee,mission,form,len,callback)},mission);
 			
 			},oMission);
 	

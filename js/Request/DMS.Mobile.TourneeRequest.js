@@ -30,10 +30,12 @@
 	
 	SelectTourneeByPersonnalFromServer : function(callbackViewModel,PersonnelID)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		var ServeurURL	= Conf.URL;
 		var form = this;
 		var Data = "PersonnelID="+PersonnelID; 	  
 		var methode= "GetListTourneeDTOByPersonnelID?";
-		var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		var URL = ServeurUrl+methode+Data;
 	    DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createTourneeDTO(JsonObject,Form,callbackViewModel);},URL,form);
 	},
 	
@@ -51,12 +53,18 @@
 			
 				var dDebut = DMS.Mobile.Common.ParseDateJson(json[i].DateDebut);
 				tourneeDTO.DateDebut = dDebut;
+				var hDebut = DMS.Mobile.Common.ParseHeureJson(json[i].DateDebut);	
+				tourneeDTO.HeureDebut = hDebut;
 	
                 var dFin = DMS.Mobile.Common.ParseDateJson(json[i].DateFin);
 				tourneeDTO.DateFin =  dFin;
+				var hFin = DMS.Mobile.Common.ParseHeureJson(json[i].DateFin);	
+				tourneeDTO.HeureFin = hFin;
 				
 				var dCreation = DMS.Mobile.Common.ParseDateJson(json[i].DateCreation);
 				tourneeDTO.DateCreation = dCreation;
+				var hCreation = DMS.Mobile.Common.ParseHeureJson(json[i].DateCreation);	
+				tourneeDTO.HeureCreation = hCreation;
 				
 				tourneeDTO.EtatTournee = json[i].EtatTournee;
 				tourneeDTO.TerminalID = json[i].TerminalID;
@@ -107,7 +115,7 @@ insertTournee: function(Tournee){
    
    InsertIntoTournee : function(requete,form,TourneeObject,synch) {
    
-			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES('+TourneeObject.TourneeID+',"'+TourneeObject.DateDebut+'","'+TourneeObject.DateFin+'","'+TourneeObject.DateCreation+'",'+TourneeObject.EtatTournee+',"'+synch+'",'+TourneeObject.TerminalID+','+TourneeObject.ImprimanteID+','+TourneeObject.EquipementID+','+TourneeObject.VehiculeID+','+TourneeObject.PersonnelID+')');
+			requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,HeureDebut,HeureFin,HeureCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES('+TourneeObject.TourneeID+',"'+TourneeObject.DateDebut+'","'+TourneeObject.DateFin+'","'+TourneeObject.DateCreation+'","'+TourneeObject.HeureDebut+'","'+TourneeObject.HeureFin+'","'+TourneeObject.HeureCreation+'",'+TourneeObject.EtatTournee+',"'+synch+'",'+TourneeObject.TerminalID+','+TourneeObject.ImprimanteID+','+TourneeObject.EquipementID+','+TourneeObject.VehiculeID+','+TourneeObject.PersonnelID+')');
 			      																																
 },
 	

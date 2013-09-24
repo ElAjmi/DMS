@@ -23,13 +23,15 @@ DMS.Mobile.ZoneRequest =
 	
 	SelectZoneByPersonnelFromServer : function (callbackViewModel,PersonnelID)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		  form =this;
 		
 		  var Data = "PersonnelID="+PersonnelID; 
 		  
 		  var methode= "GetZoneDTOByPersonnelID?";
 
-		  var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		  var URL = ServeurUrl+methode+Data;
 
 		     DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createZoneDTO(JsonObject,Form,callbackViewModel);},URL,form);
 	},

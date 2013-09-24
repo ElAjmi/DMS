@@ -34,13 +34,15 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 //////////////////////////////////////////////// Serveur  /////////////////////
 	SelectLigneCommandeByPersonnelFromServer : function (callbackViewModel,PersonnelID)
 	{
+		  var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		  var ServeurURL	= Conf.URL;
 		  form =this;
 		
 		  var Data = "PersonnelID="+PersonnelID; 
 		  
 		  var methode= "GetListLigneCommandeDTOByPersonnelID?";
 
-		  var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		  var URL = ServeurUrl+methode+Data;
 
 		     DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createLigneCommandeDTO(JsonObject,Form,callbackViewModel);},URL,form);
 	},
@@ -94,7 +96,7 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
    {
 	    	if (synch == "false")
 			{
-		  	    formReq.connexion.transaction(function(tx){ form.InsertIntoLigneCommande(tx, formReq, LigneCommandeObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoLigneCommande");}); 
+		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoLigneCommande(tx, formReq, LigneCommandeObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoLigneCommande");}); 
 		    }
 			else
 			{
@@ -108,9 +110,12 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
     },
 	
 	InsertIntoLigneCommande : function(requete,form, LigneCommande,synch){
-	
-             if (synch == "false")
-			 {      
+		
+		alert ('?'+','+LigneCommande.Quantite+','+LigneCommande.PrixTotalArticleTTC+','+LigneCommande.PrixTotalArticleHT+',"'+synch+'",'+LigneCommande.CommandID+','+LigneCommande.ArticleID);
+		
+		
+             if (synch = "false")
+			 {       
                     requete.executeSql('INSERT INTO LigneCommande (LigneCommandeID,Quantite,PrixTotalArticleTTC,PrixTotalArticleHT,Synch,CommandeID,ArticleID) VALUES ('+LigneCommande.LigneCommandeID+','+LigneCommande.Quantite+','+LigneCommande.PrixTotalArticleTTC+','+LigneCommande.PrixTotalArticleHT+',"'+synch+'",'+LigneCommande.CommandeID+','+LigneCommande.ArticleID+')');
 			 }
 			 else
@@ -119,12 +124,63 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 				   
 			 }
 	
-	}
+	},
     
     
  //////////////////////////////////////////////////////////////////////////////      
 	
 /////////////////////////Select From LOCAL /////////////////////////////////////	
+
+SelectLigneCommande: function (callback,oCommande) {
+	  var form = this;
+	  this.connexion.transaction(function(tx){ form.SelectFromLigneCommandeBYCommandeID (tx, form,callback,oCommande); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromLigneCommandeBYCommandeID");});
+    },
+    
+     SelectFromLigneCommandeBYCommandeID : function(requete,form,callback,oCommande) {
+   
+   			requete.executeSql("SELECT * FROM LigneCommande WHERE CommandeID = ?", [oCommande.CommandeID], function(tx, results) {form.querySuccessByCommandeID(tx,results,form,callback,oCommande);});
+       
+    },
+    
+    
+    
+    
+    
+    querySuccessByCommandeID : function (requete, results,form,callback,oCommande) {
+		
+		var len = results.rows.length;
+		oCommande.ListLignesCommande = [];
+			if(len>0){
+			for (var i=0;i<len;i++)
+			{
+			var oLigneCommande = new DMS.Mobile.LigneCommande();
+			oLigneCommande.LigneCommandeID = results.rows.item(i).LigneCommandeID;
+			oLigneCommande.Quantite = results.rows.item(i).Quantite;
+			oLigneCommande.PrixTotalArticleTTC = results.rows.item(i).PrixTotalArticleTTC;
+			oLigneCommande.PrixTotalArticleHT = results.rows.item(i).PrixTotalArticleHT;
+			oLigneCommande.CommandeID = results.rows.item(i).CommandeID;
+			oLigneCommande.ArticleID = results.rows.item(i).ArticleID;
+			
+			DMS.Mobile.ArticleRequest.connexion = form.connexion ;
+			DMS.Mobile.ArticleRequest.SelectAll(function(LigneCommande){
+				form.InsertLigneCommandeIntoCommande(form,callback,oCommande,LigneCommande,len);
+				},oLigneCommande);
+			
+			}
+		     				
+			}
+			else {callback(oCommande);}
+	
+        						
+	},
+	
+	InsertLigneCommandeIntoCommande : function(form,callback,oCommande,LigneCommande,len){
+		oCommande.ListLignesCommande.push(LigneCommande);
+		if(len==oCommande.ListLignesCommande.length){
+		callback(oCommande);
+		}
+	}
+	
 	
 //////////////////////////////////////////////////////////////////////////////   	
 	

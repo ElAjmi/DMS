@@ -7,12 +7,44 @@
         <script src="js/API/jquery.mobile-1.3.2.min.js"></script>
 		<script src="js/Request/DMS.Mobile.CreateBD.js"></script>
 		<script src="js/Common/DMS.Mobile.Common.js"></script>
+        
+        <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Configuration.js"></script>
 		
 		<script type="text/javascript" charset="utf-8">
 			function InitConnection(){
-				DMS.Mobile.BD.Initialize();
+			    
+				DMS.Mobile.Common.init(function(){
+					DMS.Mobile.BD.Initialize(); 
+				});
 				}
 				
+			function myTimer () {
+					 // instance.currentTime = (new Date).getTime();
+					  //instance.doDisplay();
+					/*  var date = (new Date).getTime();
+					  alert(date);
+					  setTimeout( myTimer, 3000 ); 
+                 */
+				 myVar = sessionStorage.getItem("myVar");
+				  }
+				  
+				 
+				 
+			/*	 myVar=setInterval(function(){myTimer()},1000);
+				
+				function myTimer()
+				{
+				var d=new Date();
+				var t=d.toLocaleTimeString();
+				document.getElementById("demo").innerHTML=t;
+				}*/
+				
+				function myStopFunction()
+				{
+				clearInterval(myVar);
+				}
+		
+		
 			function redirectionToCalendrier(){
 				DMS.Mobile.Common.RedirectToCalendrier();
 				}
@@ -24,18 +56,67 @@
 				function redirectionToCommande(){
 				DMS.Mobile.Common.RedirectToCommande();
 				}
+				function redirectionToListeCommandes(){
+				DMS.Mobile.Common.RedirectToListeCommandes();
+				}
+				function redirectionToMissionsParPointVente(){
+				DMS.Mobile.Common.RedirectionToMissionsParPointVente();
+				}
+				
+				
+     function getCurrentPosition (successCallback,errorCallback) {
+            
+			var geolocation = navigator.geolocation;
+			
+        	if (geolocation) {
+					try 
+					{
+						 function handleSuccess(position) {
+								successCallback(position);
+						  }
+						
+						//geolocation.watchPosition(handleSuccess, errorCallback,{
+						geolocation.getCurrentPosition(handleSuccess, errorCallback,{
+						  //The Android 2.x simulators will not return a geolocation result 
+						  //unless the enableHighAccuracy option is set to true
+							enableHighAccuracy: true,
+							maximumAge: 5000 // 5 sec.
+						  });  
+					}
+					catch (err)
+					{
+						errorCallback(err);
+					}
+			}
+			else {
+				errorCallback("probléme de géolocation");
+			}       
+        }
+		
+		
+		function test()
+		{
+		getCurrentPosition(function(position){alert("latitude = "+position.coords.latitude+" longitude = "+position.coords.longitude+"Altitude : "+position.coords.altitude +"Accuracy : "+position.coords.accuracy+"Altitude Accuracy : "+position.coords.altitudeAccuracy+"Heading : "+ position.coords.heading+"Speed : "+position.coords.speed+"Timestamp : "+new Date(position.timestamp));},function(err){alert(err);});//DMS.Mobile.Common.errors();});
+		}
+		
 				
 		</script>
     </head>
     <body>
-    
+     
+     <p id="demo"></p>
+     
 		<h1>Data Base Script</h1>
 		<input type="button" id="b" onClick="redirectionToCalendrier()" value="redirect calendrier"/>
 		<input type="button" id="b" onClick="redirectionToLogin()" value="redirect login"/>
 		<input type="button" id="b" onClick="redirectionToCommande()" value="redirect commande"/>
+        <input type="button" id="b" onClick="test()" value="test geolocalisation"/>
+        <input type="button" id="b" onClick="myTimer()" value="service"/>
+        <input type="button" id="b" onClick="myStopFunction()" value="stop service"/>
 		<script type="text/javascript" charset="utf-8">
-            document.addEventListener("deviceready", InitConnection , false);
-		</script>
+          document.addEventListener("deviceready", InitConnection , false);
+		//InitConnection();
+        </script>
 	    
 	
 	

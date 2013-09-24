@@ -11,5 +11,6 @@ $.extend(DMS.Mobile.Position.prototype,
 	Latitude : null,
 	Longitude : null,
 	Dates : null,
+	Heure : null,
 	IMEI : null,
 });

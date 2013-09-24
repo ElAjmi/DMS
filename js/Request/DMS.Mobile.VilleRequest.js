@@ -26,13 +26,15 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 	
 	SelectVilleByPersonnelFromServer : function (callbackViewModel,PersonnelID)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		  form =this;
 		
 		  var Data = "PersonnelID="+PersonnelID; 
 		  
 		  var methode= "GetListVilleDTOByPersonnelID?";
 
-		  var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		  var URL =  ServeurUrl+methode+Data;
 
 		     DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createVilleDTO(JsonObject,Form,callbackViewModel);},URL,form);
 	},

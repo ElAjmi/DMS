@@ -45,7 +45,6 @@ DMS.Mobile.Constante =
 		Annulee : 2,
 		EnCoursDeTraitement  : 3,
 		Refusee : 4,
-		Envoyee : 5,
 		
 	},
 	

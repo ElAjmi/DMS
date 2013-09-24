@@ -8,73 +8,167 @@
 	DMS.Mobile.PositionRequest = 
 	{
 		connexion: null,
-		
+		Perimetre : nulll,
+		PositionDelay : null,
 		
 		InitializeGetPosition : function ()
 		{
-			alert("apperl Initisalise get postion");
+			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		    Perimetre = Conf.Perimetre;
+		    PositionDelay = Conf.Frequence;
+		 
+			alert("appel Initisalise get postion");
 			var form = this;
 			DMS.Mobile.PositionRequest.connexion = this.connexion;
 			
-			setInterval(DMS.Mobile.PositionRequest.GetPositionFromGPS(function(position){form.VerifyIntoPointVente(position,form);}), DMS.Mobile.Common.PositionDelay);
+			setInterval(DMS.Mobile.PositionRequest.GetPositionFromGPS(function(position){form.Initialize(position,form);},form), PositionDelay);
 		},
 	
 	
 	
-		VerifyIntoPointVente : function(position,form)
+		Initialize : function(position,form)
+		{
+			alert("initialise");
+			var listPointVente = [];
+			var listMission = [];
+			var listClient = [];
+			var listTournee = [];
+		
+				 listPointVente = JSON.parse(sessionStorage.getItem("ListPointVente"));
+			     listMission = JSON.parse(sessionStorage.getItem("ListMission"));
+				 listClient = JSON.parse(sessionStorage.getItem("ListClient"));
+				 listTournee = JSON.parse(sessionStorage.getItem("ListTournee"));
+				 
+				  
+				form.currentDay(position,form,listPointVente,listMission,listClient,listTournee);
+		},
+		
+		
+	
+		currentDay : function(position,form,listPointVente,listMission,listClient,listTournee)
 		//VerifyIntoPointVente : function()
 		{
-				alert("verify into pv");
+			alert("current day");
 			//var form = this;
 			
-			var listPointVente = JSON.parse(sessionStorage.getItem("ListPointVente"));
-			var listMission = JSON.parse(sessionStorage.getItem("ListMission"));
-			var listClient = JSON.parse(sessionStorage.getItem("ListClient"));
-			 if (listPointVente != null)
-			 {
-				 var DistanceMin = DMS.Mobile.Common.Perimetre;
-				var pointVenteID = 0;
-				var lat2 = position.Latitude;
-				var long2 = position.Longitude;
-				alert ("latitute gps = "+lat2+" longitude gps = "+long2);
-				//var lat2 = 36.837866465399735;
-				//var long2 = 10.166752338409424;
-				for (var i = 0;i<listPointVente.length;i++)
-				{
-					
-					var lat1 = listPointVente[i].Latitude;
-					var long1 = listPointVente[i].Longitude;
-					
-					
-					
-					if(DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2)<DMS.Mobile.Common.Perimetre )
+			var currentListPointVente = [];
+			var currentListMission = [];
+			var currentDate = DMS.Mobile.Dates.Dayformat(new Date());
+			alert("currentDate : "+currentDate);
+			var currentDateSplit = currentDate.split('-').reverse().join('');
+			alert("currentDateSplit : "+currentDateSplit);
+						
+			// test sur la list des tournees 
+			// test sur la list des missions de la tournee courante
+			
+			if (listTournee.length >0)
+			{
+					alert("nbr tournee : "+listTournee.length);
+					for ( var x = 0;x<listTournee.length;x++)
 					{
-						if (DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2) < DistanceMin)
+						var dateDebutTournee = listTournee[x].DateDebut;
+						alert("dateDebutTournee de la tournee "+x+" est : "+dateDebutTournee);
+						var dateDebutTourneeSplit = dateDebutTournee.split('/').reverse().join('');
+						alert("dateDebutTourneeSplit de la tournee "+x+" est : "+dateDebutTourneeSplit);
+						if (currentDateSplit == dateDebutTourneeSplit)
 						{
-							for ( var k = 0; k<listMission.length;k++)
+							if ((listTournee[x].EtatTournee == DMS.Mobile.Constante.EtatTournee.NonDemaree) ||(listTournee[x].EtatTournee == DMS.Mobile.Constante.EtatTournee.EnCours))
+							alert("tournee courante");
+							var tourneeID = listTournee[x].TourneeID;
+							break;
+						}
+						
+					}
+				
+				///////////////
+					if (listMission.length >0)
+					{
+						for (var y = 0; y<listMission.length;y++)
+						{
+							if (listMission[y].TourneeID == tourneeID)
 							{
-								if ((listMission[k].PointVenteID == listPointVente[i].PointVenteID) &&
-								 (listMission[k].EtatMission == DMS.Mobile.Constante.EtatMission.NonDemaree))
-								{
-										 pointVenteID = listPointVente[i].PointVenteID;
-										 DistanceMin = DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2);	
-								}  
+								currentListMission.push(listMission[y]);
 							}
 						}
 					}
-				} 
-			 }
-			if (DistanceMin <DMS.Mobile.Common.Perimetre)// && (pointVenteID !=0))
-			{
-				alert("distance min = "+DistanceMin); 
-			  form.InitNotificationMission(listPointVente,listMission,listClient,pointVenteID,form);
-			}
+				///////////
+					if (currentListMission.length>0)
+					{
+						
+							 for ( var k = 0; k<currentListMission.length;k++)
+								{
+									alert("list pv = " +listPointVente.length);
+									if (listPointVente.length>0)
+									{
+										for(var n = 0;n<listPointVente.length;n++)
+										{
+											if ((currentListMission[k].PointVenteID == listPointVente[n].PointVenteID)&&(currentListMission[k].EtatMission == DMS.Mobile.Constante.EtatMission.NonDemaree)) 
+											{
+												alert("list point de vente courant");
+												currentListPointVente.push(listPointVente[n]);
+											}
+										}
+									}
+								}
+					 
+					           form.VerifyIntoPointVente(position,form,currentListPointVente,currentListMission,listClient);				 
+					 }  
+			   }		
+		
 		},
+		
+		
+		
+		VerifyIntoPointVente : function(position,form,currentListPointVente,currentListMission,listClient)
+		{
+			alert("verify into pointvente");
+			alert("current listpv = " +currentListPointVente.length);
+			alert("list mission = "+currentListMission.length)
+
+			 if (currentListPointVente.length > 0)
+			 {
+						var DistanceMin = Perimetre;
+						var pointVenteID ;
+						var lat2 = position.Latitude;
+						var long2 = position.Longitude;
+						alert ("latitute gps = "+lat2+" longitude gps = "+long2);
+						//var lat2 = 36.837866465399735;
+						//var long2 = 10.166752338409424;
+						for (var i = 0;i<currentListPointVente.length;i++)
+						{
+							
+							var lat1 = currentListPointVente[i].Latitude;
+							var long1 = currentListPointVente[i].Longitude;
+							
+							
+							
+							if(DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2)<DMS.Mobile.Common.Perimetre )
+							{
+								if (DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2) < DistanceMin) 
+								{
+									
+												 pointVenteID = currentListPointVente[i].PointVenteID;
+												 DistanceMin = DMS.Mobile.Common.calculDistanceKM(lat1,long1,lat2,long2);	
+												 alert("pv iD = "+pointVenteID);
+												 alert("dis = "+DistanceMin);
+								}
+							}
+						} 
+						
+						if (DistanceMin <DMS.Mobile.Common.Perimetre)
+							// && (pointVenteID !=0))
+						{
+							alert("distance min = "+DistanceMin); 
+						  form.InitNotificationMission(currentListPointVente,currentListMission,listClient,pointVenteID,form);
+						}
+			 }
+		},
+		
 		
 		InitNotificationMission : function(listPointVente,listMission,listClient,pointVenteID,form)
 		{
 			alert("appel initnotificationMission");
-			var listMissionNonDemarrer = [];
+			var listMissionNonDemarrer = listMission;
 			var oPointVente;
 			var oClient;
 			
@@ -96,20 +190,8 @@
 				}
 			}
 			
-			for (var k = 0; k<listMission.length;k++)
-			{
-				if((listMission[k].PointVenteID == oPointVente.PointVenteID)&&(listMission[k].EtatMission == DMS.Mobile.Constante.EtatMission.NonDemaree))
-				{
-					var oMission = listMission[k];
-					
-					listMissionNonDemarrer.push(oMission);
-					
-				}
-			}
-			if(listMissionNonDemarrer.length > 0)
-			{
 			form.NotificationMission(listMissionNonDemarrer,oClient,oPointVente,form);
-			}
+			
 			
 		},
 		
@@ -250,24 +332,72 @@
 		},
 		
 		
+		 getCurrentPosition : function (successCallback,errorCallback) {
+            
+			var geolocation = navigator.geolocation;
+			
+        	if (geolocation) {
+					try 
+					{
+						 function handleSuccess(position) {
+								successCallback(position);
+						  }
+						
+						//geolocation.watchPosition(handleSuccess, errorCallback,{
+						geolocation.getCurrentPosition(handleSuccess, errorCallback,{
+						  //The Android 2.x simulators will not return a geolocation result 
+						  //unless the enableHighAccuracy option is set to true
+							enableHighAccuracy: true,
+							maximumAge: 5000 // 5 sec.
+						  });  
+					}
+					catch (err)
+					{
+						errorCallback(err,err.code);
+					}
+			}
+			else {
+				errorCallback("probléme de géolocation","geolocalisation");
+			}       
+        },
 		
-		GetPositionFromGPS : function (ReturnPosition,form)
+		
+	 GetPositionFromGPS : function (ReturnPosition,form)
 		{
 			alert("get position from gps");
-			 navigator.geolocation.getCurrentPosition(function(position){form.InsertPosition(ReturnPosition,form,position);}, form.errors);
-		},
+            var synch = "true";
+
+form.getCurrentPosition(function(position){
+	
+		alert("latitude = "+position.coords.latitude+" longitude = "+position.coords.longitude+"Altitude : "+	position.coords.altitude +"Accuracy : "+position.coords.accuracy+"Altitude Accuracy : "+position.coords.altitudeAccuracy+"Heading : "+ position.coords.heading+"Speed : "+position.coords.speed+"Timestamp : "+new Date(position.timestamp));
+		
+		var IMEI = device.uuid;
+		alert(" imei = "+IMEI);
+		form.InsertPosition(ReturnPosition,form,position,synch,IMEI);
 		
 		
-		InsertPosition : function(ReturnPosition,form,position)
+	},
+	function(err)
+	{
+		DMS.Mobile.Common.errors(err,"gélocalisation");
+	}
+	);},
+		
+		
+		InsertPosition : function(ReturnPosition,form,position,synch,_IMEI)
 		{
+			var IMEI = _IMEI;
 			alert("insert position");
-			form.connexion.transaction(function(tx){ form.InsertPositionIntoLocal(tx, form,position) ;}, form.errors,function(){form.SucessInsert(ReturnPosition,form,position);});
+			form.connexion.transaction(function(tx){ form.InsertPositionIntoLocal(tx, form,position,synch,IMEI) ;},function(err){ DMS.Mobile.Common.errors(err,"InsertPositionIntoLocal");},function(){form.SucessInsert(ReturnPosition,form,position);});
+		
 		},
 		
-		InsertPositionIntoLocal : function (requete, form,position)
+	    InsertPositionIntoLocal : function (requete, form,position,synch,IMEI)
 		{
 			alert("insert position into local");
-			requete.executeSql('INSERT INTO Positions (PersonnelID,Latitude,Longitude,Date,IMEI) VALUES('+sessionStorage.getItem("userID")+',"'+position.coords.latitude+'","'+position.coords.longitude+'","'+DMS.Mobile.Dates.Dayformat(new Date())+'","")');
+			requete.executeSql('INSERT INTO Position (PersonnelID,Latitude,Longitude,Date,Heure,Synch,IMEI) VALUES('+sessionStorage.getItem("userID")+',"'+position.coords.latitude+'","'+position.coords.longitude+'","'+DMS.Mobile.Common.currentDate()+'","'+DMS.Mobile.Common.currentHours()+'","'+synch+'","'+IMEI+'")');
+
+			alert("fin insertion position");
 		},
 		
 		SucessInsert : function(ReturnPosition,form,position)
@@ -278,7 +408,7 @@
 			oPosition.Latitude = position.coords.latitude;
 			oPosition.Longitude = position.coords.longitude;
 			oPosition.Dates = DMS.Mobile.Dates.Dayformat(new Date());
-			oPosition.IMEI = null;
+			oPosition.IMEI = device.uuid;;
 			ReturnPosition(oPosition);
 		}
 	}

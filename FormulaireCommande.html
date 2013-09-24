@@ -44,6 +44,8 @@
         
 		<script src="js/Request/DMS.Mobile.CreateBD.js"></script>
         <script src="js/Common/DMS.Mobile.Common.js"></script>
+        <script src="js/Common/DMS.Mobile.Constante.js"></script>
+         <script src="js/Common/DMS.Mobile.Dates.js"></script>
         
 
 	<link href="css/API/mobipick.css" rel="stylesheet" type="text/css" />
@@ -97,7 +99,7 @@
            } 
            
     </script>
-  
+  	
     </head> 
     
 <body> 
@@ -128,23 +130,22 @@
 		
 		<!-- panel client -->
 		<div data-theme="c" data-display="overlay" data-position="right" id="panel" data-role="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
-			<h3>Date de livraison prevu</h3>
+			<h3>Date de livraison prevue</h3>
                   
-                 	<input class="mobipick-demo-default-date" type="text" id="DateLivraisonPrevu" placeholder="Date livraison pr&eacute;vue" />
+                 	<input class="mobipick-demo-default-date" type="text" id="DateLivraisonPrevu" placeholder="Date livraison ..." />
                   
              
-            <h3>Choisir un Client</h3>
-                
-                                 
+            	<h3>Choisir un Client</h3>               
                 <select id="selectClient"> 
-                  <option selected="selected">Choisir Client</option> 
+                	<option selected="selected" disabled >Client</option> 
                 </select>
+                
                 
                 <h3>Choisir un Point de Vente</h3>
-             
                 <select id="selectPointVente"> 
-                    <option selected="selected">Choisir PV</option> 
+                    <option selected="selected" disabled >Point de Vente</option> 
                 </select>
+            
                 
                 <div id='PVInfos'>
                 
@@ -158,13 +159,12 @@
 		
 		</div>
 		
-		<!-- panel menu -->
 		<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
 		<ul data-role="listview" data-theme="c" class="nav-search">
             <li data-icon="delete" data-theme="e"><a href="#" data-rel="close">Fermer menu</a></li>
-                <li data-icon="edit"><a href="saisie_commande.html">Saisie commandes</a></li>
-                <li data-icon="page"><a href="liste_commandes.html">Liste commandes</a></li>
-                <li data-icon="calendar"><a href="Calendrier.html">Calendrier</a></li>  
+                <li data-icon="edit"><a href="FormulaireCommande.html">Saisie commandes</a></li>
+                <li data-icon="page"><a href="Commande.html">Liste commandes</a></li>
+                <li data-icon="calendar"><a href="Calendrier2.html">Calendrier</a></li>  
 		</ul>
 		</div>
 
@@ -179,11 +179,6 @@
             
                        
 			<table border="0" width="100%" id="tablecommande">
-
-
-
-
-
 			<tr><td colspan="3"></td></tr>
 			<tr><td colspan="3" style="text-align: right;">
 			<a href="#panel" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="info" data-theme="b" data-iconpos="notext">D&eacute;tails client</a>
@@ -209,19 +204,7 @@
 		</tr>
 		</table>
 		<br/><br/><br/>
-        <!-- popup -->
-
-		<div data-role="popup" id="popupInfo" class="ui-content" data-theme="d" style="max-width:350px;">
-		<center><img src="http://www.myshop.tn/img/p/2261-3441-thickbox.jpg" style="max-width:320px;"></center>
-		<fieldset style="border:solid 1px silver; padding:30px;"> 
-			<legend style="font-size:11; font-weight:bold;" align="left">D&eacute;tails article :</legend> 
-		<ul>
-			<li><b>D&eacute;signation :</b> SAIDA CEREALES</li>
-			<li><b>Quantit&eacute; disponible :</b> 120</li>
-			<li><b>Prix unitaire :</b> 0.650 DT</li>
-		</ul>
-		</fieldset>
-		</div>
+     
 
 		<!-- Footer -->
         <div data-role="footer" data-theme="b" data-position="fixed" data-fullscreen="true" data-tap-toggle="false">

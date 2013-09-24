@@ -11,23 +11,26 @@ DMS.Mobile.TypeMissionRequest =
 		connexion : null,
 		
 	
-GetListTypeMissionFromServer : function()
+GetListTypeMissionFromServer : function(callbackViewModel)
 	{
+		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		DMS.Mobile.Common.Alert("get list type mission from server");
 		 var methode = "GetListTypeMissionDTO?";
 		                
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 var URL =  ServeurUrl+methode;
 		 
 		 var form = this;
-		    DMS.Mobile.Common.CallService(this.CreateTypeMissionDTO,URL,form);
+		    DMS.Mobile.Common.CallService(function(Json,Form){form.CreateTypeMissionDTO(Json,Form,callbackViewModel);},URL,form);
 		
 	},
 	
-CreateTypeMissionDTO : function (json,form)
+CreateTypeMissionDTO : function (json,form,callbackViewModel)
 	{
 		
 		if ( json != null)
 		{
+			var len = json.length;
 			var synch = "true";
 
 			for (var i=0;i<json.length;i++)
@@ -38,29 +41,35 @@ CreateTypeMissionDTO : function (json,form)
 			typeMissionDTO.Titre = json[i].Titre;
 			typeMissionDTO.listMissions = json[i].Missions;
 			
-			form.ListTypeMission.push(typeMissionDTO);
+			form.insertTypeMission(typeMissionDTO,synch,form,len,callbackViewModel);
 			}
-			form.SaveListTypeMissionInLocal(form.ListTypeMission,synch,form);
+			
 		}
-		else{return null;}	
+		else{callbackViewModel(form.ListTypeMission);}	
 		
+	},
+	
+	
+	
+	insertTypeMissionIntoArray : function(TypeMission,synch,form,len,callbackViewModel)
+	{
+		form.ListTypeMission.push(TypeMission);
+		if(form.ListTypeMission.length == len)
+		{
+			callbackViewModel(form.ListTypeMission);
+		}
 	},
 	
 ///////////////////////////////////////Insert In LOCAL /////////////////////////
 	
-SaveListTypeMissionInLocal : function(TypeMissionDTO,synch,form)
+insertTypeMission : function(TypeMissionDTO,synch,form,len,callbackViewModel)
 	{
-	DMS.Mobile.Common.Alert("length : " +TypeMissionDTO.length);
-		for ( i=0; i<TypeMissionDTO.length;i++)
-		{
-		form.InsertTypeMission(TypeMissionDTO[i],synch,form);
-		DMS.Mobile.Common.Alert("Fin insertion de typeMission : "+i); 
-		}
+	   form.InsertTypeMissionIntoLocal(TypeMissionDTO,synch,form,len,callbackViewModel);
 	},
 	
-InsertTypeMission: function(TypeMissionObject,synch,formReq) {
+InsertTypeMissionIntoLocal: function(TypeMissionObject,synch,formReq,len,callbackViewModel) {
 
-					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoTypeMission(tx, formReq,TypeMissionObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoTypeMission");}); 
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoTypeMission(tx, formReq,TypeMissionObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoTypeMission");},function(){formReq.insertTypeMissionIntoArray(TypeMissionObject,synch,formReq,len,callbackViewModel);}); 
 
       },
 

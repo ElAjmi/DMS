@@ -12,58 +12,65 @@ DMS.Mobile.ProfilRequest =
 		ListProfil : [],
 
 	////////////////////////////////////////Serveur ////////////////////////
-	GetListProfilFromServer : function ()
+	GetListProfilFromServer : function (callbackViewModel)
 	{
-		  DMS.Mobile.Common.Alert("get list profil from server");
+		 var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
+		 DMS.Mobile.Common.Alert("get list profil from server");
 		 var methode = "GetListProfilsDTO?";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 var URL = ServeurUrl+methode;
 		 
 		 var form = this;
-		    DMS.Mobile.Common.CallService(this.CreateProfilDTO,URL,form);
+		    DMS.Mobile.Common.CallService(function(Json,Form){form.CreateProfilDTO(Json,Form,callbackViewModel);},URL,form);
 		
     },
 	
-	CreateProfilDTO : function(json,form)
+	CreateProfilDTO : function(json,form,callbackViewModel)
 		{
 			
 			if ( json != null)
 			{
+				var len = json.length;
 				var synch = "true";
-			for (var i=0;i<json.length;i++)
-			{
-				var profilDTO = new DMS.Mobile.Profils();	
-				profilDTO.ProfilID = json[i].ProfilID;
-				profilDTO.Designation = json[i].Designation;
-				profilDTO.Description = json[i].Description;
-				profilDTO.ListPersonnels = json[i].Personnel;	
-				
-				form.ListProfil.push(profilDTO);    
-				
-			}
-				form.SaveListProfilInLocal(form.ListProfil,synch,form);
+				for (var i=0;i<json.length;i++)
+				{
+					var profilDTO = new DMS.Mobile.Profils();	
+					profilDTO.ProfilID = json[i].ProfilID;
+					profilDTO.Designation = json[i].Designation;
+					profilDTO.Description = json[i].Description;
+					profilDTO.ListPersonnels = json[i].Personnel;	
+					
+					form.insertProfil(profilDTO,synch,form,len,callbackViewModel);
+					
+				}
+					
 				  
 			   }
 		   else 
-		   {return null;}
+		   {callbackViewModel(form.ListProfil);}
 			   
 		},
 	//////////////////////////////////////////////////////////////////
 	
-/////////////////////////////Insertion LOCAL /////////////////////////////////////
-SaveListProfilInLocal : function (ListProfil,synch,form)
+	insertProfilIntoArray : function(profil,synch,form,len,callbackViewModel)
 	{
-	    DMS.Mobile.Common.Alert("length : " +ListProfil.length);
-		for ( i=0; i<ListProfil.length;i++)
+		form.ListProfil.push(profil);
+		if(form.ListProfil.length == len)
 		{
-		form.InsertProfil(ListProfil[i],synch,form);
-		DMS.Mobile.Common.Alert("Fin insertion de profil : "+i); 
+			callbackViewModel(form.ListProfil);
 		}
 	},
+	
+/////////////////////////////Insertion LOCAL /////////////////////////////////////
+insertProfil : function (profil,synch,form,len,callbackViewModel)
+	{
+	   form.InsertProfilIntoLocal(profil,synch,form,len,callbackViewModel);
+	},
 		
-InsertProfil: function(ProfilObject,synch,formReq) {
+InsertProfilIntoLocal: function(ProfilObject,synch,formReq,len,callbackViewModel) {
 
 		
-					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoProfil(tx, formReq,ProfilObject,synch) },function(err){ DMS.Mobile.Common.errors(err,"InsertIntoProfil");}); 
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoProfil(tx, formReq,ProfilObject,synch) },function(err){ DMS.Mobile.Common.errors(err,"InsertIntoProfil");},function(){formReq.insertProfilIntoArray(ProfilObject,synch,formReq,len,callbackViewModel);}); 
 					
 					
            },

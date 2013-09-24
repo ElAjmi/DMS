@@ -17,9 +17,13 @@
 	table#example {
 		border-collapse: collapse;   
 		}
-		#example #tr:hover {
+		#TableListeCommandes tr:hover {
 			background-color: #A9D0F5;
 		}
+		#TableLigneCommandes tr:hover {
+			background-color: #A9D0F5;
+		}
+		
 		#example th, #example td {
 			padding: 5px 10px;
 		}
@@ -57,9 +61,9 @@
 	border-radius: 1em 4em 1em 4em;
 	}
 	/* calendrier */
-		.ui-table-columntoggle-btn {
+		/*.ui-table-columntoggle-btn {
 		display: none !important;
-		}
+		}*/
 		#td{   
 		  -moz-border-radius:20px;  
 		  border-radius: 20px;  
@@ -128,22 +132,12 @@
 		.smallLabel{
 		font-size:12px;
 		}
-		#mybuttonNextJ {
-    background: url('images/next.png') no-repeat scroll 0 0 transparent;
-    background-position: center center; 
-	}
-	#mybuttonNextS {
-    background: url('images/nextS.png') no-repeat scroll 0 0 transparent;
-    background-position: center center; 
-	}
-	#mybuttonPrevJ {
-    background: url('images/prev.png') no-repeat scroll 0 0 transparent;
-    background-position: center center; 
-	}
-	#mybuttonPrevS {
-    background: url('images/prevS.png') no-repeat scroll 0 0 transparent;
-    background-position: center center; 
-	}
+ 
+ .hiddencell
+	{
+	visibility:hidden;
+	} 
+	
 	
 	.ui-input-text
 	{

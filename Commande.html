@@ -18,50 +18,58 @@
 		
 		<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.CommandeRequest.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Commande.js"></script>
-		
+        <script src="js/Request/DMS.Mobile.ActiviteRequest.js"></script>
+        <script src="js/Request/DMS.Mobile.ClientRequest.js"></script>
+        <script src="js/Request/DMS.Mobile.VilleRequest.js"></script>
+        
+        
+        <script src="js/Request/DMS.Mobile.PointVenteRequest.js"></script>
+        <script src="js/Containers/DMS.Mobile.PointVente.js"></script>
+        <script src="js/Containers/DMS.Mobile.Ville.js"></script>
+        <script src="js/Containers/DMS.Mobile.Activite.js"></script>
+        <script src="js/Containers/DMS.Mobile.Client.js"></script>
+        
+		<script src="js/ViewModel/DMS.Mobile.ListeCommandesViewModel.js"></script>
+       <script src="js/Request/DMS.Mobile.CreateBD.js"></script>
+       <script src="js/Common/DMS.Mobile.Common.js"></script>
+       <script src="js/Common/DMS.Mobile.Constante.js"></script>
+       <script src="js/Request/DMS.Mobile.LigneCommandeRequest.js"></script>
+       <script src="js/Containers/DMS.Mobile.LigneCommande.js"></script>
+        <script src="js/Request/DMS.Mobile.ArticleRequest.js"></script>
+       <script src="js/Containers/DMS.Mobile.Article.js"></script>
+       <script src="js/Common/DMS.Mobile.Notification.js"></script>
+       
+       
        
         <script>
             $(document).ready(function () {
                 $.mobile.ajaxEnabled = false;
             });  
         </script>
-        
-		<script>
-		$(document).ready(function() {
-		$('#example tbody').click(function() {
-        var href = $(this).find("a").attr("href");
-        if(href) {
-            window.location.href = href;
-        }
-		});
-		});
-		</script>
+     
 		
 		<script>
 		
-  var DB = null;
-  function InitConnection() {
-		   DB = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-		  
-           }
-           
- function InitViewCommande(){
-       
-		DMS.Mobile.CommandeRequest.connexion = DB;
-		DMS.Mobile.CommandeRequest.Connect();
-	
+function InitPage(){
+       	
+		DMS.Mobile.BD.initConnection();
+		DMS.Mobile.ListeCommandesViewModel.connexion = DMS.Mobile.BD.connexion;
+		DMS.Mobile.ListeCommandesViewModel.$TableListeCommandes = ("#TableListeCommandes");
+		DMS.Mobile.ListeCommandesViewModel.$TableLigneCommandes = ("#TableLigneCommandes");
+		DMS.Mobile.ListeCommandesViewModel.Init();
+			
            } 
-           
-    </script>
+		</script>
+        
     </head> 
 <body> 
 	<script type="text/JavaScript" charset="utf-8">
 	
 	$(document).ready(function() {  
-	    document.addEventListener("deviceready", InitConnection , false);
-	    document.addEventListener("deviceready", InitViewCommande , false);
+	    document.addEventListener("deviceready", InitPage , false);
 	
 	});
+	
 	</script>
     <div data-role="page" data-theme="c" id="index">
 		<!-- header -->
@@ -69,37 +77,64 @@
 			<h1>Liste Commandes</h1>
 			<a href="#panelmenu" data-role="button" data-inline="true" data-mini="true" data-icon="home" data-iconpos="left">Menu</a>
         </div>
-	<!-- panel menu -->
+
 		<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
 		<ul data-role="listview" data-theme="c" class="nav-search">
             <li data-icon="delete" data-theme="e"><a href="#" data-rel="close">Fermer menu</a></li>
-                <li data-icon="edit"><a href="saisie_commande.html">Saisie commandes</a></li>
-                <li data-icon="page"><a href="liste_commandes.html">Liste commandes</a></li>
-                <li data-icon="calendar"><a href="Calendrier.html">Calendrier</a></li>  
+                <li data-icon="edit"><a href="FormulaireCommande.html">Saisie commandes</a></li>
+                <li data-icon="page"><a href="Commande.html">Liste commandes</a></li>
+                <li data-icon="calendar"><a href="Calendrier2.html">Calendrier</a></li>  
 		</ul>
 		</div>
 		<!-- contenu -->
 	<div data-role="content">
-		<!-- table -->
-		<table data-role="table" id="example" data-mode="columntoggle" class="ui-responsive table-stroke" data-column-btn-text=" Filtrer ">
+		<table data-role="table" id="TableListeCommandes" data-mode="columntoggle" class="ui-responsive table-stroke" data-column-btn-text=" Filtrer ">
 		 <thead>
 		   <tr>
-			<th data-priority="1">CAB</th>
-			<th data-priority="2">Date</th>
-			<th data-priority="3">Point De Vente</th>
-			<th data-priority="4">Prix Total HT</th>
-			<th data-priority="5">Prix Total TTC</th>
+			<th>Date Creation</th>
+            <th>Date Livraison</th>
+			<th>Prix Total HT</th>
+			<th>Prix Total TTC</th>
+            <th>Etat Commande</th>
+            <th>Synchronisation</th>
+			<th></th>
+           	<th></th>
 		   </tr>
 		 </thead>
 		<tbody>
 		</tbody> 
-		 
+	
 	
 		</table>
 
 		
 	</div>
 	</div>
+ <div data-role="page" data-theme="c" id="ligneCommande">
+     <div data-role="header" data-theme="b">
+        <h1>Liste Ligne Commandes</h1>
+        <a href="#index" data-role="button" data-inline="true" data-mini="true" data-icon="back" data-iconpos="left">Retour</a>
+    </div>
+    
+ <div data-role="content">
+		<table data-role="table" id="TableLigneCommandes" data-mode="columntoggle" class="ui-responsive table-stroke">
+		  <thead>
+			<tr>
+              <th data-priority="1">Quatit&eacute;</th>
+			  <th data-priority="2">Article</th>
+              <th data-priority="4">Prix Total TTC</th>
+			  <th data-priority="3">Prix Total HT</th>
+              <th></th>
+			</tr>
+		  </thead>
+          <tbody></tbody>
+		</table>
 
+		
+	</div>   
+    
+    
+    
+</div>
 </body>
 </html>

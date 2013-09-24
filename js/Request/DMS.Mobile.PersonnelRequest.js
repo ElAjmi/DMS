@@ -106,6 +106,8 @@ DMS.Mobile.PersonnelRequest =
 	 
 	 GetPersonnelFromServer: function(_login,_password,callback2) 
 		{
+			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		    DMS.Mobile.Common.Alert(_login);
 		    var login = _login;
 		    var password = _password;
@@ -113,7 +115,7 @@ DMS.Mobile.PersonnelRequest =
 		  
 		  var methode= "GetCommercialByLogin?";
 		   
-		  var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		  var URL = ServeurUrl+methode+Data;
 		    
 			var form = this;
 		    this.CallService(this.CreatePersonnelDTO,URL,form,callback2);

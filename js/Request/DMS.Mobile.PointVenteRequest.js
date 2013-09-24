@@ -27,10 +27,12 @@
 
 	SelectPointVenteByPersonnelFromServer :function(callbackViewModel,PersonnelID)
 	{		
+	     var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var ServeurURL	= Conf.URL;
 		 var form = this;
          var Data = "PersonnelID="+PersonnelID; 
 		 var methode = "GetListPointVenteDTOByPersonnelID?";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode+Data;
+		 var URL = ServeurUrl+methode+Data;
 		 
 	 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createPointVenteDTO(JsonObject,Form,callbackViewModel);},URL,form);
 			

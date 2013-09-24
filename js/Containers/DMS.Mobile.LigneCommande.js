@@ -14,5 +14,6 @@ $.extend(DMS.Mobile.LigneCommande.prototype,
           PrixTotalArticleHT : null,
           CommandeID : null, 
           ArticleID : null,
+		  ArticleObject : null,
           
 });

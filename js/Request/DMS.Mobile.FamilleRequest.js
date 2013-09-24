@@ -11,22 +11,25 @@ DMS.Mobile.FamilleRequest =
 		
 
 	
-GetListFamilleFromServer : function()
+GetListFamilleFromServer : function(callbackViewModel)
 {
+	    var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		var ServeurURL	= Conf.URL;
 		DMS.Mobile.Common.Alert("get list famille from server");
 		 var methode = "GetListFamilleDTO";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
+		 var URL = ServeurUrl+methode;
 		 
 		 var form = this;
-		    DMS.Mobile.Common.CallService(this.CreateFamilleDTO,URL,form);
+		    DMS.Mobile.Common.CallService(function(Json,Form){form.CreateFamilleDTO(Json,Form,callbackViewModel);},URL,form);
 		
 },
 
-CreateFamilleDTO : function (json,form)
+CreateFamilleDTO : function (json,form,callbackViewModel)
 	{
 		if ( json != null)
 		{
 			var synch = "true";
+            var len = json.length;
 
 			for (var i=0;i<json.length;i++)
 			{
@@ -40,27 +43,32 @@ CreateFamilleDTO : function (json,form)
 			familleDTO.ListRelevePresencePrixConcurrents = json[i].RelevePresencePrixConcurrents;
 			familleDTO.ListRelevePrix = json[i].RelevePrix;
 			
-			form.ListFamille.push(familleDTO);
+		        form.insertFamille(familleDTO,synch,form,len,callbackViewModel);
 			}
-			form.SaveListFamilleInLocal(form.ListFamille,synch,form);
+			
 		}
-		else{return null;}	
+		else{callbackViewModel(form.ListFamille);}	
 },
 	
-SaveListFamilleInLocal : function(ListFamille,synch,form)
-{
-	DMS.Mobile.Common.Alert("length : " +ListFamille.length);
-		for (var i=0; i<ListFamille.length;i++)
+	
+	insertFamilleIntoArray : function(FamilleObject,form,len,callbackViewModel)
+	{
+		form.ListFamille.push(FamilleObject);
+		if (form.ListFamille.length == len)
 		{
-		form.InsertFamille(ListFamille[i],synch,form);
-		DMS.Mobile.Common.Alert("Fin insertion de Famille : "+i); 
+			callbackViewModel(form.ListFamille);
 		}
+	},
+	
+insertFamille : function(famille,synch,form,len,callbackViewModel)
+{
+     form.InsertFamilleIntoLOCAL(famille,synch,form,len,callbackViewModel);
 },
 
 
-InsertFamille: function(FamilleObject,synch,formReq) 
+InsertFamilleIntoLOCAL: function(FamilleObject,synch,formReq,len,callbackViewModel) 
 {
-   formReq.connexion.transaction(function(tx){ formReq.InsertIntoFamille(tx, formReq,FamilleObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoFamille");}); 
+   formReq.connexion.transaction(function(tx){ formReq.InsertIntoFamille(tx, formReq,FamilleObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoFamille");},function(){formReq.insertFamilleIntoArray(FamilleObject,formReq,len,callbackViewModel);}); 
 					   
 },
 
