@@ -388,12 +388,14 @@
 		 getCurrentPosition : function (successCallback,errorCallback) {
         try
 		{    
+		alert("getCurrentPosition");
 			var geolocation = navigator.geolocation;
 			
         	if (geolocation) {
 					try 
 					{
 						 function handleSuccess(position) {
+							 alert("getCurrentPosition handleSuccess");
 								successCallback(position);
 						  }
 						
@@ -407,11 +409,11 @@
 					}
 					catch (err)
 					{
-						errorCallback(err,err.code);
+						errorCallback(err);
 					}
 			}
 			else {
-				errorCallback("probléme de géolocation","geolocalisation");
+				errorCallback("probléme de géolocation");
 			}       
 				}
 			catch(err)
