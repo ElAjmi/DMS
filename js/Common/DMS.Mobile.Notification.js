@@ -7,7 +7,28 @@ DMS.Mobile.Notification = {};
 
 DMS.Mobile.Notification = 
 {
+
 	ShowMessage : function(text,type,theme)
+	{
+		navigator.notification.alert(
+    text,  // message
+    this.alertDismissed,         // callback
+    'alert',            // title
+    'Done'                  // buttonName
+);
+	},
+	
+
+alertDismissed : function () {
+    // do something
+},
+	
+	
+	
+	
+	
+	
+	ShowMessage1 : function(text,type,theme)
 	{
 	var image = null ;
 	var msg = null;
