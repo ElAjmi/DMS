@@ -15,23 +15,38 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 	
 	init : function ()
 	{
+		try
+		{
 		var form = this;
 		var myTournee = new DMS.Mobile.Tournee();
 		myTournee.TourneeID = 1;
 		DMS.Mobile.MissionRequest.connexion = form.connexion;
 		DMS.Mobile.MissionRequest.SelectMission(function(tournee){form.initialize(tournee,form);},myTournee);	
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : init in MissionParPointVenteViewModel",'alert','e'); 
+			}
 	},
 		
 	initialize : function(tournee,form){
+		try
+		{
 		form.triListeMissions(tournee);
 		form.insertMission(tournee,form);
 		form.initializeEvents(tournee,form);
-		
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initialize in MissionParPointVenteViewModel",'alert','e'); 
+			}
 		
 	},
 	
 	initializeEvents : function (tournee,form)
 	{
+		try
+		{
 		
 		$('li').click(function(){
 		var previous = $(this).closest('[data-role=page]');
@@ -42,19 +57,32 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 	   form.detailsMission(MissionId,form,tournee);
 		 
 		});
-			
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializeEvents in MissionParPointVenteViewModel",'alert','e'); 
+			}
 		},
 		
 		triListeMissions : function(tournee){
+			try
+			{
 			var obj =tournee.listMission;
 			obj.sort(function(a,b) {
 				 return a.DegreUrgence > b.DegreUrgence ? -1 : a.DegreUrgence < b.DegreUrgence ?  1 : 0; 
 				 });
+				 }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : trilisteMissions in MissionParPointVenteViewModel",'alert','e'); 
+			}
 		},
 				
 	
 	insertMission : function(tournee,form)
 	{
+		try
+		{
 		  var detailsmission =$("<div data-role='page' id='dialog'>"
 		  +"<div data-role='header' data-theme='b'>"
 			+" <h1>D&eacute;tails mission</h1>"
@@ -100,11 +128,18 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 			}
 		$(this.$MissionsContainer).append($(ul)).trigger('create');
 		 
+		 }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertMission in MissionParPointVenteViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	detailsMission : function(missionID,form,tournee)
 	{
+		try
+		{
 		var mission = null;
 		
 			for (var k=0;k<tournee.listMission.length;k++){
@@ -236,7 +271,11 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 			
 				$("#setdetails").html($(details+ButtonToShow)).trigger('create');
 		 
-			 
+			 }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : detailsMission in MissionParPointVenteViewModel",'alert','e'); 
+			}
 	},
 
 	

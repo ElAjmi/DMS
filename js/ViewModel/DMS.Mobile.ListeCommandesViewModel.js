@@ -16,7 +16,8 @@ DMS.Mobile.ListeCommandesViewModel =
 	
 	
 	Init: function (form) {
-		
+	try
+	{	
 		var form = this ;
 		
 		DMS.Mobile.CommandeRequest.connexion = form.connexion;
@@ -25,16 +26,29 @@ DMS.Mobile.ListeCommandesViewModel =
 				
 			});
 		
-	
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : Init in ListCommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	initialize : function(CommandeList,form){
+		try
+		{
 		form.ListeCommandes = CommandeList;
 		form.insertCommandes(CommandeList,form);
 		form.initializeEvents(CommandeList,form);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initialize in ListCommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	initializeEvents : function(CommandeList,form){
+	try
+	{
 		// panel pv click
 		$(document).on('click','.ToPointVente',function(e) { 
 			 var idCommande = $(this).attr("id");
@@ -57,12 +71,17 @@ DMS.Mobile.ListeCommandesViewModel =
 		  $.mobile.changePage('#ligneCommande');  
 		});
 		
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializeEvents in ListCommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	insertCommandes : function(CommandeList,form){
-		
+		try
+		{
 	var panelPV = $(""
 	+"<div data-role='popup' id='popupDialogPV' data-overlay-theme='a' data-theme='c' class='ui-corner-all'>"
     +"<div data-role='content' data-theme='d' class='ui-corner-bottom ui-content' id='popupContenuPV'>"
@@ -126,10 +145,16 @@ DMS.Mobile.ListeCommandesViewModel =
 		).trigger('create');
 				
 	}
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertCommande in ListCommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	insertDetailsCommande : function(CommandeList,form,IdCmd){
-		
+	try
+	{	
 		var CommandeToShow = null;
 		for(var i=0; i<form.ListeCommandes.length; i++){
 			if(form.ListeCommandes[i].CommandeID == IdCmd)
@@ -191,11 +216,17 @@ DMS.Mobile.ListeCommandesViewModel =
 			+"<br/>Etat : "+ EtatClientToShow
 			+"</td></tr></table>").trigger('create');
 	
-
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertDetailCommande in ListCommandeViewModel",'alert','e'); 
+			}
 		
 	},
 
 	insertLigneCommandes : function (CommandeList,form,IdCmd){
+	try
+	{
 		$(this.$TableLigneCommandes+" > tbody").empty();
 		var CommandeToShow = null;
 		for(var i=0; i<form.ListeCommandes.length; i++){
@@ -219,11 +250,17 @@ DMS.Mobile.ListeCommandesViewModel =
 			+"</tr>"
 		).trigger('create');	
 	}
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertLigneCommande in ListCommandeViewModel",'alert','e'); 
+			}
 		
 	},
 	
 	insertArticle : function (CommandeList,form,IdArticle){
+	try
+	{
 		var ArticleToShow = null;
 		for(var i=0; i<form.ListeCommandes.length; i++){
 			for(var j=0; j<form.ListeCommandes[i].ListLignesCommande.length; j++){
@@ -246,6 +283,11 @@ DMS.Mobile.ListeCommandesViewModel =
 			+"<img src='css/images/Produits/sablito.png' >"
 			+"</td></tr></table>"
 			).trigger('create');
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertArticle in ListCommandeViewModel",'alert','e'); 
+			}
 	}
 	
 	

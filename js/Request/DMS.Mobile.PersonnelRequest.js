@@ -6,16 +6,15 @@ DMS.Mobile.PersonnelRequest = {};
 
 DMS.Mobile.PersonnelRequest = 
 {
- 
-	ModeConnection : true,
-	PersonnelList :[],
 	Personnel: null,
 	connexion: null,
-    JsonObject : null,
+ 
 
 	
 	 
-	 	SelectOnePersonnelTransaction: function (login, password, Form, callback) {
+/*	 	SelectOnePersonnelTransaction: function (login, password, Form, callback) {
+		try
+		{
 			var form;
 				if (Form == null)
 				{
@@ -27,10 +26,18 @@ DMS.Mobile.PersonnelRequest =
 				form = Form;	
 			    form.connexion.transaction(function(tx){ form.SelectFromPersonnel(tx,login, password, form, callback) }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromPersonnel");});
 				}
-    }, 	
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectOnePersonnelTransaction in PersonnelRequest",'alert','e'); 
+		}
+    }, 	*/
 
 
- 	SelectFromPersonnel : function(requete, login, password, form, callback) {	
+ /*	SelectFromPersonnel : function(requete, login, password, form, callback) {	
+try
+{
+
 	if ((login == null) && (password == null))
 	{
 		requete.executeSql('SELECT * FROM Personnel', [],function(tx, results) {form.CreatePersonnel(tx,results,form,callback)});
@@ -39,10 +46,20 @@ DMS.Mobile.PersonnelRequest =
 	{	
      		requete.executeSql('SELECT * FROM Personnel WHERE Login = ? AND Password = ?', [login,password],function(tx, results) {form.CreatePersonnel(tx,results,form,callback)});
 	}
-    },
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromPersonnel in PersonnelRequest",'alert','e'); 
+		}
+    },*/
 	
-	  CreatePersonnel : function (requete, results, form, callback) {
-		   
+	
+	
+	
+	
+/*	  CreatePersonnel : function (requete, results, form, callback) {
+	try
+	{	   
 		   DMS.Mobile.Common.Alert("results.rows.item.length = " + results.rows.item.length);
 		   DMS.Mobile.Common.Alert("results.rows.length = " + results.rows.length);
 		   if (results.rows.length != 0)
@@ -65,49 +82,60 @@ DMS.Mobile.PersonnelRequest =
 		   else 
 		   {form.Personnel = null;}
 		   callback(form.Personnel,form);
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : CreatePersonnel in PersonnelRequest",'alert','e'); 
+		}
+    },*/
 
-    },
 
 
 
-    InsertPersonnel: function(PersonnelObject,synch,formReq) {
-		
-
-			        formReq.connexion.transaction(function(tx){ formReq.InsertIntoPersonnel(tx, formReq,PersonnelObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoPersonnel");}); 
-           },
-
-	InsertIntoPersonnel : function(requete,form,PersonnelObject,synch) {  
-			requete.executeSql('INSERT INTO Personnel (PersonnelID,Login,Password,Nom,Prenom,Tel,Email,Adresse,Matricule,Synch,ProfilID) VALUES('
-+PersonnelObject.PersonnelID+',"'+PersonnelObject.Login+'","'+PersonnelObject.Password+'","'+PersonnelObject.Nom+'","'+PersonnelObject.Prenom+'",'+PersonnelObject.Tel+',"'+PersonnelObject.Email+'","'+PersonnelObject.Adresse+'",'+PersonnelObject.Matricule+',"'+synch+'",'+PersonnelObject.ProfilID+')');
-       
-	DMS.Mobile.Common.Alert("fin insertion personnel");																																
-    },
-	 
 	 
 	
 	
 	
-	 SavePersonnelInLocal: function(PersonnelObject,synch,form)
+
+	 
+/*	 GetPersonnelFromLocal: function(_login, _password,callback)
 	 {
-	 DMS.Mobile.Common.Alert("test function save personnel in local"+PersonnelObject+synch+form);
-           form.InsertPersonnel(PersonnelObject,synch,form);
-		   
-	 
-	 },
-	 
-	 GetPersonnelFrmLocal: function(_login, _password,callback)
-	 {
+		 try
+		 {
 		  var form = this; 
 		  form.SelectOnePersonnelTransaction(_login, _password, form, callback);
-		  
-	 
-	 },
-	 
-	 
-	 GetPersonnelFromServer: function(_login,_password,callback2) 
+		  		}
+			catch(err)
 		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : GetPersonnelFromLocal in PersonnelRequest",'alert','e'); 
+		}
+	 
+	 },*/
+	 insertPersonnelIntoArray : function(personnel,form,callbackViewModel)
+	 {
+		 try
+		 {
+		 form.Personnel = personnel;
+		 localStorage.setItem("Personnel", JSON.stringify(form.Personnel));
+		 callbackViewModel(form.Personnel);
+		 	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertPersonnelIntoArray in PersonnelRequest",'alert','e'); 
+		}
+	},
+	 
+	 
+	 
+	 
+	 
+	 GetPersonnelFromServer: function(_login,_password,callbackViewModel) 
+		{
+			alert("GetpersonnelFromServer");
+			try
+			{
 			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		 var ServeurURL	= Conf.URL;
+		 
 		    DMS.Mobile.Common.Alert(_login);
 		    var login = _login;
 		    var password = _password;
@@ -115,15 +143,23 @@ DMS.Mobile.PersonnelRequest =
 		  
 		  var methode= "GetCommercialByLogin?";
 		   
-		  var URL = ServeurUrl+methode+Data;
+		  var URL = Conf.URL+methode+Data;
 		    
 			var form = this;
-		    this.CallService(this.CreatePersonnelDTO,URL,form,callback2);
+		    
+			DMS.Mobile.Common.CallService(function(JsonObject,Form){form.CreatePersonnelDTO(JsonObject,Form,callbackViewModel);},URL,form);
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : GetPersonnelFromServer in PersonnelRequest",'alert','e'); 
+		}
 		},
 		
-		CreatePersonnelDTO : function(json,form,callback2)
+		CreatePersonnelDTO : function(json,form,callbackViewModel)
 		{
-				
+			
+			try
+			{  alert("create personneldto");	
 		if ( json != null)
 		{
 			var synch = "true";
@@ -145,20 +181,107 @@ DMS.Mobile.PersonnelRequest =
 			personnelDTO.Profils = json.Profils;
 			personnelDTO.ListReclamations = json.Reclamations;
 			
-			form.SavePersonnelInLocal(personnelDTO, synch,form);
-		  
-			
-			form.Personnel = personnelDTO;      
+			form.InsertPersonnel(personnelDTO,synch,form,callbackViewModel);     
 		   }
 		   else 
-		   {form.Personnel = null;}
+		   {
+			   localStorage.setItem("Personnel", JSON.stringify(form.Personnel));
+		       callback2(form.Personnel);
+		   }
 		   
-		   callback2(form.Personnel, form);
-		   
+		   		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : CreatePersonnelDTO in PersonnelRequest",'alert','e'); 
+		}
 		},
+		
+		
+	InsertPersonnel: function(PersonnelObject,synch,form,callbackViewModel)
+	  {
+		 try
+		 {
+              form.InsertPersonnelIntoLOCAL(PersonnelObject,synch,form,callbackViewModel);
+		 }
+		catch(err)
+		 {
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPersonnel in PersonnelRequest",'alert','e'); 
+		 }  
+	 
+	 },
+		
+		
+		    InsertPersonnelIntoLOCAL: function(PersonnelObject,synch,formReq,callbackViewModel) {
+		try
+		{
+
+			        formReq.connexion.transaction(function(tx){ formReq.InsertIntoPersonnel(tx, formReq,PersonnelObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoPersonnel");},function(){formReq.insertPersonnelIntoArray(PersonnelObject,formReq,callbackViewModel);}); 
+					
+        }
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPersonnelIntoLOCAL in PersonnelRequest",'alert','e'); 
+		}
+		   },
+
+	InsertIntoPersonnel : function(requete,form,PersonnelObject,synch) {  
+	try
+	{		
+			requete.executeSql('INSERT INTO Personnel (PersonnelID,Login,Password,Nom,Prenom,Tel,Email,Adresse,Matricule,Synch,ProfilID) VALUES('
++PersonnelObject.PersonnelID+',"'+PersonnelObject.Login+'","'+PersonnelObject.Password+'","'+PersonnelObject.Nom+'","'+PersonnelObject.Prenom+'",'+PersonnelObject.Tel+',"'+PersonnelObject.Email+'","'+PersonnelObject.Adresse+'",'+PersonnelObject.Matricule+',"'+synch+'",'+PersonnelObject.ProfilID+')');
+       
+	DMS.Mobile.Common.Alert("fin insertion personnel");	
+	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoPersonnel in PersonnelRequest",'alert','e'); 
+		}																															
+    },
+	 
+		
+	 
+	 
+	 /////////////////////////////////////////////////////////////////////////////////////////////
+	 VerifyPersonnelInLocalSession : function(_login, _password,callback)
+	 {
+		 alert("VerifyPersonnelInLocalSession");
+	    try
+		{
+		  var form = this; 
+		  form.Personnel = JSON.parse(localStorage.getItem("Personnel"));
+		  if (form.Personnel == null)
+		  {
+		  callback(form.Personnel);
+		  }
+		  else
+		  {
+			  if((form.Personnel.Login == _login) && (form.Personnel.Password == _password))
+		      {
+				  alert("ok");
+				  callback(form.Personnel);
+			  }
+			  else
+			  {
+				  callback(null);
+			  }
+		  }
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : GetPersonnelFromLocalSession in PersonnelRequest",'alert','e'); 
+		}
+	 }
+	 
+	 
+	 
+	 
 	 
 	 // Function to call WCF  Service       
-	 CallService: function(callback,Url,form,callback2) {
+/*	 CallService: function(callback,Url,form,callback2) {
+	try
+	{
+		alert("callservice personnel")
 	DMS.Mobile.Common.Alert("CallService");
 					$.ajax({
 
@@ -173,12 +296,19 @@ DMS.Mobile.PersonnelRequest =
 							form.ServiceSucceeded(msg,callback,form,callback2);
 						},  
 					});
-					
+			
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : callService in PersonnelRequest",'alert','e'); 
+		}			
    },
    
 	ServiceFailed: function(xhr) {
         
-
+try
+{
+	alert("service ffffailed");
 		if (xhr.responseText) {
 			var err = xhr.responseText;
 			if (err)
@@ -186,10 +316,20 @@ DMS.Mobile.PersonnelRequest =
 			else
 				error({ Message: "Unknown server error." })
 		}
-    return;
-},
+    
+	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : ServiceFailed in PersonnelRequest",'alert','e'); 
+		}
+		return;
+},*/
 		
-   ServiceSucceeded: function(result,callback,form,callback2) {
+/*   ServiceSucceeded: function(result,callback,form,callback2) {
+		try
+		{
+		
 			DMS.Mobile.Common.Alert("result = " + result);
 		
 			
@@ -198,8 +338,12 @@ DMS.Mobile.PersonnelRequest =
 			   
 			   callback(JsonObject,form,callback2);
 			   
-
 		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : ServiceSucceeded in PersonnelRequest",'alert','e'); 
+		}
+}*/
 		
 
 

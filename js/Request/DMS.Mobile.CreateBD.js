@@ -12,24 +12,49 @@ DMS.Mobile.BD =
 	
 	Initialize : function()
 	{
+		try
+		{
 		this.initConnection();
 		this.CreateTableTransaction();
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : Initilize in CreateDB",'alert','e'); 
+		}
 	},
 	
 	initConnection : function()
 	{
-		this.connexion  = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-	//this.connexion.execSQL(" PRAGMA foreign_keys = ON ");
+		try
+		{
+			this.connexion  = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
+		//this.connexion.execSQL(" PRAGMA foreign_keys = ON ");
+	
+}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : initConnection in CreateDB",'alert','e'); 
+		}
 	},
 	
 	CreateTableTransaction : function()
 	{
+		try
+		{
 		var form = this;
 		this.connexion.transaction(form.CreateTable, form.CreateErrorFunction,function(){form.SuccessFunction(form);});
+		
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : CreateTableTransaction in CreateDB",'alert','e'); 
+		}
 	},
 	
 	SuccessFunction : function(form)
 	{
+		try
+		{
 		if(form.InsertTestElement == true)
 		{
 			alert("into insertion");
@@ -48,6 +73,11 @@ DMS.Mobile.BD =
 			form.connexion.transaction(form.insertIntoClient, form.InsertErrorFunction);
 			form.connexion.transaction(form.insertIntoLigneCommande, form.InsertErrorFunction);
 			
+		}
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SuccessFunction in CreateDB",'alert','e'); 
 		}
 	},
 	
@@ -298,6 +328,10 @@ DMS.Mobile.BD =
 	},
 	
 	insertIntoArticle : function (requete) {
+		
+try
+{		
+
       alert("insertIntoArticle");
             
             requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1271, "Crostina lait", 0.700,0.720, "w4e5r6", 12, 1223, "True")');
@@ -308,6 +342,13 @@ DMS.Mobile.BD =
       			requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1246, "Major Fraise", 1.080,1.120, "gzt654", 45, 1225, "True")');
 			   requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1247, "Major Chocolat", 0.500,0.600, "gzt654", 45, 1225, "True")');
 			     requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1220, "Gauchou", 0.600,0.700, "gzt654", 45, 1226, "True")');
+
+
+}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertIntoArticle in CreateDB",'alert','e'); 
+		}
 },
     
   insertIntoFamille : function (requete) {

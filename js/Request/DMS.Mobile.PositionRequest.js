@@ -8,11 +8,13 @@
 	DMS.Mobile.PositionRequest = 
 	{
 		connexion: null,
-		Perimetre : nulll,
+		Perimetre : null,
 		PositionDelay : null,
 		
 		InitializeGetPosition : function ()
 		{
+			try
+			{
 			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
 		    Perimetre = Conf.Perimetre;
 		    PositionDelay = Conf.Frequence;
@@ -22,12 +24,19 @@
 			DMS.Mobile.PositionRequest.connexion = this.connexion;
 			
 			setInterval(DMS.Mobile.PositionRequest.GetPositionFromGPS(function(position){form.Initialize(position,form);},form), PositionDelay);
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InitializeGetPosition in PoistionRequest",'alert','e'); 
+		}
 		},
 	
 	
 	
 		Initialize : function(position,form)
 		{
+			try
+			{
 			alert("initialise");
 			var listPointVente = [];
 			var listMission = [];
@@ -41,6 +50,12 @@
 				 
 				  
 				form.currentDay(position,form,listPointVente,listMission,listClient,listTournee);
+				
+						}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : intialize in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		
@@ -48,6 +63,8 @@
 		currentDay : function(position,form,listPointVente,listMission,listClient,listTournee)
 		//VerifyIntoPointVente : function()
 		{
+			try
+			{
 			alert("current day");
 			//var form = this;
 			
@@ -115,12 +132,20 @@
 					 }  
 			   }		
 		
+		
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : currentDay in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		
 		
 		VerifyIntoPointVente : function(position,form,currentListPointVente,currentListMission,listClient)
 		{
+			try
+			{
 			alert("verify into pointvente");
 			alert("current listpv = " +currentListPointVente.length);
 			alert("list mission = "+currentListMission.length)
@@ -162,11 +187,19 @@
 						  form.InitNotificationMission(currentListPointVente,currentListMission,listClient,pointVenteID,form);
 						}
 			 }
+			 
+			 		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : VerifyIntoPointVente in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		
 		InitNotificationMission : function(listPointVente,listMission,listClient,pointVenteID,form)
 		{
+			try
+			{
 			alert("appel initnotificationMission");
 			var listMissionNonDemarrer = listMission;
 			var oPointVente;
@@ -191,7 +224,11 @@
 			}
 			
 			form.NotificationMission(listMissionNonDemarrer,oClient,oPointVente,form);
-			
+					}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InitNotificationMission in PoistionRequest",'alert','e'); 
+		}
 			
 		},
 		
@@ -199,6 +236,8 @@
 		
 		NotificationMission : function(listMissionNonDemarrer,oClient,oPointVente,form)
 		{
+			try
+			{
 			alert("appel notification mission");
 			var listMissionNormal = [];
 			var listMissionMoyen = [];
@@ -220,10 +259,18 @@
 			}		
 			
 			form.NotifyMission(listMissionEleve,listMissionMoyen,listMissionNormal,oClient,oPointVente,form);
+					}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : NotificationMission in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		NotifyMission : function(listMissionEleve,listMissionMoyen,listMissionNormal,oClient,oPointVente,form)
 		{
+			try
+			{
+			
 			var MissionFacing = [];
 			var MissionCommande = [];
 			var MissionEspacePromo = [];
@@ -329,11 +376,18 @@
 				 DMS.Mobile.Notification.ShowMessage(text,info,e);
 				}
 			}
+			
+					}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : NotifyMission in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		
 		 getCurrentPosition : function (successCallback,errorCallback) {
-            
+        try
+		{    
 			var geolocation = navigator.geolocation;
 			
         	if (geolocation) {
@@ -359,11 +413,18 @@
 			else {
 				errorCallback("probléme de géolocation","geolocalisation");
 			}       
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : getCurrentPosition in PoistionRequest",'alert','e'); 
+		}
         },
 		
 		
 	 GetPositionFromGPS : function (ReturnPosition,form)
 		{
+			try
+			{
 			alert("get position from gps");
             var synch = "true";
 
@@ -381,27 +442,49 @@ form.getCurrentPosition(function(position){
 	{
 		DMS.Mobile.Common.errors(err,"gélocalisation");
 	}
-	);},
+	);
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : GetPositionFromGPS in PoistionRequest",'alert','e'); 
+		}
+	
+	},
 		
 		
 		InsertPosition : function(ReturnPosition,form,position,synch,_IMEI)
 		{
+			try
+			{
 			var IMEI = _IMEI;
 			alert("insert position");
 			form.connexion.transaction(function(tx){ form.InsertPositionIntoLocal(tx, form,position,synch,IMEI) ;},function(err){ DMS.Mobile.Common.errors(err,"InsertPositionIntoLocal");},function(){form.SucessInsert(ReturnPosition,form,position);});
-		
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPosition in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 	    InsertPositionIntoLocal : function (requete, form,position,synch,IMEI)
 		{
+			try
+			{
 			alert("insert position into local");
 			requete.executeSql('INSERT INTO Position (PersonnelID,Latitude,Longitude,Date,Heure,Synch,IMEI) VALUES('+sessionStorage.getItem("userID")+',"'+position.coords.latitude+'","'+position.coords.longitude+'","'+DMS.Mobile.Common.currentDate()+'","'+DMS.Mobile.Common.currentHours()+'","'+synch+'","'+IMEI+'")');
 
 			alert("fin insertion position");
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPositionIntoLocal in PoistionRequest",'alert','e'); 
+		}
 		},
 		
 		SucessInsert : function(ReturnPosition,form,position)
 		{
+			try
+			{
 			alert("secess insert position");
 			var oPosition = new DMS.Mobile.Position();
 			oPosition.PersonnelID = sessionStorage.getItem("userID");
@@ -410,5 +493,12 @@ form.getCurrentPosition(function(position){
 			oPosition.Dates = DMS.Mobile.Dates.Dayformat(new Date());
 			oPosition.IMEI = device.uuid;;
 			ReturnPosition(oPosition);
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SuccessInsert in PoistionRequest",'alert','e'); 
 		}
+		}
+		
+		
 	}

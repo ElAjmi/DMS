@@ -13,20 +13,29 @@ DMS.Mobile.TypeMissionRequest =
 	
 GetListTypeMissionFromServer : function(callbackViewModel)
 	{
+		try
+		{
 		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		 var ServeurURL	= Conf.URL;
+		 
 		DMS.Mobile.Common.Alert("get list type mission from server");
 		 var methode = "GetListTypeMissionDTO?";
 		                
-		 var URL =  ServeurUrl+methode;
+		 var URL =  Conf.URL+methode;
 		 
 		 var form = this;
 		    DMS.Mobile.Common.CallService(function(Json,Form){form.CreateTypeMissionDTO(Json,Form,callbackViewModel);},URL,form);
-		
+			
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : GetListTypeMissionFromServer in TypeMissionRequest",'alert','e'); 
+			}
 	},
 	
 CreateTypeMissionDTO : function (json,form,callbackViewModel)
 	{
+		try
+		{
 		
 		if ( json != null)
 		{
@@ -47,37 +56,67 @@ CreateTypeMissionDTO : function (json,form,callbackViewModel)
 		}
 		else{callbackViewModel(form.ListTypeMission);}	
 		
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : CreateTypeMissionDTO in TypeMissionRequest",'alert','e'); 
+			}
 	},
 	
 	
 	
 	insertTypeMissionIntoArray : function(TypeMission,synch,form,len,callbackViewModel)
 	{
+		try
+		{
 		form.ListTypeMission.push(TypeMission);
 		if(form.ListTypeMission.length == len)
 		{
 			callbackViewModel(form.ListTypeMission);
 		}
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertTypeMissionIntoArray in TypeMissionRequest",'alert','e'); 
+			}
 	},
 	
 ///////////////////////////////////////Insert In LOCAL /////////////////////////
 	
 insertTypeMission : function(TypeMissionDTO,synch,form,len,callbackViewModel)
 	{
+		try
+		{
 	   form.InsertTypeMissionIntoLocal(TypeMissionDTO,synch,form,len,callbackViewModel);
+	   }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertTypeMission in TypeMissionRequest",'alert','e'); 
+			}
 	},
 	
 InsertTypeMissionIntoLocal: function(TypeMissionObject,synch,formReq,len,callbackViewModel) {
-
+try
+{
 					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoTypeMission(tx, formReq,TypeMissionObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoTypeMission");},function(){formReq.insertTypeMissionIntoArray(TypeMissionObject,synch,formReq,len,callbackViewModel);}); 
-
+}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertTypeMissionIntoLocal in TypeMissionRequest",'alert','e'); 
+			}
       },
 
 InsertIntoTypeMission : function(requete,form,TypeMissionObject,synch) {
-   
+ try
+ {  
 			requete.executeSql('INSERT INTO TypeMissions(TypeMissionID,Titre,Synch) VALUES('+TypeMissionObject.TypeMissionID+',"'+TypeMissionObject.Titre+'","'+synch+'")');
 			
-    DMS.Mobile.Common.Alert("Fin insertion Type mission");       																																
+    DMS.Mobile.Common.Alert("Fin insertion Type mission");   
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoTypeMission in TypeMissionRequest",'alert','e'); 
+			}    																																
 },
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -85,19 +124,31 @@ InsertIntoTypeMission : function(requete,form,TypeMissionObject,synch) {
 ////////////////////////////////////SElectFromLOCAL ///////////////////////////
 
 SelectTypeMission: function (callback,oMission) {
-	 
+	try
+	{ 
 	  var form = this;
 	  this.connexion.transaction(function(tx){ form.SelectFromTypeMissionByID(tx, form,callback,oMission); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromTypeMissionByID");});
+   }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectTypeMission in TypeMissionRequest",'alert','e'); 
+			}
     },
     
      SelectFromTypeMissionByID : function(requete,form,callback,oMission) {
-   
+   try
+   {
    			requete.executeSql("SELECT * FROM TypeMissions WHERE TypeMissionID = ?", [oMission.TypeMissionID], function(tx, results) {form.querySuccess(tx,results,form,callback,oMission);});
-       
+       }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromTypeMissionByID in TypeMissionRequest",'alert','e'); 
+			}
     },
 	
     querySuccess:function (requete, results,form,callback,oMission) {
-		
+		try
+		{
 		var len = results.rows.length;
 			if (len>0){
 				
@@ -109,7 +160,11 @@ SelectTypeMission: function (callback,oMission) {
 			}
 			
 			callback(oMission);
-        						
+        		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccess in TypeMissionRequest",'alert','e'); 
+			}				
 	}
 ///////////////////////////////////////////////////////////////////////////////	
 	

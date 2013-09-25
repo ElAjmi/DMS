@@ -13,40 +13,65 @@ DMS.Mobile.MissionRequest =
 
     insertMissionIntoArray : function(Mission,form,len,callbackViewModel)
     {
+		try
+		{
 		form.ListMission.push(Mission);
 		if (form.ListMission.length == len)
 		{
 			callbackViewModel(form.ListMission);
 		}
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertMissionIntoArray in MissionRequest",'alert','e'); 
+		}
 	},
 
 	InsertMissionIntoMissionList : function(oTournee,mission,form,len,callback)	
 	{
-		oTournee.listMission.push(mission);
-		if(oTournee.listMission.length == len)
+		try
 		{
-			callback(oTournee);
+				oTournee.listMission.push(mission);
+				if(oTournee.listMission.length == len)
+				{
+					callback(oTournee);
+				}
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertMissionIntoMissionList in MissionRequest",'alert','e'); 
 		}
 	},
 	
 	//////////////////////////////////////////////////serveur ////////////////////////////////////////
 	SelectMissionByPersonnelFromServer : function(callbackViewModel,PersonnelID)
 	{
-		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		 var ServeurURL	= Conf.URL;
-		var form = this;
-		
-        var Data = "PersonnelID="+PersonnelID; 
-	  
-		var methode= "GetListMissionDTOByPersonnelID?";
-
-		var URL = ServeurUrl+methode+Data;
-
-		 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createMissionDTO(JsonObject,Form,callbackViewModel);},URL,form);
+		try
+		{
+			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+			
+			var form = this;
+			
+			var Data = "PersonnelID="+PersonnelID; 
+		  
+			var methode= "GetListMissionDTOByPersonnelID?";
+	
+			var URL = Conf.URL+methode+Data;
+	
+			 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createMissionDTO(JsonObject,Form,callbackViewModel);},URL,form);
+			 
+			
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectMissionByPersonnelFromServer in MissionRequest",'alert','e'); 
+		}
 	},
 	
 	createMissionDTO : function(json,form,callbackViewModel)
 	{
+		try
+		{
 		if ( json != null)
 		{
 			var synch = "true";
@@ -84,6 +109,12 @@ DMS.Mobile.MissionRequest =
 			
 		}
 		else{callbackViewModel(form.ListMission);}	
+	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : createMissionDTO in MissionRequest",'alert','e'); 
+		}
 	},
 	
 /////////////////////////Insertion LOCAL ///////////////////////////////
@@ -91,19 +122,33 @@ DMS.Mobile.MissionRequest =
 
    insertMission : function (mission,synch,form,len,callbackViewModel)
 		{
+			try
+			{
 			form.InsertMissionIntoLOCAL(mission,synch,form,len,callbackViewModel);
-	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertMission in MissionRequest",'alert','e'); 
+		}
 		},
 		
    InsertMission: function(Mission){
+			try
+			{
 					var form = this;	
 			       	this.InsertMissionIntoLOCAL(Mission,"false",form,null,null);
+  		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertMission in MissionRequest",'alert','e'); 
+		}
     },	
 	
 	
 	 InsertMissionIntoLOCAL: function(MissionObject,synch,formReq,len,callbackViewModel) 
 	 {
-		
+		try
+		{
 			if (synch == "false")
 			{
 				formReq.connexion.transaction(function(tx){ formReq.InsertIntoMission(tx, formReq,MissionObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoMission");}); 
@@ -116,34 +161,57 @@ DMS.Mobile.MissionRequest =
 							}); 
 							//formReq.insertMissionIntoArray(MissionObject,formReq,len,callbackViewModel)	;
 			}
-		 
+		 		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertMissionIntoLOCAL in MissionRequest",'alert','e'); 
+		}
 	},
 
 	InsertIntoMission : function(requete,form,MissionObject,synch) {
-   
+   try
+   {
 			requete.executeSql('INSERT INTO Missions(MissionID,EtatMission,DateCreation,DegreUrgence,DateCloture,HeureCreation,HeureCloture,Commentaires,TypeMissionID,Synch,BCKPersonnelID,PointVenteID,TourneeID) VALUES( '+MissionObject.MissionID+','+MissionObject.EtatMission+',"'+MissionObject.DateCreation+'",'+MissionObject.DegreUrgence+',"'+MissionObject.DateCloture+'","'+MissionObject.HeureCreation+'","'+MissionObject.HeureCloture+'","'+MissionObject.Commentaires+'",'+MissionObject.TypeMissionID+',"'+synch+'",'+MissionObject.BCKPersonnelID+','+MissionObject.PointVenteID+','+MissionObject.TourneeID+')');
-			    																																
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoMission in MissionRequest",'alert','e'); 
+		}		    																																
     },
 	///////////////////////////////////////////////////////////////////////////////////////////////////
  
  
 /////////////////////////////////////////// Select From LOCAL /////////////////////////		
 	SelectMission: function (callback,oTournee) {
-	 
+	try
+	{
 	  var form = this;
 	  this.connexion.transaction(function(tx){ form.SelectFromMissionByTourneeID(tx, form,callback,oTournee) }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromMissionByTourneeID");});
+	 		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectMission in MissionRequest",'alert','e'); 
+		}
+	 
     },
     
      SelectFromMissionByTourneeID : function(requete,form,callback,oTournee) {
-   
+  try
+  { 
    			requete.executeSql("SELECT * FROM Missions WHERE TourneeID = ?", [oTournee.TourneeID], function(tx, results) {form.querySuccess(tx,results,form,callback,oTournee);});
-       
+       		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromMissionByTourneeID in MissionRequest",'alert','e'); 
+		}
     },
     
     
    
     
     querySuccess:function (requete, results,form,callback,oTournee) {
+	try
+	{
 		var len = results.rows.length;
 		if (len>0){
 			for (var i=0; i<len; i++){
@@ -174,7 +242,11 @@ DMS.Mobile.MissionRequest =
 		}
 	}
 	else{callback(oTournee);}
-	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccess in MissionRequest",'alert','e'); 
+		}
         						
 	},
 ////////////////////////////////////////////////////////////////////////////
@@ -182,15 +254,27 @@ DMS.Mobile.MissionRequest =
 ///////////////////////////////////////////// Update In Local //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		UpdateMission: function (Etat,MissionID) {
-			 
+		try
+		{	 
 			var form = this;	
 			this.connexion.transaction(function(tx){ form.UpdateEtatMission(tx, form,Etat,MissionID) }, function(err){ DMS.Mobile.Common.errors(err,"UpdateMission");});
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : UpdateMission in MissionRequest",'alert','e'); 
+		}
 		},
 		
 		
 		UpdateEtatMission : function(requete,form,Etat,MissionID) {
+		try
+		{
 				requete.executeSql(' UPDATE Missions SET EtatMission= ? WHERE MissionID = ?', [Etat,MissionID], function(tx, results) {form.querySuccessUpdate(tx,results,form,Etat,MissionID);});
-		   
+		 		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : UpdateEtatMission in MissionRequest",'alert','e'); 
+		}  
 		},
 		
 		querySuccessUpdate :function (requete, results,form,Etat,MissionID) {

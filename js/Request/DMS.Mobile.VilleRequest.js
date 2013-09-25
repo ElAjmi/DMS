@@ -12,12 +12,19 @@
 
 insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 {
+	try
+	{
 	form.ListVille.push(ville);
 	if (form.ListVille.length == len)
 	{
 		alert("appel pv");
 		callbackViewModel(form.ListVille);
 	}
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertVilleIntoArray in VilleRequest",'alert','e'); 
+			}
 },
 
 
@@ -26,21 +33,30 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 	
 	SelectVilleByPersonnelFromServer : function (callbackViewModel,PersonnelID)
 	{
+		try
+		{
 		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		 var ServeurURL	= Conf.URL;
+		
 		  form =this;
 		
 		  var Data = "PersonnelID="+PersonnelID; 
 		  
 		  var methode= "GetListVilleDTOByPersonnelID?";
 
-		  var URL =  ServeurUrl+methode+Data;
+		  var URL =  Conf.URL+methode+Data;
 
 		     DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createVilleDTO(JsonObject,Form,callbackViewModel);},URL,form);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectVilleByPersonnelFromServer in VilleRequest",'alert','e'); 
+			}
 	},
 	
 	createVilleDTO : function(json,form,callbackViewModel)
 	{
+		try
+		{
 		if ( json != null)
 		{
 			var synch = "true";
@@ -63,6 +79,11 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 			
 		}
 		else{callbackViewModel(form.ListVille);}	
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : createVilleDTO in VilleRequest",'alert','e'); 
+			}
 	},
 	
 	//////////////////////////////////////////////////////////////////
@@ -70,17 +91,33 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 /////////////////////////////Insertion LOCAL /////////////////////////////////////
 InsertVille : function(ville,synch,form,len,callbackViewModel)
 {
+	try
+	{
 	form.InsertVilleIntoLOCAL(ville,synch,form,len,callbackViewModel);
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertVille in VilleRequest",'alert','e'); 
+			}
 },
 
 insertVille : function(ville)
 {
+	try
+	{
 		var form = this;	
 		this.InsertVilleIntoLOCAL(ville,"false",form,null,null);
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertVille in VilleRequest",'alert','e'); 
+			}
 },
 
 InsertVilleIntoLOCAL : function (villeObject,synch,formReq,len,callbackViewModel)
 {
+	try
+	{
 	  	if (synch == "false")
 			{
 		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoVille(tx, formReq, villeObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoVille");}); 
@@ -92,12 +129,24 @@ InsertVilleIntoLOCAL : function (villeObject,synch,formReq,len,callbackViewModel
 						formReq.insertVilleIntoArray(villeObject,formReq,len,callbackViewModel)	;		
 							}); 
 			}		
+}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertVilleIntoLOCAL in VilleRequest",'alert','e'); 
+			}
 },
 
 
 InsertIntoVille : function (requete,formReq,villeObject,synch)
 {
+	try
+	{
 	requete.executeSql('INSERT INTO Villes (VilleID,Designation,ZoneID,Latitude,Synch,Longitude) VALUES ('+villeObject.VilleID+',"'+villeObject.Designation+'",'+villeObject.ZoneID+',"'+villeObject.Latitude+'","'+synch+'",'+villeObject.Longitude+')');
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoVille in VilleRequest",'alert','e'); 
+			}
 },
 //////////////////////////////////////////////////////////////////////////
 
@@ -106,21 +155,34 @@ InsertIntoVille : function (requete,formReq,villeObject,synch)
 	
 		
 	SelectVille: function (callback,oPointVente) {
-	 
+	try
+	{ 
 	  var form = this;
 	  this.connexion.transaction(function(tx){ form.SelectFromVilleByID(tx, form,callback,oPointVente); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromVilleByID");});
+	  }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectVille in VilleRequest",'alert','e'); 
+			}
     },
     
      SelectFromVilleByID : function(requete,form,callback,oPointVente) {
-   
+   try
+   {
    			requete.executeSql("SELECT * FROM Villes WHERE VilleID = ?", [oPointVente.VilleID], function(tx, results) {form.querySuccessByPointVente(tx,results,form,callback,oPointVente);});
-       
+       }
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromVilleByID in VilleRequest",'alert','e'); 
+			}
     },
     
     
    
     
     querySuccessByPointVente:function (requete, results,form,callback,oPointVente) {
+	try
+	{
 		var len = results.rows.length;
 			if(len>0){
 			var oVille = new DMS.Mobile.Ville();	
@@ -133,7 +195,11 @@ InsertIntoVille : function (requete,formReq,villeObject,synch)
 			
 			}
 			callback(oPointVente);
-        						
+        	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccessByPointVente in VilleRequest",'alert','e'); 
+			}					
 	}
 
 //////////////////////////////////////////////////////////////////////////	

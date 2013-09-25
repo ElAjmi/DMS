@@ -14,11 +14,18 @@
 	
 	insertPointVenteIntoArray : function(pointVente,form,len,callbackViewModel)
 	{
-		form.ListPointVente.push(pointVente);
-		if (form.ListPointVente.length == len)
+		try
 		{
-			alert("appel client");
-			callbackViewModel(form.ListPointVente);
+			form.ListPointVente.push(pointVente);
+			if (form.ListPointVente.length == len)
+			{
+				alert("appel client");
+				callbackViewModel(form.ListPointVente);
+			}
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertPointVenteIntoArray in PointVenteRequest",'alert','e'); 
 		}
 	},
 	
@@ -26,21 +33,29 @@
 //////////////////////////////////////////////////////// Serveur /////////////////////////	
 
 	SelectPointVenteByPersonnelFromServer :function(callbackViewModel,PersonnelID)
-	{		
+	{
+		try
+		{		
 	     var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		 var ServeurURL	= Conf.URL;
+		 
 		 var form = this;
          var Data = "PersonnelID="+PersonnelID; 
 		 var methode = "GetListPointVenteDTOByPersonnelID?";
-		 var URL = ServeurUrl+methode+Data;
+		 var URL = Conf.URL+methode+Data;
 		 
 	 DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createPointVenteDTO(JsonObject,Form,callbackViewModel);},URL,form);
-			
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectPointVenteByPersonneFromServer in PointVenteRequest",'alert','e'); 
+		}		
 	},
 	
 	
 	createPointVenteDTO : function (json,form,callbackViewModel)
 	{
+		try
+		{
 		if ( json != null)
 		{
 			var synch = "true";
@@ -78,6 +93,11 @@
 			}
 		}
 		else{callbackViewModel(form.ListPointVente);}	
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : CreatePointVenteDTO in PointVenteRequest",'alert','e'); 
+		}
 	},
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,17 +105,33 @@
 
 InsertPointVente : function(pointVente,synch,form,len,callbackViewModel)
 {
+	try
+	{
 	form.InsertPointVenteIntoLOCAL(pointVente,synch,form,len,callbackViewModel);
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPointVente in PointVenteRequest",'alert','e'); 
+		}
 },
 
 insertPointVente : function(pointVente)
 {
+	try
+	{
 	var form = this;	
 		this.InsertVilleIntoLOCAL(pointVente,"false",form,null,null);
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertPointVente in PointVenteRequest",'alert','e'); 
+		}
 },
 
 InsertPointVenteIntoLOCAL : function(pointVenteObject,synch,formReq,len,callbackViewModel)
 {
+	try
+	{
 		  	if (synch == "false")
 			{
 		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoPointVente(tx, formReq, pointVenteObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoPointVente");}); 
@@ -108,11 +144,25 @@ InsertPointVenteIntoLOCAL : function(pointVenteObject,synch,formReq,len,callback
 							});
 							//formReq.insertPointVenteIntoArray(pointVenteObject,formReq,len,callbackViewModel)	;	
 			}	
+			
+					}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertPointVenteIntoLOCAL in PointVenteRequest",'alert','e'); 
+		}
 },
 
 InsertIntoPointVente : function(requete,formReq,PointVenteObject,synch)
 {
+	try
+	{
 	requete.executeSql('INSERT INTO PointVentes (PointVenteID,Latitude,Longitude,EtatPointVente,Responsable,Adresse,Tel,Fax,Email,Synch,VilleID,ClientID)VALUES('+PointVenteObject.PointVenteID+',"'+PointVenteObject.Latitude+'","'+PointVenteObject.Longitude+'",'+PointVenteObject.EtatPointVente+',"'+PointVenteObject.Responsable+'","'+PointVenteObject.Adresse+'",'+PointVenteObject.Tel+','+PointVenteObject.Fax+',"'+PointVenteObject.Email+'","'+synch+'",'+PointVenteObject.VilleID+','+PointVenteObject.ClientID+')');
+	
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoPointVente in PointVenteRequest",'alert','e'); 
+		}
 },
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -120,17 +170,35 @@ InsertIntoPointVente : function(requete,formReq,PointVenteObject,synch)
 ///////////////////////////Select From LOCAL /////////////////////////////
 
 	SelectAllPointVente: function (callback) {
+	try
+	{
 				var form = this;	
 			       	this.connexion.transaction(function(tx){ form.SelectFromPointVente(tx, form,callback) }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromPointVente");});
+   		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectAllPointVente in PointVenteRequest",'alert','e'); 
+		}
     },
 	
 	SelectFromPointVente : function (requete,form,callback)
 	{
+		try
+		{
 		requete.executeSql("SELECT * FROM PointVentes", [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
+		
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromPointVente in PointVenteRequest",'alert','e'); 
+		}
 	},
 	
 	
 	  querySuccess:function (requete, results,form,callback) {
+			try
+			{		
+					
 							var len = results.rows.length;
 						form.ListPointVente = [];
 						DMS.Mobile.Common.Alert(" length mission DB : " +len);
@@ -153,19 +221,37 @@ InsertIntoPointVente : function(requete,formReq,PointVenteObject,synch)
 								form.ListPointVente.push(pointVenteDTO);
 							}
 		callback(form.ListPointVente);
+		
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccess in PointVenteRequest",'alert','e'); 
+		}
 							
 	  },
 	
 	SelectPointVente: function (callback,oMission) {
+	 try
+	 {
 	 
 	  var form = this;
 	  this.connexion.transaction(function(tx){ form.SelectFromPointVenteByMissionID(tx, form,callback,oMission); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromPointVenteByMissionID");});
+	  		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectPointVente in PointVenteRequest",'alert','e'); 
+		}
     },
     
      SelectFromPointVenteByMissionID : function(requete,form,callback,oMission) {
-   
+   try
+   {
    			requete.executeSql("SELECT * FROM PointVentes WHERE PointVenteID = ?", [oMission.PointVenteID], function(tx, results) {form.querySuccessByMission(tx,results,form,callback,oMission);});
-       
+       		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromPointVenteByMissionID in PointVenteRequest",'alert','e'); 
+		}
     },
     
     
@@ -173,7 +259,8 @@ InsertIntoPointVente : function(requete,formReq,PointVenteObject,synch)
     
     
     querySuccessByMission:function (requete, results,form,callback,oMission) {
-		
+	try
+	{	
 		var len = results.rows.length;
 			if(len>0){
 			var oPointVente = new DMS.Mobile.PointVente();
@@ -201,13 +288,24 @@ InsertIntoPointVente : function(requete,formReq,PointVenteObject,synch)
 			{
 				callback(oMission);
 			}
-        						
+        		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccessByMission in PointVenteRequest",'alert','e'); 
+		}						
 	},
 	
 	insertPointVenteIntoMission : function (oMission,pointventeclient,callback){
-		
+	try
+	{	
 		oMission.PointVentes = pointventeclient;
 		callback(oMission);
+		
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertPointVenteIntoMission in PointVenteRequest",'alert','e'); 
+		}	
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////	

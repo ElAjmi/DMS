@@ -11,44 +11,52 @@ DMS.Mobile.LigneCommandeRequest =
 	ListLigneCommande : [],
     connexion: null,
 
-insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,callbackCommande)
-	{
-		commande.ListLignesCommande.push(ligneCommande)
-		if ( commande.ListLignesCommande.length == len)
-		{
-			callbackCommande(commande);
-		}
-		
-	},
+
 	
 	
 	insertLigneCommandeIntoArray : function(LigneCommande,form,len,callbackViewModel)
 	{
-		form.ListLigneCommande.push(LigneCommande);
-		if ( form.ListLigneCommande.length == len)
+		try
 		{
-			callbackViewModel(form.ListLigneCommande);
+			form.ListLigneCommande.push(LigneCommande);
+			if ( form.ListLigneCommande.length == len)
+			{
+				callbackViewModel(form.ListLigneCommande);
+			}
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertLigneCommandeIntoArray in LigneCommandeRequest",'alert','e'); 
 		}
 	},
 	
 //////////////////////////////////////////////// Serveur  /////////////////////
 	SelectLigneCommandeByPersonnelFromServer : function (callbackViewModel,PersonnelID)
 	{
+		try
+		{
 		  var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		  var ServeurURL	= Conf.URL;
+		
 		  form =this;
 		
 		  var Data = "PersonnelID="+PersonnelID; 
 		  
 		  var methode= "GetListLigneCommandeDTOByPersonnelID?";
 
-		  var URL = ServeurUrl+methode+Data;
+		  var URL = Conf.URL+methode+Data;
 
 		     DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createLigneCommandeDTO(JsonObject,Form,callbackViewModel);},URL,form);
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectLigneCommandeByPersonnelFromServer in LigneCommandeRequest",'alert','e'); 
+		}
 	},
 	
 	createLigneCommandeDTO : function (json,form,callbackViewModel)
 	{
+		try
+		{
 		if ( json != null)
 		{
 			var synch = "true";
@@ -72,6 +80,12 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 		}
 		else{callbackViewModel(form.ListLigneCommande);}	
 		
+		
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : CreateLigneCommandeDTO in LigneCommandeRequest",'alert','e'); 
+		}
 	},
 	
 	
@@ -81,19 +95,35 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 
    InsertLigneCommande : function (ligneCommande,synch,form,len,callbackViewModel)
 		{
+			try
+			{
 			form.InsertLigneCommandeIntoLOCAL(ligneCommande,synch,form,len,callbackViewModel);
-	
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertLigneCommande in LigneCommandeRequest",'alert','e'); 
+		}
 		},
 		
    insertLigneCommande: function(ligneCommande){
-					var form = this;	
+			
+			try
+			{
+						var form = this;	
 			       	this.InsertLigneCommandeIntoLOCAL(ligneCommande,"false",form,null,null);
+						}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertLigneCommande in LigneCommandeRequest",'alert','e'); 
+		}
     },	
 	
 	
 	
 	InsertLigneCommandeIntoLOCAL: function(LigneCommandeObject,synch,formReq,len,callbackViewModel) 
    {
+	   try
+	   {
 	    	if (synch == "false")
 			{
 		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoLigneCommande(tx, formReq, LigneCommandeObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoLigneCommande");}); 
@@ -106,11 +136,16 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 							}); 
 			}		
 	
-					
+				}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertLigneCommandeIntoLOCAL in LigneCommandeRequest",'alert','e'); 
+		}		
     },
 	
 	InsertIntoLigneCommande : function(requete,form, LigneCommande,synch){
-		
+		try
+		{
 		alert ('?'+','+LigneCommande.Quantite+','+LigneCommande.PrixTotalArticleTTC+','+LigneCommande.PrixTotalArticleHT+',"'+synch+'",'+LigneCommande.CommandID+','+LigneCommande.ArticleID);
 		
 		
@@ -124,6 +159,12 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 				   
 			 }
 	
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoLigneCommande in LigneCommandeRequest",'alert','e'); 
+		}
+	
 	},
     
     
@@ -132,14 +173,26 @@ insertLigneCommandeIntoCommande : function (commande, ligneCommande,form,len,cal
 /////////////////////////Select From LOCAL /////////////////////////////////////	
 
 SelectLigneCommande: function (callback,oCommande) {
+try
+{
 	  var form = this;
 	  this.connexion.transaction(function(tx){ form.SelectFromLigneCommandeBYCommandeID (tx, form,callback,oCommande); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromLigneCommandeBYCommandeID");});
+	  	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectLigneCommande in LigneCommandeRequest",'alert','e'); 
+		}
     },
     
      SelectFromLigneCommandeBYCommandeID : function(requete,form,callback,oCommande) {
-   
+   try
+   {
    			requete.executeSql("SELECT * FROM LigneCommande WHERE CommandeID = ?", [oCommande.CommandeID], function(tx, results) {form.querySuccessByCommandeID(tx,results,form,callback,oCommande);});
-       
+    	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromLigneCommandeByCommandeID in LigneCommandeRequest",'alert','e'); 
+		}
     },
     
     
@@ -147,7 +200,8 @@ SelectLigneCommande: function (callback,oCommande) {
     
     
     querySuccessByCommandeID : function (requete, results,form,callback,oCommande) {
-		
+try
+{		
 		var len = results.rows.length;
 		oCommande.ListLignesCommande = [];
 			if(len>0){
@@ -170,14 +224,25 @@ SelectLigneCommande: function (callback,oCommande) {
 		     				
 			}
 			else {callback(oCommande);}
-	
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccessByCommandeID in LigneCommandeRequest",'alert','e'); 
+		}
         						
 	},
 	
 	InsertLigneCommandeIntoCommande : function(form,callback,oCommande,LigneCommande,len){
+	try
+	{
 		oCommande.ListLignesCommande.push(LigneCommande);
 		if(len==oCommande.ListLignesCommande.length){
 		callback(oCommande);
+		}
+			}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertLigneCommandeIntoCommande in LigneCommandeRequest",'alert','e'); 
 		}
 	}
 	

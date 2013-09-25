@@ -25,20 +25,35 @@ DMS.Mobile.CalendrierViewModel =
 		
 	init : function ()
 	{
+		try
+		{
 		var form = this;
 		DMS.Mobile.TourneeRequest.connexion = this.connexion;
 		DMS.Mobile.TourneeRequest.SelectAll(function(listTournee){form.initialize(listTournee,form);});
-			
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : init in CalendrierViewModel",'alert','e'); 
+			}
 		},
 	initialize : function(listTournee,form){
+		try
+		{
 		form.TourneeArray = listTournee;
 		//form.rechercheTourneeSemaineEncours(listTournee,form);
 		form.rechercheTourneeAujourdhui(listTournee,form);
 		form.initailizeEvents(listTournee,form);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initialize in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	initailizeEvents : function (listTournee,form)
 	{
+		try
+		{
 		form.$SearchButton.click(function() {
 				if(form.validateDate(form.$DateDebut.val(),form.$DateFin.val())){
 					form.rechercheTourneeParDate(listTournee,form,form.$DateDebut.val(),form.$DateFin.val());
@@ -80,23 +95,36 @@ DMS.Mobile.CalendrierViewModel =
 	});
 		
 		
-			
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializeEvents in CalendrierViewModel",'alert','e'); 
+			}	
 	},
 	
 		
 	validateDate : function (DateDebut,DateFin)
 	{
+		try
+		{
 		dd1=DateDebut.split('-').reverse().join('');
 		dd2=DateFin.split('-').reverse().join('');
 		if(dd1>dd2){
 			return false;
 		}
 		else return true;
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : validateDate in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	insertTournee : function(Tournee,form)
 	{
+		try
+		{
 				var tmp = new Date(DMS.Mobile.Dates.SplitDate(Tournee.DateDebut));
 				tmp = DMS.Mobile.Dates.Days(tmp);
 				 var tournee = Tournee;
@@ -293,12 +321,19 @@ DMS.Mobile.CalendrierViewModel =
   $(this).parent().attr("data-current",ident);
         });;
     });
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertTournee in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	rechercheTourneeParDate : function(listTournee,form,DateDebut,DateFin)
 	{
 		
+		try 
+		{
 		//$(this.$Periode).text("Du "+DateDebut+" Au "+DateFin);
 		
 		this.$TourneeContainer.empty();
@@ -334,40 +369,67 @@ DMS.Mobile.CalendrierViewModel =
 			//alert("Aucune Tourn\351e !");
 			DMS.Mobile.Notification.ShowMessage("Aucune Tourn\351e pour cette date !","alert",'e');
 		}
-		
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeParDate in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 		
 	rechercheTourneeAujourdhui : function(listTournee,form)
 	{
+		try
+		{
 		this.$TourneeContainer.empty();
 		var curr = new Date();
 		var DateDebutA = DMS.Mobile.Dates.Dayformat(curr);
 		var DateFinA= DMS.Mobile.Dates.Dayformat(curr);
 		form.rechercheTourneeParDate(listTournee,form,DateDebutA,DateFinA);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeAujourdhui in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	rechercheTourneeDemain : function(listTournee,form)
 	{
+		try
+		{
 		var curr = new Date();
 		var tomorrow = new Date(curr.getTime() + 24 * 60 * 60 * 1000);
 		var DateDebutD = DMS.Mobile.Dates.Dayformat(curr);
 		var DateFinD= DMS.Mobile.Dates.Dayformat(tomorrow);
 		form.rechercheTourneeParDate(listTournee,form,DateDebutD,DateFinD);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeDemain in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	rechercheTourneeHier : function(listTournee,form)
 	{
+		try
+		{
 		var curr = new Date();
 		var yesterday = new Date(curr.getTime() - 24 * 60 * 60 * 1000);
 		var DateDebutH = DMS.Mobile.Dates.Dayformat(curr);
 		var DateFinH= DMS.Mobile.Dates.Dayformat(yesterday);
 		form.rechercheTourneeParDate(listTournee,form,DateDebutH,DateFinH);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeHier in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	rechercheTourneeSemaineEncours : function(listTournee,form)
 	{
+		try
+		{
 		this.$TourneeContainer.empty();
 		var curr = new Date();
 		var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()+1));
@@ -377,10 +439,17 @@ DMS.Mobile.CalendrierViewModel =
 		var DateFinEC = DMS.Mobile.Dates.Dayformat(lastday);
 		//alert("DateDebut : "+DateDebutEC+" DateFin : "+DateFinEC);
 		form.rechercheTourneeParDate(listTournee,form,DateDebutEC,DateFinEC);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeSemaineEncours in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	rechercheTourneeSemaineSuivante : function(listTournee,form)
 	{
+		try
+		{
 		this.$TourneeContainer.empty();
 		var curr = new Date();
 		var Nextweek = DMS.Mobile.Dates.Nextweek(curr);
@@ -391,6 +460,11 @@ DMS.Mobile.CalendrierViewModel =
 		var DateFinSS = DMS.Mobile.Dates.Dayformat(lastday);
 		//alert("DateDebut : "+DateDebutSS+" DateFin : "+DateFinSS);
 		form.rechercheTourneeParDate(listTournee,form,DateDebutSS,DateFinSS);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : rechercheTourneeSemaineSuivante in CalendrierViewModel",'alert','e'); 
+			}
 	},
 	
 	rechercheTourneeSemainePrecedante : function(listTournee,form)

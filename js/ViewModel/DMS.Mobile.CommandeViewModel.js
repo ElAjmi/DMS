@@ -52,7 +52,9 @@ DMS.Mobile.CommandeViewModel =
 
     
 	Init: function (form) {
-    	//alert("in init");
+    
+	try
+	{	//alert("in init");
 		var form = this ;
 		
 		DMS.Mobile.CommandeRequest.connexion = form.connexion;
@@ -80,43 +82,73 @@ DMS.Mobile.CommandeViewModel =
 		//----------------Hamza	
 		form.getSessionStorage(form);
 		form.FillIdPersonnelSession(form);
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : init in CommandeViewModel",'alert','e'); 
+			}
 		},
 	
 	initializeCommande : function(ListCommande,form){
-		
+		try
+		{
 		form.CommandeArray = ListCommande;
 		form.GetCommandeID(form.CommandeArray,form);
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializeCommande in CommandeViewModel",'alert','e'); 
+			}
 	
 		},
 	
 	
 	initializePointVente : function(ListPointVente,form){
+	try
+	{
 		form.PointVenteArray = ListPointVente;
 		//alert("table PV is"+form.PointVenteArray);
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializePointVente in CommandeViewModel",'alert','e'); 
+			}
 		},
 	
 	
 	initializeClient : function(ListClient,form){
-
+try
+{
 		form.ClientArray = ListClient;
 		form.FillClient(form.ClientArray,form);
 		// alert("table is"+form.ClientArray);
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initializeClient in CommandeViewModel",'alert','e'); 
+			}
 	
 		},
 	
 	Initialize : function(ListArticle,form){
+	try
+	{
 		form.ArticleArray = ListArticle;
 		form.FamilleOcc = form.countFamilleID(form.ArticleArray,form);
 		form.InsertArticle(form.ArticleArray,form);
 		form.InitializeEvents(form.ArticleArray,form);
 		
 		//alert("from Initialize is "+form);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : initialize in CommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	InitializeEvents: function (ListArticle,Form) {
+	try
+	{
 		var form = Form;
 		form.Commande.CommandeID = (form.LastCommande.CommandeID)+1 ;//------------------------------------>
 		
@@ -199,21 +231,34 @@ DMS.Mobile.CommandeViewModel =
 
 			     
 		 });
-				   	
+					}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InitializeEvents in CommandeViewModel",'alert','e'); 
+			}   	
 	},
 	
 	
 	getSessionStorage: function(form){
+	try
+	{
 		var sessionSto = sessionStorage.getItem("Personnel");
 		
 		if (sessionSto != null) {
 			    form.items = JSON.parse(sessionSto);
                // alert("items is : "+items.Login);
             }
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : getSessionStorage in CommandeViewModel",'alert','e'); 
+			}
 		},
 	
 	compressArray : function (arr) {
- 	var a = [], b = [], prev;
+ 	try
+	{
+	var a = [], b = [], prev;
     var ArrayOcc = [];
     arr.sort();
     for ( var i = 0; i < arr.length; i++ ) {
@@ -234,11 +279,18 @@ DMS.Mobile.CommandeViewModel =
 		}
 	}
     return ArrayOcc;
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : compresseArray in CommandeViewModel",'alert','e'); 
+			}
 },
 
 	
 	countFamilleID : function(ListArticle,form)
 	{
+		try
+		{
 		ArrayFamille = [];
 		Result = [];
 		
@@ -250,11 +302,17 @@ DMS.Mobile.CommandeViewModel =
 		
 		Result = form.compressArray(ArrayFamille);
 		return Result;
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : countFamilleID in CommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	GetArticleByFamilleID : function (ListArticle,form,familleID)
 	{
+		try
+		{
 		var ArticleArray = [];
 		for (var i=0; i < ListArticle.length; i++){
 			if(ListArticle[i].FamilleID == familleID ){
@@ -262,11 +320,17 @@ DMS.Mobile.CommandeViewModel =
 			}
 		}
 		return ArticleArray;
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : GetArticleByFamilleID in CommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	UpdateCommandedArticle :function (element,form)
 	{
-		
+		try
+		{
 		
 		
 		
@@ -347,11 +411,18 @@ DMS.Mobile.CommandeViewModel =
 		}
 		form.Commande.ListLignesCommande = form.ListLigneCommande;
 		//alert("Form.Commande.ListLignesCommande "+ form.Commande.ListLignesCommande);
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : UpdateCommandeArticle in CommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	CalculTotalCommande : function (form)
 	{
+		try
+		{
 		var totalHT = 0;
 		var totalTTC = 0;
 		var totalTVA = 0;
@@ -380,12 +451,17 @@ DMS.Mobile.CommandeViewModel =
 		 form.$PrixTotalHT.text("Prix Total HT : "+totalHT+" DT");
 		 form.$PrixTotalTTC.text("Prix Total TTC : "+totalTTC+" DT");
 		 form.$TotalTVA.text("Total TVA : "+totalTVA+" DT");
-
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : calculTotalCommande in CommandeViewModel",'alert','e'); 
+			}
 	},
 	
 	
 	InsertDetailsArticle : function (ListArticle,form) {
-		
+	try
+	{	
   		var Images = [
 		'css/images/Produits/gaucho.png',
 		'css/images/Produits/gaufrettes.png',
@@ -415,6 +491,11 @@ DMS.Mobile.CommandeViewModel =
 			$("#th"+ListArticle[i].ArticleID).append('<div data-role="popup" id="popup' + i + '" data-overlay-theme="a" data-theme="c" data-corners="true"><a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Fermer</a><br/><center><img class="popphoto" src="' + popup + '" style="width:100%;"></center><b>&nbsp;&nbsp;D&eacute;tails article :</b><ul><li><b>D&eacute;signation :</b>'+ListArticle[i].Designation+'</li><li><b>Quantit&eacute; disponible :</b>'+ ListArticle[i].QteDispo+'</li><li><b>Prix unitaire :</b>'+ ListArticle[i].PrixUnitaire+' DT</li></ul></div>').trigger('create');
 
 		}
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : insertDetailsArticle in CommandeViewModel",'alert','e'); 
+			}
 		},
        
 	   //----------------Hamza	
@@ -434,7 +515,8 @@ DMS.Mobile.CommandeViewModel =
 	   
 	   //----------------Hamza	
 	FillClient : function (ListClient,form){
-					
+	try
+	{				
 		for (var i=0; i<ListClient.length ; i++ ){
 
 			//alert("SelectClient is "+$(form.$SelectClient));
@@ -442,21 +524,33 @@ DMS.Mobile.CommandeViewModel =
 			//alert("from Select is "+$(form.$SelectClient).html());
 			$(form.$SelectClient).append("<option value='"+ListClient[i].ClientID+"'>"+ListClient[i].NomSociete+"</option>").trigger('create'); 
 			}
-			
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : FillClient in CommandeViewModel",'alert','e'); 
+			}
 	    
 	  },
 	  //----------------Hamza	
 	  FillPointVente : function (ListPointVente,form,selectClientID){
+		try
+		{
 		  for (var i=0; i<ListPointVente.length ; i++ ){
 		  if (ListPointVente[i].ClientID == selectClientID){
 			$(form.$SelectPointVente).append("<option value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Adresse+"</option>").trigger('create'); 
 							}
 						}
+							}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : FillPointVente in CommandeViewModel",'alert','e'); 
+			}
 		  },  
 	  
 	  //----------------Hamza	
 			 FillPointVenteInfos : function (ListPointVente,form,selectPointVenteID){
-					
+		try
+		{			
 				  for (var i=0; i<ListPointVente.length ; i++ ){
 					  if (ListPointVente[i].PointVenteID == selectPointVenteID){
 											$(form.$PVInfos).append("<br><label value='1'>Responsable : </label><label value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Responsable+"</label><br><br><label value='1'>Numero de Telephone : </label><label value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Tel+"</label><br><br><label value='1'>Numero de Fax : </label><label value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Fax+"</label><br><br><label value='1'>Email : </label><label value='"+ListPointVente[i].PointVenteID+"'>"+ListPointVente[i].Email+"</label>").trigger('create'); 
@@ -464,12 +558,18 @@ DMS.Mobile.CommandeViewModel =
 																			
 									}
 				  }
-				
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : FillPointVenteInfos in CommandeViewModel",'alert','e'); 
+			}		
 				  },   
 	  
 	
 	InsertArticle : function (ListArticle,form)
 	{
+		try
+		{
 		//$(this.$tablecommande).append("<tbody></tbody>");
 		
 		
@@ -530,7 +630,11 @@ DMS.Mobile.CommandeViewModel =
 				
 				
 			}
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertArticle in CommandeViewModel",'alert','e'); 
+			}
 	},    
     
    

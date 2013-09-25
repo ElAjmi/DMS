@@ -14,23 +14,45 @@ DMS.Mobile.ClientRequest =
 
 insertClientIntoPointVente : function(pointVente,client,callbackPointVente)
 	{
-		pointVente.Client = client;
-		callbackPointVente(pointVente);
+		try
+		{
+			pointVente.Client = client;
+			callbackPointVente(pointVente);
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertClientIntoPointVente in ClientRequest",'alert','e'); 
+		} 
 	},
 
 insertActiviteIntoClient: function(mission,callback)	
 	{ 
+	
+	try
+	{
 		callback(mission);  
+	}
+	catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertActiviteIntoClient in ClientRequest",'alert','e'); 
+		} 
 	},
 
 insertClientIntoArray : function(client,form,len,callbackViewModel)
 {
-	form.ClientList.push(client);
-	if (form.ClientList.length == len)
+	try
 	{
-		alert("appel activite");
-		callbackViewModel(form.ClientList);
+		form.ClientList.push(client);
+		if (form.ClientList.length == len)
+		{
+			alert("appel activite");
+			callbackViewModel(form.ClientList);
+		}
 	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertClientIntoArray in ClientRequest",'alert','e'); 
+		} 
 },
 	
 	
@@ -39,19 +61,28 @@ insertClientIntoArray : function(client,form,len,callbackViewModel)
 	
 	SelectClientByPersonnelFromServer : function(callbackViewModel,PersonnelID)
 	{
+		try
+		{
 		    var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
-		    var ServeurURL	= Conf.URL;
+		    
 			var form = this;
             var Data = "PersonnelID="+PersonnelID;  
 		    var methode= "GetListClientDTOByPersonnelID?";		
-		    var URL = ServeurUrl+methode+Data;
+		    var URL = Conf.URL+methode+Data;
 
 		    DMS.Mobile.Common.CallService(function(JsonObject,Form){form.createClientDTO(JsonObject,Form,callbackViewModel)},URL,form);
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectClientByPersonnelFromServer in ClientRequest",'alert','e'); 
+		}
 	},
 	
 	
 	createClientDTO : function(json,form,callbackViewModel)
 	{
+		try
+		{
 			if ( json != null)
 		{
 			var synch = "true";
@@ -84,6 +115,12 @@ insertClientIntoArray : function(client,form,len,callbackViewModel)
 
 		}
 		else{callbackViewModel(form.ClientList);}	
+	
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : createClientDTO in ClientRequest",'alert','e'); 
+		}
 	},
 	
 	
@@ -93,16 +130,32 @@ insertClientIntoArray : function(client,form,len,callbackViewModel)
 /////////////////////////////////////////Insertion LOCAL //////////////
 InsertClient : function(client,synch,form,len,callbackViewModel)
 {
+	try
+	{
 	form.InsertClientIntoLOCAL(client,synch,form,len,callbackViewModel);
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertClient in ClientRequest",'alert','e'); 
+		}
 },
 insertClient : function(client)
 {
+	try
+	{
 	var form = this;	
 	this.InsertClientIntoLOCAL(client,"false",form,null,null);
+	}
+			catch(err)
+	{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : insertClient in ClientRequest",'alert','e'); 
+	}
 },
 
 InsertClientIntoLOCAL : function (clientObject,synch,formReq,len,callbackViewModel)
 {
+	try
+	{
 		  	if (synch == "false")
 			{
 		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoClient(tx, formReq, clientObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoClient");}); 
@@ -115,32 +168,58 @@ InsertClientIntoLOCAL : function (clientObject,synch,formReq,len,callbackViewMod
 							}); 
 							//formReq.insertClientIntoArray(clientObject,formReq,len,callbackViewModel);
 			}
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertClientIntoLOCAL in ClientRequest",'alert','e'); 
+		}
 },
 
 InsertIntoClient : function(requete,formReq,ClientObject,synch)
 {
+ try
+ {
 	requete.executeSql('INSERT INTO Client(ClientID,NomResponsable,NomSociete,RaisonSocial,Tel,Fax,UrlWeb,Email,ImageIDClient,EtatClient,Synch,ActiviteID) VALUES('+ClientObject.ClientID+',"'+ClientObject.NomResponsable+'","'+ClientObject.NomSociete+'","'+ClientObject.RaisonSocial+'",'+ClientObject.Tel+','+ClientObject.Fax+',"'+ClientObject.UrlWeb+'","'+ClientObject.Email+'",'+ClientObject.ImageIDClient+','+ClientObject.EtatClient+',"'+synch+'",'+ClientObject.ActiviteID+')');
+	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoClient in ClientRequest",'alert','e'); 
+		}
 },
 //////////////////////////////////////////////////////////////////////////////
 	
 ///////////////////////////////////////////////Select From LOCAL ////////////////////
 
 SelectAllClient: function (callback) {
-				var form = this;	
+	try
+	{			var form = this;	
 			       	this.connexion.transaction(function(tx){ form.SelectFromClient(tx, form,callback) }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromClient");});
-    },
+   	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectAllClient in ClientRequest",'alert','e'); 
+		}
+					
+ },
     
     SelectFromClient : function(requete,form,callback) {
        	
-       				
+     try
+	 {  				
 					requete.executeSql('SELECT * FROM Client', [], function(tx, results) {form.querySuccess(tx,results,form,callback);});
-    
+    	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromClient in ClientRequest",'alert','e'); 
+		}
         
         
     },
 	
 	querySuccess : function (requete, results,form,callback) 
 {
+	try
+	{
 				var len = results.rows.length;
 				var id;
 				var myproducts = new Array();
@@ -165,18 +244,36 @@ SelectAllClient: function (callback) {
 											
 				}							
 callback(form.ClientList);
+	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccess in ClientRequest",'alert','e'); 
+		}
                            
     },
 	
 	  SelectClient: function (callback,oPointVente) {
+		try
+		{
 	  		var form = this;	
 		this.connexion.transaction(function(tx){ form.SelectFromClientByPoinVenteID(tx, form,callback,oPointVente); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromClientByPoinVenteID");});
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectClient in ClientRequest",'alert','e'); 
+		}
 	},
     
      SelectFromClientByPoinVenteID : function(requete,form,callback,oPointVente) {
-		 
+	try
+	{
 		requete.executeSql('SELECT * FROM Client WHERE ClientID = ?', [oPointVente.ClientID], function(tx, results) {form.querySuccessByPointVente(tx,results,form,callback,oPointVente);});
-    
+    	}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromClientByPointVenteID in ClientRequest",'alert','e'); 
+		}
+	
     },
     
     
@@ -184,7 +281,8 @@ callback(form.ClientList);
     
     
    querySuccessByPointVente : function (requete, results,form,callback,oPointVente) {
-	  
+	  try
+	  {
 		var len = results.rows.length;
 			if(len>0){	
 			var oClient = new DMS.Mobile.Client();
@@ -204,15 +302,15 @@ callback(form.ClientList);
 DMS.Mobile.ActiviteRequest.SelectActivite(function(client){form.insertClientIntoPointVente(oPointVente,client,callback);},oClient);
 			
 			}else{callback(oPointVente);}
+		}
+			catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccessByPointeVente in ClientRequest",'alert','e'); 
+		}
                     
     },
 	
-	insertClientIntoPointVente : function (oPointVente,client,callback)
-	{
-		oPointVente.Client = client;
-		
-		callback(oPointVente);
-	}
+
 	
 	/////////////////////////////////////////////////////////////////////////////
 }

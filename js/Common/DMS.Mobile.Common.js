@@ -24,7 +24,7 @@ DMS.Mobile.Common =
 	{
 		try
 		{
-			var Conf = JSON.parse(localStorage.getItem("Configuration"));
+			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
 			
 			if (Conf == null)
 			{
@@ -35,14 +35,14 @@ DMS.Mobile.Common =
 						configurationDTO.URL = "http://192.168.1.8:80/ninject/Service1.svc/";
 						
 						
-						  localStorage.setItem("Configuration", JSON.stringify(configurationDTO));
+						  sessionStorage.setItem("Configuration", JSON.stringify(configurationDTO));
 			}
 	
 		   callback();
 		}
 		catch(err)
 		{
-			DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+			DMS.Mobile.Notification.ShowMessage(err.message+" : init in common",'alert','e'); 
 		}
 	
 	},
@@ -73,7 +73,7 @@ DMS.Mobile.Common =
 			}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+				DMS.Mobile.Notification.ShowMessage(err.message+" : ParseDateJson in common" ,'alert','e'); 
 			}
 		},
 		ParseHeureJson : function(d)
@@ -96,7 +96,7 @@ DMS.Mobile.Common =
 			}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+				DMS.Mobile.Notification.ShowMessage(err.message+" : ParseHeureJson in common",'alert','e'); 
 			}
 		},		
 		currentHours : function()
@@ -119,7 +119,7 @@ DMS.Mobile.Common =
 			}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+				DMS.Mobile.Notification.ShowMessage(err.message+" : currentHours in common",'alert','e'); 
 			}
 		},
 		currentDate : function()
@@ -144,19 +144,26 @@ DMS.Mobile.Common =
 			}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err,'alert','e'); 
+				DMS.Mobile.Notification.ShowMessage(err.message+" : currentDate in common",'alert','e'); 
 			}
 		},
 		
 	DisplayProperty :function(obj)
 	 {
-	    var str = '';
-	    for (var p in obj) {
-	        if (obj.hasOwnProperty(p)) {
-	            str += p + ' : ' + obj[p] + '\n';
-	        }
-	    }
-	    alert(str);
+		 try
+		 {
+			var str = '';
+			for (var p in obj) {
+				if (obj.hasOwnProperty(p)) {
+					str += p + ' : ' + obj[p] + '\n';
+				}
+			}
+			alert(str);
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : DisplayProperty in common",'alert','e'); 
+		}
 	},  
 	
 	errors:function (err,type) {
@@ -198,29 +205,34 @@ DMS.Mobile.Common =
 	},
 	
 	DrawLoading : function()
-
 	{
-		var cl = new CanvasLoader('canvasloader-container');
-		cl.setColor('#100b9e'); // default is '#000000'
-		cl.setShape('roundRect'); // default is 'oval'
-		cl.setDiameter(29); // default is 40
-		cl.setDensity(15); // default is 40
-		cl.setRange(1.2); // default is 1.3
-		cl.setSpeed(1); // default is 2
-		cl.setFPS(20); // default is 24
-		cl.show(); // Hidden by default
-		
-		// This bit is only for positioning - not necessary
-		  var loaderObj = document.getElementById("canvasLoader");
-  		loaderObj.style.position = "absolute";
-  		loaderObj.style["top"] = cl.getDiameter() * -0.5 + "px";
-  		loaderObj.style["left"] = cl.getDiameter() * -0.5 + "px";
+		try
+		{
+			var cl = new CanvasLoader('canvasloader-container');
+			cl.setColor('#100b9e'); // default is '#000000'
+			cl.setShape('roundRect'); // default is 'oval'
+			cl.setDiameter(29); // default is 40
+			cl.setDensity(15); // default is 40
+			cl.setRange(1.2); // default is 1.3
+			cl.setSpeed(1); // default is 2
+			cl.setFPS(20); // default is 24
+			cl.show(); // Hidden by default
+			
+			// This bit is only for positioning - not necessary
+			  var loaderObj = document.getElementById("canvasLoader");
+			loaderObj.style.position = "absolute";
+			loaderObj.style["top"] = cl.getDiameter() * -0.5 + "px";
+			loaderObj.style["left"] = cl.getDiameter() * -0.5 + "px";
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : DrawLoading in common",'alert','e'); 
+		}
 	},
 	
 
-     CallService: function(callback,Url,form1) {
-			
-			
+     CallService: function(callback,Url,form1) 
+	 {
 				var form = this;
 				 DMS.Mobile.Common.Alert("CallService");
 					$.ajax({
@@ -242,11 +254,12 @@ DMS.Mobile.Common =
                              form.ServiceFailed(msg);
                         }
 					});
-			
+		
 	         
 					
     },
    ServiceFailed: function(xhr) {
+	  
 			   alert("ServiceFailed" + xhr.responseText);
 		
 				if (xhr.responseText) {
@@ -257,24 +270,42 @@ DMS.Mobile.Common =
 						error({ Message: "Unknown server error." })
 				}
 			return;
+		
+		
 		},
 		
    ServiceSucceeded: function(result,callback,form) {
+	   try
+	   {
 			DMS.Mobile.Common.Alert("result = " + result);					
 
 			   JsonObject = result;
 			   
-			   callback(JsonObject,form);			   
+			   callback(JsonObject,form);	
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : ServiceSucceded in common",'alert','e'); 
+		}		   
 		},
 	
 	TestServer: function(callback)
 	{
-		var form = this;
-		var methode = "TestServer?";
-		 var URL = DMS.Mobile.Common.ServeurUrl+methode;
-		 
-		 var form = this;
-		    DMS.Mobile.Common.CallService(function(Json,Form){callback(form.AcceeServeur);},URL,form);
+		try
+		{
+			var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+			alert("test service");
+			var form = this;
+			var methode = "TestServer?";
+			 var URL =Conf.URL+methode;
+			 
+			 var form = this;
+				DMS.Mobile.Common.CallService(function(Json,Form){callback(form.AcceeServeur);},URL,form);
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : TestServer in common",'alert','e'); 
+		}
 	},
 		
 	/*	TestServerFunction : function(json,form)
@@ -294,6 +325,8 @@ DMS.Mobile.Common =
 	
 	
 	 deg2rad: function (angle){
+		 try
+		 {
     // Converts the number in degrees to the radian equivalent  
     // 
     // version: 1109.2015
@@ -301,34 +334,46 @@ DMS.Mobile.Common =
     // *     example 1: deg2rad(45);
     // *     returns 1: 0.7853981633974483
     return (angle / 180) * Math.PI;
+	}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : deg2rad in common",'alert','e'); 
+		}
 },
  
  calculDistanceKM:function (lat1,long1,lat2,long2)
  {
-	var r = 6366;
-	 
-	var lat1 = lat1;
-	var lon1 = long1;
-	 
-	var lat2 = lat2;
-	var lon2 = long2;
- 
-/**
- * Conversion des entrées en ° vers des Radians
- */
-lat1 = this.deg2rad(lat1);
-lon1 = this.deg2rad(lon1);
-lat2 = this.deg2rad(lat2);
-lon2 = this.deg2rad(lon2);
- 
-/**
- * Formule simple
- * d=acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2))
- */
- 
-var ds = Math.acos( Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1-lon2) );
-ds = ds * r;
-return ds // Distance en km : 0.024053337627628308
+	 try
+	 {
+				var r = 6366;
+				 
+				var lat1 = lat1;
+				var lon1 = long1;
+				 
+				var lat2 = lat2;
+				var lon2 = long2;
+			 
+			/**
+			 * Conversion des entrées en ° vers des Radians
+			 */
+			lat1 = this.deg2rad(lat1);
+			lon1 = this.deg2rad(lon1);
+			lat2 = this.deg2rad(lat2);
+			lon2 = this.deg2rad(lon2);
+			 
+			/**
+			 * Formule simple
+			 * d=acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon1-lon2))
+			 */
+			 
+			var ds = Math.acos( Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1-lon2) );
+			ds = ds * r;
+			return ds // Distance en km : 0.024053337627628308
+		}
+		catch(err)
+		{
+			DMS.Mobile.Notification.ShowMessage(err.message+" : calculDistanceKM in common",'alert','e'); 
+		}
 }
 	
 	

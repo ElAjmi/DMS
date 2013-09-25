@@ -16,7 +16,8 @@ DMS.Mobile.Login =
 	PersonnelLogin: null,
 
     Initialise: function () {
-		
+	try
+	{	
        DMS.Mobile.GammeRequest.connexion = this.connexion;
 	   DMS.Mobile.FamilleRequest.connexion = this.connexion;
 	   DMS.Mobile.ArticleRequest.connexion = this.connexion;
@@ -35,15 +36,23 @@ DMS.Mobile.Login =
 	   DMS.Mobile.ConfigurationRequest.connexion = this.connexion;
 	   
 	   
+	   
 	   DMS.Mobile.PersonnelRequest.connexion = this.connexion;
        this.InitialiseEvents();
+	   	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : Initialise in LoginViewModel",'alert','e'); 
+			}
     },
 	
 	InitialiseEvents: function () {
+		try
+		{
 		var form = this;
 		   this.$ValidateButton.click(function(){
 			$(this).addClass('ui-disabled');
-			   
+			   alert("button");
 				form.ValidateLogin();
 				
 				DMS.Mobile.Common.DrawLoading();
@@ -51,22 +60,36 @@ DMS.Mobile.Login =
 				
 			
 			});
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : InitiliseEvents in LoginViewModel",'alert','e'); 
+			}
        
     },
 	
 	
 	ValidateLogin:function(){
+		try
+		{
+		alert("validateLogin");
 	    var form = this;
-		DMS.Mobile.PersonnelRequest.GetPersonnelFrmLocal($(this.$login).val(), $(this.$password).val(),function(personnel){form.fonction1(personnel,form)});
+		DMS.Mobile.PersonnelRequest.VerifyPersonnelInLocalSession($(this.$login).val(), $(this.$password).val(),function(personnel){form.fonction1(personnel,form)});
 		
 		//DMS.Mobile.PersonnelRequest.GetPersonnelFromServer($(this.$login).val(), $(this.$password).val(),function(personnel){form.fonction2(personnel,form);});	
-		
+			}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : ValidateLogin in LoginViewModel",'alert','e'); 
+			}
 		},
 		
 		
 		fonction1 : function(personnel,form)
 		{
-			
+			alert("fonction1");
+			try
+			{
 			if ( personnel == null)
 			{
 			  DMS.Mobile.Common.TestServer(function(AcceeServeur){
@@ -87,6 +110,7 @@ DMS.Mobile.Login =
 			else
 			{				
 			alert("accees local");
+			alert(personnel.PersonnelID);
 			
 			var listPointVente = [];
 			var listMission = [];
@@ -145,10 +169,17 @@ DMS.Mobile.Login =
 				});
 				
 			}
+	}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : fonction1 in LoginViewModel",'alert','e'); 
+			}
 		},
 		
 		fonction2 : function(personnel,form)
 		{
+			try
+			{
 			if ( personnel == null)
 			{
 				alert("login et/ou mot de passe incorrecte");
@@ -226,6 +257,11 @@ DMS.Mobile.Login =
 			  
 		
 			}*/
+				}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : fonction2 in LoginViewModel",'alert','e'); 
+			}
 		},
 		
 	
