@@ -401,7 +401,7 @@
 						geolocation.getCurrentPosition(handleSuccess, errorCallback,{
 						  //The Android 2.x simulators will not return a geolocation result 
 						  //unless the enableHighAccuracy option is set to true
-							enableHighAccuracy: true,
+							enableHighAccuracy: false,
 							maximumAge: 5000 // 5 sec.
 						  });  
 					}
