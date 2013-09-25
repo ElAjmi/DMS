@@ -18,6 +18,7 @@ DMS.Mobile.Login =
     Initialise: function () {
 	try
 	{	
+	this.InitialiseEvents();
        DMS.Mobile.GammeRequest.connexion = this.connexion;
 	   DMS.Mobile.FamilleRequest.connexion = this.connexion;
 	   DMS.Mobile.ArticleRequest.connexion = this.connexion;
@@ -38,7 +39,7 @@ DMS.Mobile.Login =
 	   
 	   
 	   DMS.Mobile.PersonnelRequest.connexion = this.connexion;
-       this.InitialiseEvents();
+       
 	   	}
 			catch(err)
 			{
@@ -161,8 +162,8 @@ DMS.Mobile.Login =
 						  sessionStorage.setItem("ListTournee", JSON.stringify(listTournee));
 						  sessionStorage.setItem("Configuration", JSON.stringify(configuration));
 						
-						//DMS.Mobile.Common.RedirectToCalendrier();
-						DMS.Mobile.PositionRequest.InitializeGetPosition();
+						DMS.Mobile.Common.RedirectToCalendrier();
+						//DMS.Mobile.PositionRequest.InitializeGetPosition();
 					}
 					
 					;});
@@ -214,8 +215,8 @@ DMS.Mobile.Login =
 								  sessionStorage.setItem("ListClient", JSON.stringify(listClient));
 								  sessionStorage.setItem("ListTournee", JSON.stringify(listTournee));
 								  sessionStorage.setItem("Configuration", JSON.stringify(configuration));
-								// DMS.Mobile.Common.RedirectToCalendrier();
-						DMS.Mobile.PositionRequest.InitializeGetPosition();
+								 DMS.Mobile.Common.RedirectToCalendrier();
+						//DMS.Mobile.PositionRequest.InitializeGetPosition();
 
 				 
 			 },personnel.PersonnelID);	 
