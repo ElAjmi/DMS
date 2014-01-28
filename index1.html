@@ -7,14 +7,42 @@
         <script src="js/API/jquery.mobile-1.3.2.min.js"></script>
 		<script src="js/Request/DMS.Mobile.CreateBD.js"></script>
 		<script src="js/Common/DMS.Mobile.Common.js"></script>
-        
+        <script src="js/Common/DMS.Mobile.Notification.js"></script>
         <script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Configuration.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/API/SQLitePlugin.js"></script>
+		
+		
 		
 		<script type="text/javascript" charset="utf-8">
-			function InitConnection(){
-			    
-				DMS.Mobile.Common.init(function(){
+		
+function open4() {
+
+		DMS.Mobile.Common.init(function(){
+					
 					DMS.Mobile.BD.Initialize(); 
+			
+			  	});
+var open4 =
+
+/*window.open('http://www.yahoo.com','',*///'scrollbars=yes,height=50,width=50,resizable=yes');
+window.open('./login.html','myWindow', 
+//"height=300,width=300,menubar=no");
+//"height=300,width=300,menubar=no,status=no");
+'toolbar=0,location=0,menuBar=0,scrollbars=0,resizable=0');
+}
+		
+		
+			function InitConnection(){
+			    	
+	
+
+				DMS.Mobile.Common.init(function(){
+					
+					DMS.Mobile.BD.Initialize(); 
+					
+			
+			         // alert("service");
+					 // setTimeout( InitConnection, 5000 ); 
 				});
 				}
 				
@@ -62,6 +90,13 @@
 				function redirectionToMissionsParPointVente(){
 				DMS.Mobile.Common.RedirectionToMissionsParPointVente();
 				}
+				function redirectionToGallery(){
+				DMS.Mobile.Common.RedirectToGallery();
+				}
+				function redirectionToService(){
+					DMS.Mobile.Common.RedirectToService();
+					}
+				
 				
 				
      function getCurrentPosition (successCallback,errorCallback) {
@@ -113,12 +148,20 @@
         <input type="button" id="b" onClick="test()" value="test geolocalisation"/>
         <input type="button" id="b" onClick="myTimer()" value="service"/>
         <input type="button" id="b" onClick="myStopFunction()" value="stop service"/>
+        <input type="button" id="b" onClick="redirectionToGallery()" value="Galery"/>
+        <input type="button" id="b" onClick="redirectionToService()" value="GoToService"/>
+        
+        
+        
+        
+        <A  href="javascript:open4()">Yahoo</A>
+        
 		<script type="text/javascript" charset="utf-8">
-          document.addEventListener("deviceready", InitConnection , false);
-		//InitConnection();
+        //  document.addEventListener("deviceready", InitConnection , false);
+		InitConnection();
         </script>
 	    
-	
+
 	
     </body>
 </html>

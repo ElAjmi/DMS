@@ -17,12 +17,24 @@ DMS.Mobile.ZoneRequest =
 		try
 		{
 		form.Zone = ZoneObject;
-		alert("appel ville")
+		//alert"appel ville")
 		callbackViewModel(form.Zone);
 		}
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : insertZoneIntoArray in ZoneRequest",'alert','e'); 
+				
+				  var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "insertZoneIntoArray";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.Zone);
+						});
+				
 			}
 	},
 	
@@ -32,7 +44,7 @@ DMS.Mobile.ZoneRequest =
 	{
 		try
 		{
-		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		var Conf = JSON.parse(localStorage.getItem("Configuration"));
 		 
 		  form =this;
 		
@@ -47,10 +59,21 @@ DMS.Mobile.ZoneRequest =
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectZoneByPersonnelFromServer in ZoneRequest",'alert','e'); 
+				
+				 var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "SelectZoneByPersonnelFromServer";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.Zone);
+						});
 			}
 	},
 
-createZoneDTO : function (json,Form,callbackViewModel)
+createZoneDTO : function (json,form,callbackViewModel)
 {
 	try
 	{
@@ -74,6 +97,17 @@ createZoneDTO : function (json,Form,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : createZoneDTO in ZoneRequest",'alert','e'); 
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "createZoneDTO";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.Zone);
+						});
+			
 			}
 },
 
@@ -91,6 +125,18 @@ createZoneDTO : function (json,Form,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertZone in ZoneRequest",'alert','e'); 
+			
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "InsertZone";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.Zone);
+						});
+			
 			}
 	},
 	
@@ -103,7 +149,19 @@ createZoneDTO : function (json,Form,callbackViewModel)
 				}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err.message+" : insertZone in ZoneRequest",'alert','e'); 
+				 
+			
+			
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "insertZone";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							DMS.Mobile.Notification.ShowMessage(err.message+" : insertZone in ZoneRequest",'alert','e');
+						});
 			}
 	},
 
@@ -113,7 +171,8 @@ createZoneDTO : function (json,Form,callbackViewModel)
 		{
 		   if (synch == "false")
 			{
-		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoZone(tx, formReq, ZoneObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoZone");}); 
+		  	    formReq.connexion.transaction(function(tx){ formReq.InsertIntoZone(tx, formReq, ZoneObject,synch) }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoZone");
+				}); 
 		    }
 			else
 			{
@@ -127,6 +186,17 @@ createZoneDTO : function (json,Form,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertZoneIntoLOCAL in ZoneRequest",'alert','e'); 
+				
+					var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "InsertZoneIntoLOCAL";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(formReq.Zone);
+						});
 			}
 	},
 	
@@ -138,8 +208,91 @@ createZoneDTO : function (json,Form,callbackViewModel)
 	 	}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoZone in ZoneRequest",'alert','e'); 
+				 
+				        var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "InsertIntoZone";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIntoZone in ZoneRequest",'alert','e');
+						});
 			}
-	}
+	},
 	/////////////////////////////////////////////////////////////////////////////////
+	
+		 //////////////////////////////////////// Delete All Zone ////////////////////////
+DeleteAllZone : function(callback)
+{
+	try
+	{
+			var form = this;	
+			this.connexion.transaction(function(tx){ form.DeleteZones(tx, form,callback);}, function(err){ DMS.Mobile.Common.errors(err,"DeleteZones");
+			
+			
+			            var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteZones";
+						exception.Exception = err.code;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+			
+			});
+	 }
+	 catch(err)
+	 {
+			DMS.Mobile.Notification.ShowMessage(err.message+" : DeleteAllZone in ZoneRequest",'alert','e'); 
+			
+			
+			            var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteAllZone";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+	 }	
+}, 
+
+DeleteZones : function(requete, form,callback)
+{
+	requete.executeSql("DELETE  FROM Zone ", [],
+              function(tx, result) {				
+				form.querySuccessDELETEAll(form,callback);
+				}, 
+                function(err){DMS.Mobile.Common.errors(err,"DeleteZones");
+				
+				          var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteZones";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+				
+				});
+},
+
+querySuccessDELETEAll : function(form,callback)
+{
+	callback();
+},
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	
+	
+	
 }

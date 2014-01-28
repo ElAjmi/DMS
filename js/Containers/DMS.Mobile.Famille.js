@@ -13,7 +13,9 @@ $.extend(DMS.Mobile.Famille.prototype,
     GammeID: null,
     ListArticles : [],
     Gammes: null,
-    ListPromotions : [],
+
+
+	Synch : null,
     ListRelevePresencePrixConcurrents : [],
 	ListRelevePrix : []
 

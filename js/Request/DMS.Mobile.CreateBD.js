@@ -27,10 +27,11 @@ DMS.Mobile.BD =
 	{
 		try
 		{
-			this.connexion  = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 100000);
-		//this.connexion.execSQL(" PRAGMA foreign_keys = ON ");
+			this.connexion  = window.openDatabase("BaseDeDonnees", "1.0.0", "OpenGeophone", 90000000);
+			//this.connexion = window.sqlitePlugin.openDatabase("DataBase");
+			//this.connexion.execSQL(" PRAGMA foreign_keys = ON ");
 	
-}
+		}
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : initConnection in CreateDB",'alert','e'); 
@@ -57,7 +58,7 @@ DMS.Mobile.BD =
 		{
 		if(form.InsertTestElement == true)
 		{
-			alert("into insertion");
+			//alert"into insertion");
 			form.connexion.transaction(form.insertIntoArticle, form.InsertErrorFunction);
 			form.connexion.transaction(form.insertIntoGamme, form.InsertErrorFunction);
 			form.connexion.transaction(form.insertIntoFamille, form.InsertErrorFunction);
@@ -100,6 +101,33 @@ DMS.Mobile.BD =
 							"[Synch] BOOLEAN  NOT NULL"+
 							")");
        
+	   //Livraison(CommandeID,CodeLivraison,DatePlanification,Etat,ClientID,PointVenteID,Synch)
+	   
+	   requete.executeSql("CREATE TABLE IF NOT EXISTS [Livraison] ("+
+						"[CommandeID] INTEGER  PRIMARY KEY NOT NULL ,"+
+						"[CodeLivraison] INTEGER  NOT NULL,"+
+						"[DatePlanification] DATE  NOT NULL,"+
+						"[DateCreationTrie] DATE  NOT NULL,"+	
+						"[Etat] INTEGER  NOT NULL,"+
+						"[ClientID] INTEGER  NOT NULL,"+
+						"[PointVenteID] INTEGER  NOT NULL,"+
+						"[Synch] BOOLEAN NOT NULL "+
+						
+					    
+						
+						")");
+	   
+	   ////// Table de gestion des exception 
+	   requete.executeSql( "CREATE TABLE IF NOT EXISTS [Exception] ("+
+								"[ExceptionID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT ,"+
+								"[FichierE] NVARCHAR(50)   NULL,"+
+								"[FonctionE] NVARCHAR(50)  NULL,"+
+								"[Synch] BOOLEAN NOT NULL,"+
+								"[Exception]  NVARCHAR(300) NULL"+
+								")");
+								
+	   
+	   
            requete.executeSql( "CREATE TABLE IF NOT EXISTS [Client] ("+
 								"[ClientID] INTEGER  NOT NULL PRIMARY KEY ,"+
 								"[NomResponsable] NVARCHAR(50)  NOT NULL,"+
@@ -107,6 +135,7 @@ DMS.Mobile.BD =
 								"[RaisonSocial] NVARCHAR(50)  NULL,"+
 								"[Tel] INTEGER  NULL,"+
 								"[Fax] INTEGER  NULL,"+
+								"[CodeClient] INTEGER  NULL,"+
 								"[UrlWeb] NVARCHAR(300)  NULL,"+
 								"[Email] NVARCHAR(50)  NULL,"+
 								"[ImageIDClient] INTEGER  NULL,"+
@@ -114,14 +143,42 @@ DMS.Mobile.BD =
 								"[Synch] BOOLEAN NOT NULL,"+
 								"[ActiviteID] INTEGER  NOT NULL"+
 								")");
+					
+					// PropositionID c'est la meme valeur que PersonnelID
+			requete.executeSql("CREATE TABLE IF NOT EXISTS [PropositionCommande] ("+
+						"[PropositionID] INTEGER  PRIMARY KEY NOT NULL ,"+
+						"[Prop1] INTEGER  NOT NULL,"+
+						"[Prop2] BOOLEAN  NOT NULL,"+
+						"[Prop3] INTEGER  NOT NULL,"+
+						"[Synch] BOOLEAN  NOT NULL"+
+						
+						
+						")");	
+						
+	
 								
 			 requete.executeSql("CREATE TABLE IF NOT EXISTS [Familles] ("+
 						"[FamilleID] INTEGER  PRIMARY KEY NOT NULL ,"+
 						"[Designation] NVARCHAR(100)  NOT NULL,"+
 						"[GammeID] INTEGER  NOT NULL,"+
+						
 						"[Synch] BOOLEAN NOT NULL,"+
 						
 					    "FOREIGN KEY(GammeID) REFERENCES Gammes(GammeID)"+
+						
+						")");
+						
+			requete.executeSql("CREATE TABLE IF NOT EXISTS [Pictures] ("+
+						"[PictureID] INTEGER  PRIMARY KEY NOT NULL ,"+
+						"[Name] NVARCHAR(50)  NOT NULL,"+
+						"[ArticleID] INTEGER   NULL,"+
+						"[ClientID] INTEGER   NULL,"+
+						"[PointVenteID] INTEGER   NULL,"+
+						"[FamilleID] INTEGER   NULL,"+
+						"[Byte] TEXT  NOT NULL,"+
+						"[Synch] BOOLEAN NOT NULL,"+
+						
+					    "FOREIGN KEY(ArticleID) REFERENCES Gammes(Articles)"+
 						
 						")");	
 									
@@ -130,12 +187,10 @@ DMS.Mobile.BD =
 								"CREATE TABLE IF NOT EXISTS [Gammes] ("+
 								"[GammeID] INTEGER  PRIMARY KEY  NOT NULL,"+
 								"[Designation] NVARCHAR(100)  NOT NULL,"+
+								
 								"[Synch] BOOLEAN NOT NULL"+
 								")");	
-								
-			requete.executeSql(	"CREATE TABLE IF NOT EXISTS [MissionCommande] ("+
-								"[MissionID] INTEGER  NOT NULL PRIMARY KEY"+
-								")");	
+									
 								
 		  requete.executeSql( "CREATE TABLE IF NOT EXISTS [Profils] ("+
 								"[ProfilID] INTEGER  NOT NULL PRIMARY KEY ,"+
@@ -179,20 +234,101 @@ DMS.Mobile.BD =
 								"FOREIGN KEY(VilleID) REFERENCES Villes(VilleID)"+
 								")");	
 	
+	//////// relation n..n entre PointVente & Tournee //////
+	
+	    requete.executeSql("CREATE TABLE IF NOT EXISTS [TourneePointVente]("+
+		                        "[ID] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+
+								"[TourneeID] INTEGER NOT NULL,"+
+								"[PointVenteID] INTEGER NOT NULL,"+
+								
+								"FOREIGN KEY(TourneeID) REFERENCES Tournees(TourneeID),"+
+								"FOREIGN KEY(PointVenteID) REFERENCES PointVentes(PointVenteID)"+
+								")");
+								//////// relation n..n entre PromotionArticle//////
+	
+	    requete.executeSql("CREATE TABLE IF NOT EXISTS [PromotionArticleFamilleGamme]("+
+		                        "[ID] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+
+								"[PromotionID] INTEGER  NOT NULL,"+
+								"[ArticleID] INTEGER NOT NULL,"+
+								"[FamilleID] INTEGER NOT NULL,"+
+								"[Quota] INTEGER  NULL,"+
+								"[Remise] FLOAT  NULL,"+
+								"[GammeID] INTEGER NOT NULL"+
+								
+								
+								")");
+								
+	
+							
+							//////// table reclamation ///////////
+							
+			requete.executeSql("CREATE TABLE IF NOT EXISTS [Reclamation]("+
+		                        "[ReclamationID] INTEGER PRIMARY KEY  NOT NULL,"+
+								"[TexteReclamation] NVARCHAR(1000)  NULL,"+
+								"[TypeReclamationID] INTEGER  NULL,"+
+								"[PointVenteID] INTEGER NULL,"+
+								"[PersonnelID] INTEGER NOT NULL,"+
+								"[ParentID] INTEGER  NULL,"+
+								"[DateCreation] DATE  NULL,"+
+								"[DateCreationTrie] DATE  NULL,"+
+								"[EtatConsultation] INTEGER   NULL,"+
+								"[EtatTraitement] INTEGER   NULL,"+
+								"[HeureCreation] NVARCHAR(50)  NULL,"+
+								"[ExistServer] BOOLEAN NOT NULL,"+
+								"[Synch] BOOLEAN NOT NULL"+
+								
+								
+								
+								//"FOREIGN KEY(MissionID) REFERENCES Missions(MissionID),"+
+								
+								")");
+		//////////// table facture ///////////////////////////
+		
+		requete.executeSql("CREATE TABLE IF NOT EXISTS [Facture]("+
+		                        "[FactureID] INTEGER PRIMARY KEY  NOT NULL,"+
+								"[CAB] VARCHAR(30) NOT NULL,"+
+								"[EtatFacture] INTEGER NOT NULL,"+
+								"[ResteAPayer] FLOAT NULL,"+
+								//"[CommentairesID] INTEGER NOT NULL,"+
+								"[DateFacture] INTEGER  NULL,"+
+								"[MissionID] INTEGER  NULL,"+
+								"[MontantNet] FLOAT  NULL,"+
+								"[TauxEscompte] FLOAT  NULL,"+
+								"[InternalCodeFacture] INTEGER NULL,"+
+								"[Synch] BOOLEAN NOT NULL"+
+								
+								//"FOREIGN KEY(MissionID) REFERENCES Missions(MissionID),"+
+								
+								")");
+		
+		
+		requete.executeSql("CREATE TABLE IF NOT EXISTS [HistoriqueFacture]("+
+		                        "[HistoriqueID] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+
+								"[MontantSaisie] FLOAT NULL,"+
+								"[HeureHistorique] NVARCHAR(50) NULL,"+
+								"[Commentaires] TEXT  NULL,"+
+								"[DateHistorique] Date  NULL,"+
+								"[FactureID] INTEGER NOT NULL,"+
+								"[ModePayement] INTEGER  NULL,"+
+								"[Synch] BOOLEAN NOT NULL"+
+								
+								
+								")");
+		
+		
+		////////////////////////////////////////////////////////
 							
 		requete.executeSql(	"	CREATE TABLE IF NOT EXISTS [Tournees] ("+
 								"[TourneeID] INTEGER  PRIMARY KEY  NOT NULL,"+
 								"[DateDebut] DATE  NULL,"+
 								"[HeureDebut] NVARCHAR(50)  NULL,"+
-								"[DateFin] DATE NULL,"+
-								"[HeureFin] NVARCHAR(50) NULL,"+
+								"[DateCloture] DATE NULL,"+
+								"[HeureCloture] NVARCHAR(50) NULL,"+
 								"[DateCreation] DATE  NULL,"+
 								"[HeureCreation] NVARCHAR(50)  NULL,"+
 								"[EtatTournee] INTEGER  NOT NULL,"+
 								"[Synch] BOOLEAN NOT NULL,"+
-								"[TerminalID] INTEGER  NULL,"+
-								"[ImprimanteID] INTEGER  NULL,"+
-								"[EquipementID] INTEGER  NULL,"+
+								
 								"[VehiculeID] INTEGER  NULL,"+
 								"[PersonnelID] INTEGER  NOT NULL,"+
 								"FOREIGN KEY(PersonnelID) REFERENCES Personnel(PersonnelID)"+
@@ -202,9 +338,9 @@ DMS.Mobile.BD =
 				requete.executeSql(	"	CREATE TABLE IF NOT EXISTS [Position] ("+
 								"[PositionID] INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,"+
 								"[PersonnelID] INTEGER  NULL,"+
-								"[Latitude] FLOAT NULL,"+
-								"[Longitude] FLOAT  NULL,"+
-								"[Date] DATE NULL,"+
+								"[Latitude] VARCHAR(50)  NULL,"+
+								"[Longitude] VARCHAR(50)  NULL,"+
+								"[date] DATE NULL,"+
 								"[Heure]  NVARCHAR(50) NULL,"+
 								"[IMEI] VARCHAR(50)  NULL,"+
 								"[Synch] BOOLEAN  NULL,"+
@@ -218,14 +354,15 @@ DMS.Mobile.BD =
 									"[CAB] VARCHAR(30)  NULL,"+
 									"[DateCreation] DATE  NOT NULL,"+
 									"[HeureCreation] VARCHAR(50)  NOT NULL,"+
+									"[DateModification] DATE  NULL,"+
+									"[HeureModification] VARCHAR(50)  NULL,"+
 									"[DateLivraisonPrevue] DATE  NOT NULL,"+
-									"[HeureLivraisonPrevue] VARCHAR(50)  NOT NULL,"+
-									"[EtatCommande] INTEGER  NOT NULL,"+
+									"[EtatCommande] INTEGER   NULL,"+
 									
-									"[PrixTotalTTC] FLOAT  NOT NULL,"+
-									"[PrixTotalHT] FLOAT  NOT NULL,"+
+									"[PrixTotalTTC] FLOAT   NULL,"+
+									"[PrixTotalHT] FLOAT   NULL,"+
 									"[TotalTVA] FLOAT  NULL,"+
-									"[CodeCommande] NVARCHAR(50) NULL,"+
+								
 									
 									"[Synch] BOOLEAN NOT NULL,"+
 									"[CommercialID] INTEGER  NOT NULL,"+
@@ -268,11 +405,9 @@ DMS.Mobile.BD =
 								
 								"[BCKPersonnelID] INTEGER  NOT NULL,"+
 								"[PointVenteID] INTEGER  NOT NULL,"+
-								"[TourneeID] INTEGER  NULL,"+
 								
 								
-								"FOREIGN KEY(PointVenteID) REFERENCES PointVentes(PointVenteID),"+
-								"FOREIGN KEY(TourneeID) REFERENCES Tournees(TourneeID)"+
+								"FOREIGN KEY(PointVenteID) REFERENCES PointVentes(PointVenteID)"+
 								")");	
 								
 								
@@ -283,10 +418,49 @@ DMS.Mobile.BD =
 								"[PrixUnitaireTTC] FLOAT  NULL,"+
 		                        "[CAB] VARCHAR(50)  NULL,"+
 		                        "[QteDispo] INTEGER  NULL,"+
+								"[QuantiteRef] INTEGER  NULL,"+
+                                 
+								"[DimensionCarton] VARCHAR(50)  NULL,"+
+		                        "[VolumeCarton] FLOAT  NULL,"+
+								"[PoidsUnite] FLOAT  NULL,"+
+		                        "[UniteCarton] VARCHAR(50)  NULL,"+
+		                        "[Ordre] INTEGER  NULL,"+
+								"[Actif] BOOLEAN  NULL,"+
+								
+								
+								
 		    					"[FamilleID] INTEGER  NOT NULL,"+
+								"[CodeArticle] VARCHAR (100) NULL,"+
 		    					"[Synch] BOOLEAN NOT NULL,"+
 		                        "FOREIGN KEY(FamilleID) REFERENCES Familles(FamilleID)"+
+			")");
+			
+					requete.executeSql( "CREATE TABLE IF NOT EXISTS [Promotion] ("+	
+			                    "[PromotionID] INTEGER  NOT NULL PRIMARY KEY ,"+
+								"[Remise] FLOAT  NULL,"+
+								"[DateDebut] DATE NOT NULL,"+
+								"[HeureDebut] VARCHAR(50) NOT NULL,"+ 
+								"[DateFin] DATE NOT NULL,"+
+								"[HeureFin] VARCHAR(50) NOT NULL,"+ 
+								"[DateTimeDebut] DATE  NULL,"+
+								"[DateTimeFin] DATE  NULL,"+
+								"[Designation] VARCHAR (100) NULL,"+
+		    					"[Synch] BOOLEAN NOT NULL"+
+
 			")");	
+		                                                        
+					requete.executeSql( "CREATE TABLE IF NOT EXISTS [Fidelisation] ("+	
+			                    "[PromotionID] INTEGER  NOT NULL PRIMARY KEY ,"+
+								"[ClientID] INTEGER  NULL,"+
+								"[Remise] FLOAT  NULL,"+
+								"[DateDebut] DATE NOT NULL,"+
+								"[HeureDebut] VARCHAR(50) NOT NULL,"+ 
+								"[DateFin] DATE NOT NULL,"+
+								"[HeureFin] VARCHAR(50) NOT NULL,"+ 
+								"[Designation] VARCHAR (100) NULL,"+
+		    					"[Synch] BOOLEAN NOT NULL"+
+
+			")");
 			
 			 requete.executeSql("CREATE TABLE IF NOT EXISTS [Villes] ("+
 						"[VilleID] INTEGER NOT NULL PRIMARY KEY,"+
@@ -314,7 +488,8 @@ DMS.Mobile.BD =
 						"[URL] NVARCHAR(200)  NOT NULL,"+
 						"[Synch] BOOLEAN NOT NULL,"+
 						"[Perimetre] INTEGER  NOT NULL,"+
-						"[Frequence] INTEGER NOT NULL"+
+						"[Frequence] INTEGER NOT NULL,"+
+						"[SeuilArticle] INTEGER NOT NULL"+
 						
 						")");
 			
@@ -332,7 +507,7 @@ DMS.Mobile.BD =
 try
 {		
 
-      alert("insertIntoArticle");
+      //alert"insertIntoArticle");
             
             requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1271, "Crostina lait", 0.700,0.720, "w4e5r6", 12, 1223, "True")');
             requete.executeSql('INSERT INTO Article (ArticleID, Designation,PrixUnitaireHT,PrixUnitaireTTC, CAB, QteDispo, FamilleID, Synch) VALUES (1272, "Crostina Vanille", 0.230,0.250, "gzt654", 45, 1223, "True")');
@@ -352,7 +527,7 @@ try
 },
     
   insertIntoFamille : function (requete) {
-     alert("insertIntoFamille"); 
+     //alert"insertIntoFamille"); 
             
             requete.executeSql('INSERT INTO Familles (FamilleID, Designation,GammeID, Synch) VALUES (1223, "famille1",1231,"True")');
             requete.executeSql('INSERT INTO Familles (FamilleID, Designation,GammeID, Synch) VALUES (1224, "famille2",1231,"True")');
@@ -363,7 +538,7 @@ try
 },
 
 insertIntoClient : function (requete) {
-	alert("insertIntoClient "); 
+	//alert"insertIntoClient "); 
             requete.executeSql('INSERT INTO Client (ClientID,NomResponsable,NomSociete,RaisonSocial,Tel,Fax,UrlWeb,Email,ImageIDClient,EtatClient,Synch,ActiviteID) VALUES (1234,"Salah","Carrefour","SA",4543456,6565438,"www.carrefour.com","carrefour@carrefour.com",56543,1,"false",1)');
 			
 			 requete.executeSql('INSERT INTO Client (ClientID,NomResponsable,NomSociete,RaisonSocial,Tel,Fax,UrlWeb,Email,ImageIDClient,EtatClient,Synch,ActiviteID) VALUES (1224,"Ammar","Geant","SA",4543456,6565438,"www.geant.com","geant@geant.com",59543,1,"false",1)');
@@ -374,20 +549,20 @@ insertIntoClient : function (requete) {
 },
 
 insertIntoProfils : function (requete) {
-	alert("insertIntoProfils "); 
+	//alert"insertIntoProfils "); 
             requete.executeSql('INSERT INTO Profils (ProfilID,Designation,Description,Synch) VALUES (04,"Profil","Profil commercial","false")');
                         
        
 },
 
 insertIntoVilles : function (requete) {
-	alert("insertIntoVille "); 
+	//alert"insertIntoVille "); 
 		requete.executeSql('INSERT INTO Villes(VilleID,Designation,ZoneID,Latitude,Longitude,Synch) VALUES(1,"Tunis",1,12.555,9.2548,"false")');
 	
 },
 
 insertIntoActivite : function (requete) {
-	alert("insertIntoActivite"); 
+	//alert"insertIntoActivite"); 
 		requete.executeSql('INSERT INTO Activite(ActiviteID,Designation,Synch) VALUES(1,"Grande surface","false")');
                         
 },
@@ -395,7 +570,7 @@ insertIntoActivite : function (requete) {
 
 
 insertIntoPersonnel : function (requete) {
-     alert("insertIntoPersonnel");  
+     //alert"insertIntoPersonnel");  
             
             requete.executeSql('INSERT INTO Personnel (PersonnelID,Login,Password,Nom,Prenom,Tel,Email,Adresse,Matricule,Synch,ProfilID) VALUES (1223, "user","user","Mabrouk","Massaoud",21111111,"mm@gmail.com","LA",999,"false",000)');
              requete.executeSql('INSERT INTO Personnel (PersonnelID,Login,Password,Nom,Prenom,Tel,Email,Adresse,Matricule,Synch,ProfilID) VALUES (1244, "admin1","admin2","hamma","hamma",23111111,"h2@gmail.com","NY",888,"false",000)');
@@ -403,7 +578,7 @@ insertIntoPersonnel : function (requete) {
        
 },
 insertIntoTournees : function (requete) {
-      alert("insertIntoTournee"); 
+      //alert"insertIntoTournee"); 
             
             requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (1,"23/09/2013","14/02/2013","11/02/2013",1,"false",1,1,1,1,1223)');
             requete.executeSql('INSERT INTO Tournees (TourneeID,DateDebut,DateFin,DateCreation,EtatTournee,Synch,TerminalID,ImprimanteID,EquipementID,VehiculeID,PersonnelID) VALUES (2,"24/09/2013","19/02/2013","18/02/2013",1,"false",1,1,1,1,1223)');
@@ -417,7 +592,7 @@ insertIntoTournees : function (requete) {
 },
 
 insertIntoMissions : function (requete) {
-      alert("insertIntoMission"); 
+      //alert"insertIntoMission"); 
             
              requete.executeSql('INSERT INTO Missions(MissionID,EtatMission,DateCreation,DegreUrgence,DateCloture,Commentaires,TypeMissionID,Synch,BCKPersonnelID,PointVenteID,TourneeID) VALUES (11,0,"12/03/2013",1,"13/02/2013","Commantaires",2,"false",1223,235,1)');
 			 
@@ -434,7 +609,7 @@ insertIntoMissions : function (requete) {
 },
 
 insertIntoTypeMissions : function (requete) {
-      alert("insertIntoTypeMission"); 
+      //alert"insertIntoTypeMission"); 
             
         
 		requete.executeSql('INSERT INTO TypeMissions(TypeMissionID,Titre) VALUES (1,"Facing")');
@@ -451,7 +626,7 @@ insertIntoTypeMissions : function (requete) {
 },
 
   insertIntoGamme : function (requete) {
-      alert("insertIntoGamme"); 
+      //alert"insertIntoGamme"); 
             requete.executeSql('INSERT INTO Gammes (GammeID, Designation, Synch) VALUES (1231, "gamme1","True")');
             requete.executeSql('INSERT INTO Gammes (GammeID, Designation, Synch) VALUES (1232, "gamme2","True")');
             requete.executeSql('INSERT INTO Gammes (GammeID, Designation, Synch) VALUES (1233, "gamme3","True")');
@@ -463,7 +638,7 @@ insertIntoTypeMissions : function (requete) {
 
 
 insertIntoPointVentes : function (requete) {
-      alert("insertIntoPointVente"); 
+      //alert"insertIntoPointVente"); 
 	  
             requete.executeSql('INSERT INTO PointVentes (PointVenteID,Latitude,Longitude,EtatPointVente,Responsable,Adresse,Tel,Fax,Email,Synch,VilleID,ClientID) VALUES (235,"12.345","9.345",1,"Faouzi Ben Gamra","Boston",71456989,71244568,"faouzi@gmail.com","false",1,1234)');
 			
@@ -474,18 +649,18 @@ insertIntoPointVentes : function (requete) {
 },
 
 insertIntoCommande : function (requete) {
-      alert("insertIntoCommande"); 
-            requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (1,1111,"12/02/2012","14/02/2012",0,10.500,11.200,0.504,12,"false",1223,235)');
-			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (2,2222,"12/02/2012","14/02/2012",1,10.500,11.200,1.504,12,"true",1223,235)');
-			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (3,3333,"12/02/2012","14/02/2012",2,10.500,11.200,2.504,12,"false",1223,235)');
-			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (4,4444,"12/02/2012","14/02/2012",3,10.500,11.200,3.504,12,"true",1223,235)');
-			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (5,5555,"12/02/2012","14/02/2012",4,10.500,11.200,4.504,12,"false",1223,235)');
-			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,CodeCommande,Synch,CommercialID,PointVenteID) VALUES (6,6666,"12/02/2012","14/02/2012",5,10.500,11.200,5.504,12,"false",1223,235)');
+      //alert"insertIntoCommande"); 
+            requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (1,1111,"12/02/2012","14/02/2012",0,10.500,11.200,0.504,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (2,2222,"12/02/2012","14/02/2012",1,10.500,11.200,1.504,"true",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (3,3333,"12/02/2012","14/02/2012",2,10.500,11.200,2.504,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (4,4444,"12/02/2012","14/02/2012",3,10.500,11.200,3.504,,"true",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (5,5555,"12/02/2012","14/02/2012",4,10.500,11.200,4.504,"false",1223,235)');
+			requete.executeSql('INSERT INTO Commandes (CommandeID,CAB,DateCreation,DateLivraisonPrevue,EtatCommande,PrixTotalTTC,PrixTotalHT,TotalTVA,Synch,CommercialID,PointVenteID) VALUES (6,6666,"12/02/2012","14/02/2012",5,10.500,11.200,5.504,"false",1223,235)');
 			
 },
 
 insertIntoLigneCommande : function (requete){
-	alert("insertIntoLigneCommande"); 
+	//alert"insertIntoLigneCommande"); 
 	requete.executeSql('INSERT INTO LigneCommande (LigneCommandeID,Quantite,PrixTotalArticleTTC,PrixTotalArticleHT,Synch,CommandeID,ArticleID) VALUES (1,15,20.500,20.000,"false",1,1271)');
 	requete.executeSql('INSERT INTO LigneCommande (LigneCommandeID,Quantite,PrixTotalArticleTTC,PrixTotalArticleHT,Synch,CommandeID,ArticleID) VALUES (2,100,50.500,42.000,"false",1,1272)');
 	

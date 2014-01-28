@@ -12,20 +12,22 @@ $.extend(DMS.Mobile.Commande.prototype,
     CAB : null,
 	DateCreation : null,
 	HeureCreation : null,
+	DateModification : null,
+	HeureModification : null,
     DateLivraisonPrevue: null,
-	HeureLivraisonPrevue : null,
 	EtatCommande : null,
     PrixTotalTTC: null,
     PrixTotalHT: null,
-	CodeCommande : null,
+    DateCreationTrie : null,
     TotalTVA: null,
-	Synch: null,
     PointVenteID : null,
     CommercialID : null,
+	
     Personnel : null,
 	PointVentes : null,
-    ListLignesCommande: [],
-    ListLivraisons : []
+    LignesCommande: [],
+	Synch : null,
+    Livraisons : []
 
 
 });

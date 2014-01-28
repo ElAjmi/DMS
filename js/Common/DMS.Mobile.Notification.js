@@ -10,11 +10,8 @@ DMS.Mobile.Notification =
 
 	ShowMessage : function(text,type,theme)
 	{
-		navigator.notification.alert(
-    text,  // message
-    this.alertDismissed,         // callback
-    'alert',            // title
-    'Done'                  // buttonName
+		alert(
+    text
 );
 	},
 	

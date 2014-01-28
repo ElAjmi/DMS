@@ -144,10 +144,10 @@ DMS.Mobile.CalendrierViewModel =
 	//------------------------ insertion missions --------------------------------------
 				
 		var ul = $("<ul  data-role='listview' data-inset='false'></ul>");
-		for (var k=0;k<tournee.listMission.length;k++){
+		for (var k=0;k<tournee.Missions.length;k++){
 			var j = k+1;
 			tourneeID = tournee.TourneeID;
-			mission = tournee.listMission[k];
+			mission = tournee.Missions[k];
 		var li = $("<li id='li"+mission.MissionID+"'><h2 style='color:#999999;'>Mission "+ j +" : </h2>"
 			/*+"<table width='100%' border='0'>"		
 			+"<tbody>"
@@ -277,8 +277,8 @@ DMS.Mobile.CalendrierViewModel =
 									
 			$("#Tournee"+tournee.TourneeID).append($(ul)).trigger('create');
 			
-			for (var k=0;k<tournee.listMission.length;k++){
-				var m = tournee.listMission[k];
+			for (var k=0;k<tournee.Missions.length;k++){
+				var m = tournee.Missions[k];
 				if(m.TypeMissions.Titre!="Titre Type Mission")
 				{
 					$('#cmdbtn'+m.MissionID).hide();

@@ -11,7 +11,8 @@ $.extend(DMS.Mobile.Profils.prototype,
     ProfilID : null,
 	Designation : null,
 	Description : null,
-	ListPersonnels : []
+	ListPersonnels : [],
+	Synch : null,
 	
 	
 });

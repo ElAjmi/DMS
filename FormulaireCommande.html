@@ -4,15 +4,13 @@
         <meta charset="utf-8" />
         <title>Commande</title> 
         <meta name="viewport" content="width=device-width" />
-              
-       
+ 
         
            
 	    <link href="css/API/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css" />
         <link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
         <link href="css/style.css" rel="stylesheet" type="text/css" />
-         
-      
+       
 		<script src="js/API/jquery-1.9.1.min.js" type="text/javascript"></script>
         <script src="js/API/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
       
@@ -74,7 +72,9 @@
                 $.mobile.ajaxEnabled = false;
             });  
         </script>
-       				
+       		
+  
+            		
 		<script>
 		  
            
@@ -114,7 +114,7 @@
     
   
    
-   <div data-role="page" data-theme="c">
+   <div data-role="page" data-theme="c" id="CommandeForm" class="CommandeForm">
     
 		<!-- header -->
         <div data-role="header" data-theme="b">
@@ -129,24 +129,36 @@
         <!---->
 		
 		<!-- panel client -->
-		<div data-theme="c" data-display="overlay" data-position="right" id="panel" data-role="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
+		<div data-theme="c" data-display="overlay" data-position="right" id="panel" data-role="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-c ui-panel-animate ui-panel-open" >
 			<h3>Date de livraison prevue</h3>
                   
                  	<input class="mobipick-demo-default-date" type="text" id="DateLivraisonPrevu" placeholder="Date livraison ..." />
                   
              
             	<h3>Choisir un Client</h3>               
-                <select id="selectClient"> 
-                	<option selected="selected" disabled >Client</option> 
-                </select>
+               <!-- <select id="selectClient"> 
+                	
+                </select> -->
+                
+                <div data-role="fieldcontain">
+                    <select name="select-choice-1" id="selectClient">
+                        <option selected="selected" disabled >Selectionner un client</option>  
+                    </select>
+                </div>
                 
                 
-                <h3>Choisir un Point de Vente</h3>
+                <!--
                 <select id="selectPointVente"> 
                     <option selected="selected" disabled >Point de Vente</option> 
                 </select>
+                -->
             
-                
+         
+        <div id="selectPointVente" width="100%">
+        
+        
+    	</div>
+
                 <div id='PVInfos'>
                 
                 </div>
@@ -161,16 +173,44 @@
 		
 		<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >
 		<ul data-role="listview" data-theme="c" class="nav-search">
-            <li data-icon="delete" data-theme="e"><a href="#" data-rel="close">Fermer menu</a></li>
-                <li data-icon="edit"><a href="FormulaireCommande.html">Saisie commandes</a></li>
-                <li data-icon="page"><a href="Commande.html">Liste commandes</a></li>
-                <li data-icon="calendar"><a href="Calendrier2.html">Calendrier</a></li>  
+            <li data-icon="delete" data-theme="e"><a href="#" data-rel="close" >Fermer menu</a></li>
+                <li data-icon="page"><a href="Commande.html" class="menu">Liste commandes</a></li>
+                <li data-icon="calendar"><a href="Calendrier2.html" class="menu">Calendrier</a></li>  
 		</ul>
 		</div>
 
 		<!-- page content -->
 		
         <div data-role="content">
+            <div data-role="collapsible">
+    <h4>
+<div classe="ui-grid-a">
+<div class="ui-block-a">
+<div class="header">
+header
+
+</div>
+<div class="subheader">
+<p>aaaaa</p>
+<p>bbbbb</p>
+<p>ccccc</p>
+</div>
+</div>
+<div classe="ui-block-a">
+
+<div style='float:right;'>
+             <!--   <input type='button'  data-theme='b' value='Settings' data-mini='true' data-inline='true' data-icon='gear' data-icon-pos='top' onclick='test(43);'/>-->
+                <input type='button' value='Saisie Commande' data-theme='b' data-mini='true' data-inline='true'  onclick='test(45);' class='splitButtonClicked'/>
+     
+       </div>
+</div>
+</div>
+   </h4>
+    <ul data-role="listview">
+       <li><a href="#">Billy</a></li>
+       <li><a href="#">Bob</a></li>
+    </ul>
+    </div>
             <form id="form">
             
      
@@ -179,7 +219,6 @@
             
                        
 			<table border="0" width="100%" id="tablecommande">
-			<tr><td colspan="3"></td></tr>
 			<tr><td colspan="3" style="text-align: right;">
 			<a href="#panel" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="info" data-theme="b" data-iconpos="notext">D&eacute;tails client</a>
           
@@ -208,11 +247,12 @@
 
 		<!-- Footer -->
         <div data-role="footer" data-theme="b" data-position="fixed" data-fullscreen="true" data-tap-toggle="false">
+        
         	<table width="100%" border="0">
                                   
 			<tr>
 			<td align="center"><p id="ptht"></p></td>
-			
+		
 			<td align="center"><p id="ttva"></p></td>
 			
 			<td align="center"><p id="ptttc"></p></td>

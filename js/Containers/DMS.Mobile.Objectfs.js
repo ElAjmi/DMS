@@ -16,6 +16,7 @@ $.extend(DMS.Mobile.Objectifs.prototype,
 	QuantiteCible : null,
 	DateFin : null,
 	Personnel : null,
+	Synch : null,
 	EtatObjectif : null,
 	Client : null,
 	Gammes : null	

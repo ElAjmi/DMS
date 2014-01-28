@@ -9,7 +9,7 @@ $.extend(DMS.Mobile.TypeMission.prototype,
 {
     TypeMissionID : null,
 	Titre : null,
-	listMissions : []
-			
+	Missions : [],
+	Synch : null,		
 	
 });

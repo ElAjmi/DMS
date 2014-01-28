@@ -22,6 +22,10 @@ $.extend(DMS.Mobile.Client.prototype,
 	listObjectifs : [],
 	listPointVentes : [],
 	listPromotions : [],
+	CodeClient : null,
+	Synch : null,
+	
+	Picture : null
 	
 
 			

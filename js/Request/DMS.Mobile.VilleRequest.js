@@ -17,13 +17,24 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 	form.ListVille.push(ville);
 	if (form.ListVille.length == len)
 	{
-		alert("appel pv");
+		//alert"appel pv");
 		callbackViewModel(form.ListVille);
 	}
 	}
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : insertVilleIntoArray in VilleRequest",'alert','e'); 
+				
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "insertVilleIntoArray";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListVille);
+						});
 			}
 },
 
@@ -35,7 +46,7 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 	{
 		try
 		{
-		var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		var Conf = JSON.parse(localStorage.getItem("Configuration"));
 		
 		  form =this;
 		
@@ -50,6 +61,17 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectVilleByPersonnelFromServer in VilleRequest",'alert','e'); 
+				
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "SelectVilleByPersonnelFromServer";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListVille);
+						});
 			}
 	},
 	
@@ -57,10 +79,11 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 	{
 		try
 		{
-		if ( json != null)
+			var len = json.length;
+		if ( len>0)
 		{
 			var synch = "true";
-            var len = json.length;
+            
 			for (var i=0;i<json.length;i++)
 			{
 			var villeDTO = new DMS.Mobile.Ville();
@@ -83,6 +106,16 @@ insertVilleIntoArray : function(ville,form,len,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : createVilleDTO in VilleRequest",'alert','e'); 
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "createVilleDTO";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListVille);
+						});
 			}
 	},
 	
@@ -98,6 +131,18 @@ InsertVille : function(ville,synch,form,len,callbackViewModel)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertVille in VilleRequest",'alert','e'); 
+			
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "InsertVille";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListVille);
+						});
+			
 			}
 },
 
@@ -110,7 +155,19 @@ insertVille : function(ville)
 		}
 			catch(err)
 			{
-				DMS.Mobile.Notification.ShowMessage(err.message+" : insertVille in VilleRequest",'alert','e'); 
+				
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "insertVille";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							DMS.Mobile.Notification.ShowMessage(err.message+" : insertVille in VilleRequest",'alert','e'); 
+			
+						});
+			
 			}
 },
 
@@ -133,6 +190,17 @@ InsertVilleIntoLOCAL : function (villeObject,synch,formReq,len,callbackViewModel
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : InsertVilleIntoLOCAL in VilleRequest",'alert','e'); 
+				
+				        var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "InsertVilleIntoLOCAL";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(formReq.ListVille);
+						});
 			}
 },
 
@@ -158,11 +226,36 @@ InsertIntoVille : function (requete,formReq,villeObject,synch)
 	try
 	{ 
 	  var form = this;
-	  this.connexion.transaction(function(tx){ form.SelectFromVilleByID(tx, form,callback,oPointVente); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromVilleByID");});
+	  this.connexion.transaction(function(tx){ form.SelectFromVilleByID(tx, form,callback,oPointVente); }, function(err){ DMS.Mobile.Common.errors(err,"SelectFromVilleByID");
+	  
+	   var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "SelectFromVilleByID";
+						exception.Exception = err.code;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback(oPointVente);
+						});
+	  
+	  });
 	  }
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectVille in VilleRequest",'alert','e'); 
+			
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "SelectVille";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback(oPointVente);
+						});
+			
 			}
     },
     
@@ -174,6 +267,16 @@ InsertIntoVille : function (requete,formReq,villeObject,synch)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : SelectFromVilleByID in VilleRequest",'alert','e'); 
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "SelectFromVilleByID";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback(oPointVente);
+						});
 			}
     },
     
@@ -199,9 +302,89 @@ InsertIntoVille : function (requete,formReq,villeObject,synch)
 			catch(err)
 			{
 				DMS.Mobile.Notification.ShowMessage(err.message+" : querySuccessByPointVente in VilleRequest",'alert','e'); 
+				
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "querySuccessByPointVente";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback(oPointVente);
+						});
 			}					
-	}
+	},
 
 //////////////////////////////////////////////////////////////////////////	
+
+
+	 //////////////////////////////////////// Delete All Ville ////////////////////////
+DeleteAllVille : function(callback)
+{
+	try
+	{
+			var form = this;	
+			this.connexion.transaction(function(tx){ form.DeleteVilles(tx, form,callback);}, function(err){ DMS.Mobile.Common.errors(err,"DeleteVilles");
+			
+			            var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteVilles";
+						exception.Exception = err.code;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+			
+			});
+	 }
+	 catch(err)
+	 {
+			DMS.Mobile.Notification.ShowMessage(err.message+" : DeleteAllVille in VilleRequest",'alert','e'); 
+	
+	             var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteAllVille";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+	 }	
+}, 
+
+DeleteVilles : function(requete, form,callback)
+{
+	requete.executeSql("DELETE  FROM Villes ", [],
+              function(tx, result) {				
+				form.querySuccessDELETEAll(form,callback);
+				}, 
+                function(err){DMS.Mobile.Common.errors(err,"DeleteVilles");
+				
+				        var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "VilleRequest";
+						exception.FonctionE = "DeleteVilles";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+				
+				});
+},
+
+querySuccessDELETEAll : function(form,callback)
+{
+	callback();
+},
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 	
 }

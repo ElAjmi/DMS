@@ -18,9 +18,12 @@ $.extend(DMS.Mobile.PointVente.prototype,
     Adresse: null,
 	Tel : null,
     Fax : null,
+	Synch : null,
     Email: null,
     Client: null,
 	Ville : null,
+	
+	Picture : null,
 	
 	ListEspacesPromos : [],
     ListLineaires : [],
@@ -29,7 +32,8 @@ $.extend(DMS.Mobile.PointVente.prototype,
 	ListRelevePresencePrixConcurrents : [],
     ListRelevePrix : [],
     ListReleveStock : [],
-	ListCommandes : []
+	ListCommandes : [],
+	ListTournees : []
 	
 
 

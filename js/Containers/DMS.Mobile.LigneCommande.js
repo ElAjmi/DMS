@@ -13,6 +13,7 @@ $.extend(DMS.Mobile.LigneCommande.prototype,
           PrixTotalArticleTTC : null,
           PrixTotalArticleHT : null,
           CommandeID : null, 
+		  Synch : null,
           ArticleID : null,
 		  ArticleObject : null,
           

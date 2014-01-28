@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>Référentiel article</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/API/jquery.mobile-1.3.2.css"/>
+<link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="js/API/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/API/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Article.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.ArticleRequest.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.ArticleCommercial.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.ArticleCommercialRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Picture.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PictureRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.PropositionCommande.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PropositionCommandeRequest.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Famille.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.FamilleRequest.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.CreateBD.js"></script>
+<script type="text/javascript" src="js/ViewModel/DMS.Mobile.ReferentielArticleViewModel.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Common.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Constante.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Notification.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Promotion.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.SynchronizeRequest.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Exception.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/API/SQLitePlugin.js"></script>
+
+<script type="text/JavaScript" charset="utf-8">
+                    
+		function InitPage()
+		{
+			
+			DMS.Mobile.BD.initConnection();
+			DMS.Mobile.ReferentielArticleViewModel.connexion = DMS.Mobile.BD.connexion;
+            DMS.Mobile.ReferentielArticleViewModel.$Bloc1 = $("#Bloc1");
+		    DMS.Mobile.ReferentielArticleViewModel.$Bloc2 = $("#Bloc2");
+            DMS.Mobile.ReferentielArticleViewModel.$Bloc3 = $("#Bloc3");
+			DMS.Mobile.ReferentielArticleViewModel.$SaveReference=$("#SaveReference");
+		    DMS.Mobile.ReferentielArticleViewModel.$AnnulerRef=$("#AnnulerRef");
+			DMS.Mobile.ReferentielArticleViewModel.$back=$("#back");
+            DMS.Mobile.ReferentielArticleViewModel.$synchronisation=$("#synchronisation");
+
+             DMS.Mobile.ReferentielArticleViewModel.Init();
+		}
+</script>
+
+</head>
+
+<body>
+     
+     <div data-role="page" id="ReferentielArticle">
+     
+       <div data-role="header" data-theme="b">
+         <h1>Formulaire référentiel article</h1>
+    		<a href="#" data-role="button" id="synchronisation" data-inline="true" data-mini="true" data-icon="refresh" data-iconpos="left">Synchroniser</a>
+            
+             <a  href="#" id="back" data-inline="true" class ="retour" data-mini="true"  data-icon="back">Retour</a>
+             
+       </div>
+       
+       
+       <div data-role="content">
+  
+            <div class="ui-grid-b">
+            
+                <div class=" ui-block-a" style="padding-right: 4px; !important" id="Bloc1">	
+        
+                </div>
+               
+                <div class="ui-block-b" style="padding-right: 4px; !important" id="Bloc2">
+               
+                </div>
+                
+                <div class="ui-block-c" id="Bloc3"> 
+                
+                </div>
+                
+            </div>
+        
+        </div>
+
+
+      <!-- footer -->
+     <div data-role="footer" data-theme="b" id ="footer" data-tap-toggle="false" data-position="fixed">
+         <div class="ui-grid-a">
+          <div class="ui-block-a" align="right"><a href="#" id="SaveReference"  style="width:125px" data-role="button" data-icon="check" data-theme="c">Enregistrer</a></div>
+
+           <div class="ui-block-b"><a href="#" id="AnnulerRef"   style="width:125px" data-role="button" data-icon="delete" data-theme="c">Annuler</a> </div>
+         </div>
+     </div>
+     
+     
+</div>
+<!-- fin page reference article -->
+     
+     
+<script type="text/JavaScript" charset="utf-8">
+	
+	$(document).ready(function() {  
+	//alert("documentReady");
+	    //document.addEventListener("deviceready", InitPage , false);
+		InitPage();
+	});
+	
+</script>
+
+
+
+</body>
+</html>

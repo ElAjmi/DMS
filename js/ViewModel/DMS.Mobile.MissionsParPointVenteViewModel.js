@@ -67,7 +67,7 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 		triListeMissions : function(tournee){
 			try
 			{
-			var obj =tournee.listMission;
+			var obj =tournee.Missions;
 			obj.sort(function(a,b) {
 				 return a.DegreUrgence > b.DegreUrgence ? -1 : a.DegreUrgence < b.DegreUrgence ?  1 : 0; 
 				 });
@@ -98,8 +98,8 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 			var ul = $("<ul data-role='listview' data-inset='true'></ul>");
 			var Priorite = "";
 			var DegreUrgence = "";
-			for (var i=0; i<tournee.listMission.length;i++){
-				var mission =tournee.listMission[i];
+			for (var i=0; i<tournee.Missions.length;i++){
+				var mission =tournee.Missions[i];
 				var h = i+1;
 			
 			if(mission.DegreUrgence==DMS.Mobile.Constante.DegreUrgence.Normal){
@@ -142,11 +142,11 @@ DMS.Mobile.MissionsParPointVenteViewModel =
 		{
 		var mission = null;
 		
-			for (var k=0;k<tournee.listMission.length;k++){
+			for (var k=0;k<tournee.Missions.length;k++){
 				
-				if(tournee.listMission[k].MissionID==missionID)
+				if(tournee.Missions[k].MissionID==missionID)
 				{
-					mission = tournee.listMission[k];
+					mission = tournee.Missions[k];
 					break;
 				}
 			}

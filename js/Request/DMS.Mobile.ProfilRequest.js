@@ -16,7 +16,7 @@ DMS.Mobile.ProfilRequest =
 	{
 		try
 		{
-		 var Conf = JSON.parse(sessionStorage.getItem("Configuration"));
+		 var Conf = JSON.parse(localStorage.getItem("Configuration"));
 		
 		 DMS.Mobile.Common.Alert("get list profil from server");
 		 var methode = "GetListProfilsDTO?";
@@ -30,6 +30,17 @@ DMS.Mobile.ProfilRequest =
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : GetListProfilFromServer in ProfilRequest",'alert','e'); 
+			
+			   var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "GetListProfilFromServer";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListProfil);
+						});	
 		}
     },
 	
@@ -37,9 +48,10 @@ DMS.Mobile.ProfilRequest =
 		{
 		try
 		{	
-			if ( json != null)
+			var len = json.length;
+			if ( len>0)
 			{
-				var len = json.length;
+			
 				var synch = "true";
 				for (var i=0;i<json.length;i++)
 				{
@@ -63,6 +75,17 @@ DMS.Mobile.ProfilRequest =
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : CreateProfilDTO in ProfilRequest",'alert','e'); 
+		   var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "CreateProfilDTO";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListProfil);
+						});	
+		
 		}
 		},
 	//////////////////////////////////////////////////////////////////
@@ -80,6 +103,16 @@ DMS.Mobile.ProfilRequest =
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : insertProfilIntoArray in ProfilRequest",'alert','e'); 
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "insertProfilIntoArray";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListProfil);
+						});
 		}
 	},
 	
@@ -93,6 +126,17 @@ insertProfil : function (profil,synch,form,len,callbackViewModel)
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : insertProfil in ProfilRequest",'alert','e'); 
+		        var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "insertProfil";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(form.ListProfil);
+						});
+		
 		}
 	},
 		
@@ -100,11 +144,34 @@ InsertProfilIntoLocal: function(ProfilObject,synch,formReq,len,callbackViewModel
 try
 {
 		
-					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoProfil(tx, formReq,ProfilObject,synch) },function(err){ DMS.Mobile.Common.errors(err,"InsertIntoProfil");},function(){formReq.insertProfilIntoArray(ProfilObject,synch,formReq,len,callbackViewModel);}); 
+					    formReq.connexion.transaction(function(tx){ formReq.InsertIntoProfil(tx, formReq,ProfilObject,synch) },function(err){ DMS.Mobile.Common.errors(err,"InsertIntoProfil");
+						
+						var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "InsertIntoProfil";
+						exception.Exception = err.code;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(formReq.ListProfil);
+						});
+						
+						},function(){formReq.insertProfilIntoArray(ProfilObject,synch,formReq,len,callbackViewModel);}); 
 			}
 			catch(err)
 		{
 			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertProfilIntoLocal in ProfilRequest",'alert','e'); 
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "InsertProfilIntoLocal";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = formReq.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callbackViewModel(formReq.ListProfil);
+						});
 		}			
 					
            },
@@ -117,10 +184,88 @@ try
        			}
 			catch(err)
 		{
-			DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIintoProfil in ProfilRequest",'alert','e'); 
+			 
+			var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "InsertIintoProfil";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							DMS.Mobile.Notification.ShowMessage(err.message+" : InsertIintoProfil in ProfilRequest",'alert','e');
+						});
 		}																														
     },
 //////////////////////////////////////////////////////////////////////////
+
+	 //////////////////////////////////////// Delete All Profil ////////////////////////
+DeleteAllProfil : function(callback)
+{
+	try
+	{
+			var form = this;	
+			this.connexion.transaction(function(tx){ form.DeleteProfils(tx, form,callback);}, function(err){ DMS.Mobile.Common.errors(err,"DeleteProfils");
+			
+			            var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "DeleteProfils";
+						exception.Exception = err.code;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+			
+			});
+	 }
+	 catch(err)
+	 {
+			DMS.Mobile.Notification.ShowMessage(err.message+" : DeleteAllProfil in ProfilRequest",'alert','e'); 
+	
+	var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "DeleteAllProfil";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+	 }	
+}, 
+
+DeleteProfils : function(requete, form,callback)
+{
+	requete.executeSql("DELETE  FROM Profils ", [],
+              function(tx, result) {				
+				form.querySuccessDELETEAll(form,callback);
+				}, 
+                function(err){DMS.Mobile.Common.errors(err,"DeleteProfils");
+				
+				var exception = new DMS.Mobile.Exception();
+						exception.FichierE = "ProfilRequest";
+						exception.FonctionE = "DeleteProfils";
+						exception.Exception = err.message;
+						exception.Synch = "false";
+			
+						DMS.Mobile.Common.connexion = form.connexion;
+						DMS.Mobile.Common.InsertException(exception,function(){
+							callback();
+						});
+					});
+},
+
+querySuccessDELETEAll : function(form,callback)
+{
+	callback();
+},
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
 
 //////////////////////////////Select FROM Local //////////////////////////////
 

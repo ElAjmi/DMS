@@ -10,6 +10,7 @@ $.extend(DMS.Mobile.Zone.prototype,
 	ZoneID : null,
 	Designation : null,
 	Personnel : null,
+	Synch : null,
 	listVilles : []
 	
 	

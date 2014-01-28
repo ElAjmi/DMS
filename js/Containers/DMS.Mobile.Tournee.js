@@ -10,18 +10,18 @@ $.extend(DMS.Mobile.Tournee.prototype,
     TourneeID : null,
 	DateDebut : null,
 	HeureDebut : null,
-	DateFin : null,
-	HeureFin : null,
+	DateCloture : null,
+	HeureCloture : null,
+	Synch : null,
 	DateCreation : null,
 	HeureCreation : null,
-	EtatTournee : null,
-	TerminalID : null,
-	ImprimanteID : null,
-	EquipementID : null,
+	EtatTournee : null,	
 	VehiculeID : null,
 	PersonnelID : null,
-	listMission : [],
-	listPositions : []
+	//Missions : [],
+	ListPointVentes : [],
+	listPositions : [],
+	ListEquipement : []
 		
 	
 });

@@ -10,7 +10,7 @@ DMS.Mobile.CalendrierViewModel =
 	$TourneeContainer : null,
 	$DetailsContainer : null,
 	
-	
+	FirstPageID : null,
 	CurrentPageID : null,
 	connexion: null,
 	
@@ -22,11 +22,40 @@ DMS.Mobile.CalendrierViewModel =
 		var form = this;
 		DMS.Mobile.TourneeRequest.connexion = this.connexion;
 		
-		DMS.Mobile.PositionRequest.connexion = this.connexion;
+		//DMS.Mobile.PositionRequest.connexion = this.connexion;
 		//  alert("InitializeGetPosition");
 		//DMS.Mobile.PositionRequest.InitializeGetPosition();
 		
-		DMS.Mobile.TourneeRequest.SelectAll(function(listTournee){form.initialize(listTournee,form);});
+		DMS.Mobile.TourneeRequest.SelectAll(function(listTournee){
+			
+			var nbrTournee = listTournee.length;
+			for(var i = 0; i<nbrTournee;i++)
+			{
+				var tourCloture = true;
+				var nbrMission = listTournee[i].Missions.length;
+				for(var j = 0; j<nbrMission; j++)
+				{
+					if (listTournee[i].Missions[j].EtatMission != DMS.Mobile.Constante.EtatMission.Cloturee)
+					{
+						tourCloture = false;
+						break;
+					}
+				}
+				if (tourCloture == true)
+				{
+					 var etat = DMS.Mobile.Constante.EtatTournee.Cloturee;
+				
+				 DMS.Mobile.TourneeRequest.UpdateListTournee(etat,nbrTournee,listTournee[i].TourneeID,function(){
+					 form.initialize(listTournee,form);
+					 });
+				}
+				
+			}
+			
+			
+			
+			
+			});
 					}
 			catch(err)
 			{
@@ -51,7 +80,7 @@ DMS.Mobile.CalendrierViewModel =
 		try
 		{
 		
-		       $(document).on('swiperight', '[data-role="page"]', function(event){    
+		       $(document).on('swipeleft', '[data-role="page"]', function(event){    
 			if(event.handled !== true) // This will prevent event triggering more then once
 			{
 				var index =$(this).attr('id');
@@ -68,7 +97,7 @@ DMS.Mobile.CalendrierViewModel =
 			return false;         
 		});
 
-		$(document).on('swipeleft', '[data-role="page"]', function(event){   
+		$(document).on('swiperight', '[data-role="page"]', function(event){   
 			if(event.handled !== true) // This will prevent event triggering more then once
 			{
 				var index =$(this).attr('id');
@@ -84,7 +113,7 @@ DMS.Mobile.CalendrierViewModel =
 			return false;            
 		});
 		 
-		
+		// select mission
 		$('li').click(function(){
 		var previous = $(this).closest('[data-role=page]');
 		//alert($(previous).attr("id"));
@@ -94,7 +123,7 @@ DMS.Mobile.CalendrierViewModel =
 	   form.detailsMission(MissionId,form,listTournee);
 		 
 		});
-		
+		// bouto retour
 		$(document).on('click','#back',function(e) { 
 			$.mobile.changePage("#"+form.CurrentPageID, { 
 			  transition: 'slide',
@@ -103,31 +132,46 @@ DMS.Mobile.CalendrierViewModel =
 			
 		});
 		
-		
+		// bouton tournee
 		 $(document).on('click','[data-role=button]',function(e) { 
 			 var idTournee = $(this).attr("id");
+			// $(this).addClass('ui-disabled');
 			if(idTournee.substr(0,5)=="demar")
 			 {
 				 idTournee = idTournee.substr(5,idTournee.length);
+				 
 				 var etat = DMS.Mobile.Constante.EtatTournee.EnCours;
-				 DMS.Mobile.TourneeRequest.UpdateTournee(etat,idTournee);
-				 var text ="D\351marrage de la tourn\351e "+idTournee+" !";
-				 DMS.Mobile.Notification.ShowMessage(text,"info",'e');
+				// alert("etat tournee : "+etat);
+				 DMS.Mobile.TourneeRequest.UpdateTournee(etat,idTournee,function(){
+					 
+					 	var text ="D\351marrage de la tourn\351e "+idTournee+" !";
+				        DMS.Mobile.Notification.ShowMessage(text,"info",'e');
+					 
+					 });
 				 
 			 }
 			e.preventDefault();
 			});
 			
-			
+			// bouton mission
 		 $(document).on('click','[data-role=button]',function(e) { 
 			 var idMission = $(this).attr("id");
+			 var href = $(this).attr("href");
 			if(idMission.substr(0,8)=="redircmd")
 			 {
 				 idMission = idMission.substr(8,idMission.length);
 				 var etat = DMS.Mobile.Constante.EtatMission.EnCours;
-				 DMS.Mobile.MissionRequest.UpdateMission(etat,idMission);
-				 var text ="D\351marrage de la mission "+idMission+"<br> Redirection vers le formulaire de commande ! ";
-				 DMS.Mobile.Notification.ShowMessage(text,"info",'e');
+				 DMS.Mobile.MissionRequest.UpdateMission(etat,idMission,function(){
+					 sessionStorage.setItem("MissionID", idMission);
+				 form.sessionStorageData(listTournee,form,idMission);
+				
+				// $.mobile.changePage('FormulaireCommande.html',{ transition: "slideup", changeHash: false });
+				 //$.mobile.changePage('FormulaireCommande.html', {transition: "slide", reverse: true}, true, true);
+				 
+				
+				window.location.replace(href);
+				
+				});
 			 }
 			e.preventDefault();
 			});
@@ -140,6 +184,21 @@ DMS.Mobile.CalendrierViewModel =
 	},
 	
 				
+	sessionStorageData : function(listTournee,form,missionID){
+		var mission = null;
+		for(var i=0;i<listTournee.length;i++){
+			for (var k=0;k<listTournee[i].Missions.length;k++){
+				
+				if(listTournee[i].Missions[k].MissionID == missionID)
+				{
+					mission = listTournee[i].Missions[k];
+					break;
+				}
+			}
+		}
+		var PointVente = mission.PointVentes;
+		sessionStorage.setItem("PointVente", JSON.stringify(PointVente));
+	},
 	
 	insertTournee : function(ListTournees,form)
 	{
@@ -175,9 +234,8 @@ DMS.Mobile.CalendrierViewModel =
 		 +'data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" >'
 		+'<ul data-role="listview" data-theme="c" class="nav-search">'
             +'<li data-icon="delete" data-theme="e"><a href="#" data-rel="close">Fermer menu</a></li>'
-               +'<li data-icon="edit"><a href="FormulaireCommande.html">Saisie commandes</a></li>'
+               +'<li data-icon="edit"><a href="FormulaireCommande2.html">Saisie commandes</a></li>'
                +'<li data-icon="page"><a href="Commande.html">Liste commandes</a></li>'
-                +'<li data-icon="calendar"><a href="Calendrier2.html">Calendrier</a></li> ' 
 		+'</ul>'
 		+'</div>'
 		//-------------------------------------------------------------------- 
@@ -196,8 +254,8 @@ DMS.Mobile.CalendrierViewModel =
 			
 			var ul = $("<ul data-role='listview' data-inset='true'></ul>");
 			var Priorite = "";
-			for (var i=0; i<tournee.listMission.length;i++){
-				var mission = tournee.listMission[i];
+			for (var i=0; i<tournee.Missions.length;i++){
+				var mission = tournee.Missions[i];
 				var h = i+1;
 			
 			if(mission.DegreUrgence==DMS.Mobile.Constante.DegreUrgence.Normal){
@@ -240,14 +298,14 @@ DMS.Mobile.CalendrierViewModel =
 	{
 		try
 		{
-		alert(missionID);
+		//alertmissionID);
 		var mission = null;
 		for(var i=0;i<listTournee.length;i++){
-			for (var k=0;k<listTournee[i].listMission.length;k++){
+			for (var k=0;k<listTournee[i].Missions.length;k++){
 				
-				if(listTournee[i].listMission[k].MissionID==missionID)
+				if(listTournee[i].Missions[k].MissionID==missionID)
 				{
-					mission = listTournee[i].listMission[k];
+					mission = listTournee[i].Missions[k];
 					break;
 				}
 			}
@@ -351,7 +409,7 @@ DMS.Mobile.CalendrierViewModel =
 				{
 				case DMS.Mobile.Constante.TypeMission.Facing :  ButtonToShow = "<div class='cmdbtn' align='right'><a id='redircmd"+mission.MissionID+"' href='#' data-role='button' data-inline='true' >Facing</a></div>";
 				break;
-				case DMS.Mobile.Constante.TypeMission.Commande :  ButtonToShow = "<div class='cmdbtn' align='right'><a id='redircmd"+mission.MissionID+"' href='#' data-role='button' data-inline='true' >Formulaire commande</a></div>";
+				case DMS.Mobile.Constante.TypeMission.Commande :  ButtonToShow = "<div class='cmdbtn' align='right'><a id='redircmd"+mission.MissionID+"' href='FormulaireCommande2.html' data-role='button' data-inline='true' >Formulaire commande</a></div>";
 				break;
 				case DMS.Mobile.Constante.TypeMission.EspacePromo :  ButtonToShow = "<div class='cmdbtn' align='right'><a id='redircmd"+mission.MissionID+"' href='#' data-role='button' data-inline='true' >Espace Promo</a></div>";
 				break;
@@ -386,6 +444,8 @@ DMS.Mobile.CalendrierViewModel =
 	{
 		try
 		{
+			//alert("DateDebut = "+DateDebut);
+			//alert("DateFin = "+DateFin);
 		var ListTourneeByDate =[];					
 		for (var i=0;i<listTournee.length;i++){
 			

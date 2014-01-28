@@ -1,0 +1,724 @@
+<!DOCTYPE html> 
+
+<html>
+<head> 
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+       <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <title>ReleveInventaire</title> 
+        <meta name="viewport" content="width=device-width" />
+        
+        <link href="css/API/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css" />
+        <link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+        <script src="js/API/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="js/API/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
+		<script src="js/API/heartcode-canvasloader-min-0.9.1.js" type="text/javascript"></script>
+        
+        <script  language="JavaScript">
+	
+		</script>
+        
+        <style>
+
+  .class-input .ui-input-text
+ {
+	  width:85px !important;
+	  
+ }
+</style>
+
+</head>
+<body>
+
+<div data-role="page" id="formReleveInventaire">
+
+<!-- panel menu-->
+<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" 
+
+data-corners="false"  data-shadow="false" data-tolerance="0,0" >
+
+		<ul data-role="listview" data-theme="c" class="nav-search">
+            <li data-icon="page"><a href="Commande.html" class="menu">Liste commandes</a></li>
+            <li data-icon="calendar"><a href="Calendrier2.html" class="menu">Calendrier</a></li>  
+            <li data-icon="lock"><a href="#" id="btnSeDeconnecter" class="menu">Se déconnecter</a></li>
+            
+		</ul>
+</div><!-- /panel -->
+
+  <div data-role="header" data-theme="b">
+    <h1>Fichier de relevé d'inventaire/Stock</h1>
+    		<a href="#panelmenu" data-role="button" data-inline="true" data-mini="true" data-icon="home" data-iconpos="left">Menu</a>
+            
+             <a href="#panel" align="right" id="ButtonRetour" data-role="button" data-rel="back" data-inline="true" data-mini="true" data-icon="back" data-iconpos="left">Retour </a>
+             
+  </div>
+  
+    <!-------- debut content ------->
+      <div data-role="content" id="content">
+      
+      <div class="ui-grid-a">
+        <div class="ui-block-a" style="width: 180px;">
+           <div data-role="controlgroup" style="min-width:385px;" data-type="horizontal" >
+            <select name="select-choice-0" id="SelectClient" data-theme="b">
+                <option value="" >UHD</option>
+                <option value="" >Monoprix</option>
+                <option value="" >Géant</option>
+                <option value="" >Magasin Général</option>
+                <option value="" >UHD</option>
+            </select>
+           </div> 
+        </div>
+           
+        <div class="ui-block-b" style="width: 180px;">   
+           <div data-role="controlgroup" style="min-width:385px;" data-type="horizontal" >
+            <select name="select-choice-0" id="SelectPV" data-theme="b">
+                <option value="" >Menzah 9</option>
+                <option value="" >Ariana</option>
+                <option value="" >Menzah 9</option>
+                <option value="" >Soukra</option>
+                <option value="" >Naser</option>
+            </select>
+           </div> 
+       </div>
+       
+    </div>   
+       
+       
+       <div class="ui-grid-a">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 45%; margin-right: 3px;" class=" ui-block-a" >	
+			   </div>
+                              
+               <div id="" data-role="content" style=" margin-bottom:0px; width: 30%;" class=" ui-block-c" >	
+                         <div  data-role="header" data-theme="e">
+                             <h4 style="font-size:16px; margin: 5px; !important"> MPF </h4>
+                         </div>
+               </div>
+                     
+       </div>
+       
+       <div class="ui-grid-a">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div  data-role="header" data-theme="b">
+                     <h4 style="font-size:16px; margin: 5px; !important"> Article </h4>
+                   </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                   <div  data-role="header" data-theme="b">
+                     <h4 style="font-size:16px; margin: 5px; !important"> Designation article </h4>
+                   </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                          <div  data-role="header" data-theme="b">
+                             <h4 style="font-size:16px; margin: 5px; !important"> CART </h4>
+                           </div>
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                          <div  data-role="header" data-theme="b">
+                             <h4 style="font-size:16px; margin: 5px; !important"> PALATTE </h4>
+                           </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                   <div  data-role="header" data-theme="b">
+                     <h4 style="font-size:16px; margin: 5px; !important"> Statut </h4>
+                   </div>
+			   </div>
+       
+       </div>
+       
+       
+       
+       
+   <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151010001</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA EXTRA 6</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151010004</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA EXTRA 12</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->  
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151010008</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA EXTRA 24</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151020001</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA 12 CEREALES</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+       
+       
+          <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151020002</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA 24 CEREALES</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151030001</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>SAIDA VRAC</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->  
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151040201</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>START LAIT</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151060101</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>START CHOC</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1--> 
+        <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151070101</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>TUNGO</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151030002</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>GALETTES</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->  
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" style="background-color:#FAFAD2;">
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151050001</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>KAAK NRM</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1-->   
+     
+     
+       <!-- ligne tableau 1-->    
+       
+        <div class="ui-grid-a" >
+             
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 15%; margin-right: 2px;" class=" ui-block-a" >	
+                   <div style="margin-top: 16px;"><label><center><strong>151050005</strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 2px;" class=" ui-block-b" >	
+                    <div style="margin-top: 16px;"><label ><center><strong><a>FENOUIL NRM</a></strong></center></label> </div>
+			   </div>
+               
+               <div id="" data-role="content" style=" margin-bottom:2px; width: 30%; margin-right: 0px;" class=" ui-block-c" >	
+                 
+                   <div class="ui-grid-a">
+                   
+                       <div id="" data-role="content" style=" margin-bottom:2px; width: 49%; margin-right: 2px;" class=" ui-block-a" >
+                           <div class="class-input" style="margin-left: 10px;"><input  type="number"> </div>  
+                      </div>
+                      
+                      <div id="" data-role="content" style=" margin-bottom:2px; width: 50%; margin-right: 0px;" class=" ui-block-b" >
+                           <div class="class-input" style="margin-left: 10px;"><input type="number"> </div>
+                      </div>
+                      
+                   </div>
+                   
+                   
+			   </div>
+               
+               <div id="" data-role="content" style="  margin-bottom:2px; width: 24%; margin-left: 1px;" class=" ui-block-d" >	
+                    <div style=" margin-top: 3px;">
+                    <center>
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+    
+                        <input name="checkbox-6" id="checkbox-6" type="checkbox">
+                        <label for="checkbox-6">Existant</label>
+                        
+                    </fieldset>
+                    </center>
+                     </div>
+			   </div>
+       
+       </div>
+     <!-- fin ligne tableau 1--> 
+       
+                   
+       
+       
+             
+       </div>
+    <!----- fin content------->
+    
+    
+     <!-- footer -->
+ <div data-role="footer" data-position="fixed" data-theme="b">
+ <center>
+     <div class="ui-grid-a">
+          <div class="ui-block-a">
+               <a href="" align="right" id="" data-theme="c" style="width:125px; margin-left: 191px;" data-role="button" >Annuler </a>
+          </div>
+          <div class="ui-block-b">
+               <a href="" align="right" id="" data-theme="c" style="width:125px; margin-right: 191px;" data-role="button" >Envoyer </a>
+          </div>
+     
+     </div>    
+  </center>
+  </div>
+ 
+    
+    
+    </body>
+</html>

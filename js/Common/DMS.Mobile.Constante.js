@@ -7,6 +7,78 @@ DMS.Mobile.Constante = {};
 
 DMS.Mobile.Constante = 
 {	
+
+   Proposition1 : {
+	
+	DerniereCommande : 0,
+	MoyenneRefMvt : 1,
+	MaxRefMvt : 2,   
+	   
+	},
+
+   Proposition3 : {
+    
+	   MoyenneA : 0,
+	   Referentiel : 1,
+	},
+
+   ModePayement : {
+	   
+	 Espece : 0,
+	 Cheque : 1,  
+	 Traite : 2,  
+	   
+	   }, 
+
+   TypeReclamation : {
+	 
+	 RecInconnue : 0,
+	 RecFacing : 1,  
+	 RecCommande : 2,
+	 RecEspacePromo : 3,
+	 RecLivraison : 4,
+	 RecParametragePV : 5,
+	 RecRecouvrement : 6,
+	 RecReleveInventaire : 7,
+	 RecRelevePresencePrixConc : 8,
+	 RecRelevePrix : 9,
+	 ReclamationReleveVenteConc : 10,	   
+   
+   
+   
+   },
+
+  EtatTraitement: {
+	  NonTraitee : 0,
+	  Traitee : 1,
+	  Supprimee : 2,
+	  
+	  },
+
+  EtatConsultation: {
+	  NonConsulte : 0,
+	  Consulte : 1,
+	  
+	  },
+
+    EtatFacture : {
+		NonReglee : 0,
+		Reglee : 1,
+		
+		},
+
+    Synchronize : {
+		  All : 0,
+		  Position : 1,
+		  Commande : 2,
+		  Tournee : 3,
+		  Reclamation : 4,
+		  Facture : 5,
+		  ArticleCommercial : 6,
+		  PropositionCommande : 7,
+		
+		},
+
 	EtatTournee : {
 		NonDemaree : 0,
 		EnCours  : 1,

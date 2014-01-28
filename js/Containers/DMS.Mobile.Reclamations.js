@@ -14,6 +14,7 @@ $.extend(DMS.Mobile.Reclamations.prototype,
 	PointVenteID : null,
 	PersonnelID : null,
 	Personnel : null,
+	Synch : null,
 	PointVentes : null		
 
 	

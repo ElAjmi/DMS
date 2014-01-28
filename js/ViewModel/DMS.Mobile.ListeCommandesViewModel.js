@@ -11,6 +11,9 @@ DMS.Mobile.ListeCommandesViewModel =
 	ListeCommandes : [],
 	$TableListeCommandes : null,
 	$TableLigneCommandes : null,
+	$synchroCmdBtn : null,
+	$modifBTN : null,
+	$btnSeDeconnecter  : null,
 	
 	
 	
@@ -49,6 +52,30 @@ DMS.Mobile.ListeCommandesViewModel =
 	initializeEvents : function(CommandeList,form){
 	try
 	{
+		$(form.$btnSeDeconnecter).click(function(){
+			
+				 	 sessionStorage.removeItem("CommandeToModify");
+					// sessionStorage.removeItem("MissionID");
+					 sessionStorage.removeItem("missionToStart");
+					 sessionStorage.removeItem("CommandeToModify");
+					 sessionStorage.removeItem("indexClient");
+					 sessionStorage.removeItem("indexPointVente");
+					 
+					
+					 sessionStorage.removeItem("ListClient");
+					 sessionStorage.removeItem("ListMission");
+					 sessionStorage.removeItem("ListPointVente");
+					 
+					  	 sessionStorage.removeItem("ListTournee");
+					 sessionStorage.removeItem("indexClient");
+					 sessionStorage.removeItem("indexPointVente");
+					 sessionStorage.removeItem("userID");
+					 
+					 DMS.Mobile.Common.RedirectToLogin();
+				
+			
+			}); 
+		
 		// panel pv click
 		$(document).on('click','.ToPointVente',function(e) { 
 			 var idCommande = $(this).attr("id");
@@ -67,8 +94,60 @@ DMS.Mobile.ListeCommandesViewModel =
 		// lc button click
 		$(document).on('click','.ToLigneCommande',function(e) { 
 		 var idCommande = $(this).attr("id");
+		 sessionStorage.removeItem("CommandeToModify");
 		 form.insertLigneCommandes(CommandeList,form,idCommande);
+		 
 		  $.mobile.changePage('#ligneCommande');  
+		});
+		
+		// btn synchroniser
+		$(form.$synchroCmdBtn).click(function(e){
+		  //alert("synchronisation des listes des commandes ");
+		  
+		        	DMS.Mobile.Common.TestServer(function(AcceeServeur){
+			
+									if (AcceeServeur == true)
+									{
+											DMS.Mobile.SynchronizeRequest.connexion = form.connexion;
+											DMS.Mobile.SynchronizeRequest.SynchronizeCommande(function(synchr)
+													{  
+															  DMS.Mobile.Common.RedirectToListeCommandes();	
+													});
+									}
+									else
+									{
+										 alert("Pas d'accès serveur !!!");	
+									}
+								
+					 });
+		 
+		
+		});
+		
+		
+		$(".menu_ListArticleRepture").click(function(){
+			
+			DMS.Mobile.Common.RedirectToArticleEnRepture();
+			});
+			
+		$(".menu_Synchronisation").click(function(){
+			
+			$(this).addClass('ui-disabled'); 
+				  
+				  DMS.Mobile.Common.connexion = form.connexion;
+				  DMS.Mobile.Common.synchronizeAllData(function(){
+					  
+					  DMS.Mobile.Common.RedirectToListeCommandes();
+				  });
+			
+			});
+		
+		
+		
+		// btn modifier
+		$(form.$modifBTN).click(function(e) { 
+		 
+		 	DMS.Mobile.Common.RedirectToCommande();
 		});
 		
 			}
@@ -78,7 +157,75 @@ DMS.Mobile.ListeCommandesViewModel =
 			}
 	},
 	
+/*	synchronizeServer : function(form,jsonText,callback)
+	{
+		try
+		{
+			//alert("synchronize server");
+		var Conf = JSON.parse(localStorage.getItem("Configuration"));
+		
+		var Data = "jsonText="+jsonText; 	  
+		var methode= "SynchronizeServer?";
+		var URL = Conf.URL+methode+Data;
+	    //var URL = "http://http://localhost:1307/Service1.svc/"+methode+Data;
+	    DMS.Mobile.Common.CallService(function(JsonObject,Form){form.ReponseService(JsonObject,Form,callback);},URL,form);
+		
+		}
+			catch(err)
+			{
+				DMS.Mobile.Notification.ShowMessage(err.message+" : synchronizeServer in ListeCommandeViewModel",'alert','e'); 
+			}
+	},
 	
+	ReponseService : function(json,form,callback)
+	{
+		try
+		{
+			//alert("reponseJson : "+json);
+		if ( json != null)
+		{
+			//alert("json = "+json);
+			callback(json);
+		}
+		else
+		{
+			callback("false");
+		}
+		}
+		catch(err)
+		{DMS.Mobile.Notification.ShowMessage(err.message+" : ReponseService in ListeCommandeViewModel",'alert','e'); }
+			
+	},
+	
+	ChangeSynch : function(form)
+	{
+		//alert("changeSynch");
+	//	DMS.Mobile.PositionRequest.connexion = form.connexion;
+		  DMS.Mobile.CommandeRequest.connexion = form.connexion;
+		  DMS.Mobile.TourneeRequest.connexion = form.connexion;
+		  DMS.Mobile.LigneCommandeRequest.connexion = form.connexion;
+		  DMS.Mobile.MissionRequest.connexion = form.connexion;
+		  
+		 //alert("UpdatesynchPosition");
+	//	DMS.Mobile.PositionRequest.UpdateSynchPosition(function(){
+			 //alert("UpdateSynchTournee");
+			DMS.Mobile.TourneeRequest.UpdateSynchTournee(function(){
+				 //alert("UpdateSynchMission");
+				DMS.Mobile.MissionRequest.UpdateSynchMission(function(){
+					 //alert("UpdateSynchCommande");
+					DMS.Mobile.CommandeRequest.UpdateSynchCommande(function(){
+						 //alert("UpdateSynchLigneCommande");
+						DMS.Mobile.LigneCommandeRequest.UpdateSynchLigneCommande(function(){
+							
+							alert("La synchronisation est effectuée avec succès");
+							
+							});
+						});
+					});
+				});
+		//	});
+	},
+	*/
 	insertCommandes : function(CommandeList,form){
 		try
 		{
@@ -120,6 +267,8 @@ DMS.Mobile.ListeCommandesViewModel =
 				}
 				
 				
+				
+				
 				switch (form.ListeCommandes[i].Synch)
 				{
 					case "false" : Synchronisation ='<img src="css/images/synch_red.png" align="middle">&nbsp;&nbsp;&nbsp;<span class="smallLabel" style="color:red;">Non synchronis\351e</span>';
@@ -128,14 +277,20 @@ DMS.Mobile.ListeCommandesViewModel =
 					break;
 				}
 		
-		$(this.$TableListeCommandes).table("refresh");
-		$(this.$TableListeCommandes+" > tbody").append(""
+	//	$(this.$TableListeCommandes).table("refresh");
+		//$(this.$TableListeCommandes+" > tbody").append(""
+		var prixTotalHT = form.ListeCommandes[i].PrixTotalHT;
+		var prixTotalTTC = form.ListeCommandes[i].PrixTotalTTC
+		
+		$(this.$TableListeCommandes).find("tbody:eq(0)").append(""
 			+"<tr id='"+form.ListeCommandes[i].CommandeID+"'>"
 				+"<td>"+form.ListeCommandes[i].DateCreation+"</td>"
 				//+"<td>"+form.ListeCommandes[i].CAB+"</td>"
 				+"<td>"+form.ListeCommandes[i]. DateLivraisonPrevue+"</td>"
-				+"<td>"+form.ListeCommandes[i].PrixTotalHT.toFixed(3)+"</td>"
-				+"<td>"+form.ListeCommandes[i].PrixTotalTTC.toFixed(3)+"</td>"
+				//+"<td>"+parseFloat(form.ListeCommandes[i].PrixTotalHT.replace(",", ".")).toFixed(3)+"</td>"
+				//+"<td>"+parseFloat(form.ListeCommandes[i].PrixTotalTTC.replace(",", ".")).toFixed(3)+"</td>"
+				+"<td>"+(form.ListeCommandes[i].PrixTotalHT).toFixed(3)+"</td>"
+				+"<td>"+(form.ListeCommandes[i].PrixTotalTTC).toFixed(3)+"</td>"
 				+"<td style='vertical-align: center;'>"+EtatCommandeToShow+"</td>"
 				+"<td style='vertical-align: center;'>"+Synchronisation+"</td>"
 				+"<td><a data-role='button' class='ui-icon-alt ToPointVente' data-inline='true' data-icon='mappin' data-theme='c' data-iconpos='notext' id='"+form.ListeCommandes[i].CommandeID+"'>D&eacute;tails</a></td>"
@@ -227,25 +382,30 @@ DMS.Mobile.ListeCommandesViewModel =
 	insertLigneCommandes : function (CommandeList,form,IdCmd){
 	try
 	{
-		$(this.$TableLigneCommandes+" > tbody").empty();
+		//$(this.$TableLigneCommandes+" > tbody").empty();
+		$(this.$TableLigneCommandes).find("tbody:eq(0)").empty();
 		var CommandeToShow = null;
 		for(var i=0; i<form.ListeCommandes.length; i++){
 			if(form.ListeCommandes[i].CommandeID == IdCmd)
 			{
 				CommandeToShow = form.ListeCommandes[i];
+				sessionStorage.setItem("CommandeToModify", JSON.stringify(CommandeToShow));
 				break;
 			}
 		}
 		
-		for(var i=0; i<CommandeToShow.ListLignesCommande.length; i++){
+		for(var i=0; i<CommandeToShow.LignesCommande.length; i++){
 		
-		$(this.$TableLigneCommandes+" > tbody").append(""
+		//$(this.$TableLigneCommandes+" > tbody").append(""
+		$(this.$TableLigneCommandes).find("tbody:eq(0)").append(""
 			+"<tr>"
-				+"<td>"+CommandeToShow.ListLignesCommande[i].Quantite+"</td>"
-				+"<td>"+CommandeToShow.ListLignesCommande[i].ArticleObject.Designation +"</td>"
-				+"<td>"+CommandeToShow.ListLignesCommande[i].PrixTotalArticleTTC.toFixed(3)+"</td>"
-				+"<td>"+CommandeToShow.ListLignesCommande[i].PrixTotalArticleHT.toFixed(3)+"</td>"
-				+"<td><a data-role='button' class='ui-icon-alt ToArticle' data-inline='true' data-icon='page' data-theme='d' data-iconpos='notext' id='"+CommandeToShow.ListLignesCommande[i].ArticleID+"'>D&eacute;tails</a></td>"
+				+"<td>"+CommandeToShow.LignesCommande[i].Quantite+"</td>"
+				+"<td>"+CommandeToShow.LignesCommande[i].ArticleObject.Designation +"</td>"
+			/*	+"<td>"+parseFloat(CommandeToShow.LignesCommande[i].PrixTotalArticleTTC.replace(",", ".")).toFixed(3)+"</td>"
+				+"<td>"+parseFloat(CommandeToShow.LignesCommande[i].PrixTotalArticleHT.replace(",", ".")).toFixed(3)+"</td>"*/
+				+"<td>"+(CommandeToShow.LignesCommande[i].PrixTotalArticleTTC).toFixed(3)+"</td>"
+				+"<td>"+(CommandeToShow.LignesCommande[i].PrixTotalArticleHT).toFixed(3)+"</td>"
+				+"<td><a data-role='button' class='ui-icon-alt ToArticle' data-inline='true' data-icon='page' data-theme='d' data-iconpos='notext' id='"+CommandeToShow.LignesCommande[i].ArticleID+"'>D&eacute;tails</a></td>"
 				
 			+"</tr>"
 		).trigger('create');	
@@ -263,21 +423,21 @@ DMS.Mobile.ListeCommandesViewModel =
 	{
 		var ArticleToShow = null;
 		for(var i=0; i<form.ListeCommandes.length; i++){
-			for(var j=0; j<form.ListeCommandes[i].ListLignesCommande.length; j++){
-				if(form.ListeCommandes[i].ListLignesCommande[j].ArticleID == IdArticle)
+			for(var j=0; j<form.ListeCommandes[i].LignesCommande.length; j++){
+				if(form.ListeCommandes[i].LignesCommande[j].ArticleID == IdArticle)
 				{
-					ArticleToShow = form.ListeCommandes[i].ListLignesCommande[j].ArticleObject;
+					ArticleToShow = form.ListeCommandes[i].LignesCommande[j].ArticleObject;
 					break;
 				}
 			}
 		}
 			
 			$("#popupContenuArticle").html(""
-			+"<table width ='100%'><tr><td width='50%' style='padding-right: 30px;padding-left: 30px;'>"
-			+"<br/>D\351signation : "+ ArticleToShow.Designation
-			+"<br/> Quantit\351 Disponible : "+ ArticleToShow.QuantiteDisponible
-			+"<br/> Prix Unitaire HT : "+ArticleToShow.PrixUnitaireHT.toFixed(3)
-			+"<br/> Prix Unitaire TTC : "+ArticleToShow.PrixUnitaireTTC.toFixed(3)
+			+"<table width ='100%'><tr><td width='50%' style='padding-right: 0px;padding-left: 0px;vertical-align:top;'>"
+			+"<br/><strong>D\351signation :</strong> "+ ArticleToShow.Designation
+			+"<br/><strong>Quantit\351 Disponible :</strong> "+ ArticleToShow.QuantiteDisponible
+			+"<br/><strong>Prix Unitaire HT :</strong> "+(ArticleToShow.PrixUnitaireHT).toFixed(3)
+			+"<br/><strong>Prix Unitaire TTC :</strong> "+ (ArticleToShow.PrixUnitaireTTC).toFixed(3)
 			+"</td>"
 			+"<td width='50%' style='border-left: 1px solid silver;padding-right: 30px;padding-left: 30px;'>"
 			+"<img src='css/images/Produits/sablito.png' >"

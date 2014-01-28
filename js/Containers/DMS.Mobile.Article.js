@@ -20,14 +20,29 @@ $.extend(DMS.Mobile.Article.prototype,
           CodeTVA : null, 
           Familles : null, 
           UniteMesure : null,
+		  
+		  UniteCarton : null,
+		  PoidsUnite : null,
+		  DimensionCarton : null,
+		  VolumeCarton : null,
+		  Ordre : null,
+		  Actif : null,
+		  
+		  
           ListFacings : [],
-          ListLignesCommande : [],
-          ListLivraisons : [], 
-          ListPromotions : [], 
+          LignesCommande : [],
+          Livraisons : [], 
+
           ListReleveLineaire : [],
           ListRelevePresencePrixConcurrents : [], 
           ListRelevePrix : [], 
           ListReleveStock : [],
           CodeTVA1 : null, 
-		  PrixUnitaireTTC : null
+		  PrixUnitaireTTC : null,
+		  PromotionID : null,
+		  Pictures : [],
+		  Synch : null,
+		  
+		  Promotion : null,
+		  Picture : null
 });

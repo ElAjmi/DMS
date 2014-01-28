@@ -1,0 +1,427 @@
+<!DOCTYPE html> 
+
+<html>
+<head> 
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+       <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <title>Gestion de point de vente</title> 
+        <meta name="viewport" content="width=device-width" />
+        
+        <link href="css/API/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css" />
+        <link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        
+        <script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+        <script src="js/API/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="js/API/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
+		<script src="js/API/heartcode-canvasloader-min-0.9.1.js" type="text/javascript"></script>
+<style>
+.coin-class
+{
+	-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+</style>
+
+        <script  language="JavaScript">
+		   function AjoutLineaire()
+		   {
+		
+			   $("#popupLineaire").popup();
+			   $("#popupLineaire").popup("open");
+			   
+			   $("#popupLineaire").trigger('create');
+		   }
+		   
+		   function AjoutEspacePromo()
+		   {
+			   
+			    $("#popupEspacePromo").popup();
+			   $("#popupEspacePromo").popup("open");
+			   
+			   $("#popupEspacePromo").trigger('create');
+		   }
+		   
+		</script>
+        
+        
+</head>
+<body>
+
+<div data-role="page" id="formGestionPointVente">
+
+<!-- panel menu-->
+<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" 
+
+data-corners="false"  data-shadow="false" data-tolerance="0,0" >
+
+		<ul data-role="listview" data-theme="c" class="nav-search">
+            <li data-icon="page"><a href="Commande.html" class="menu">Liste commandes</a></li>
+            <li data-icon="calendar"><a href="Calendrier2.html" class="menu">Calendrier</a></li>  
+            <li data-icon="lock"><a href="#" id="btnSeDeconnecter" class="menu">Se déconnecter</a></li>
+            
+		</ul>
+</div><!-- /panel -->
+
+  <div data-role="header" data-theme="b">
+    <h1>Gestion point de vente</h1>
+    		<a href="#panelmenu" data-role="button" data-inline="true" data-mini="true" data-icon="home" data-iconpos="left">Menu</a>
+            
+             <a href="#panel" align="right" id="ButtonRetour" data-role="button" data-rel="back" data-inline="true" data-mini="true" data-icon="back" data-iconpos="left">Retour </a>
+             
+  </div>
+  
+    <!-------- debut content ------->
+      <div data-role="content" id="content">
+      
+      <div class="ui-grid-a">
+        <div class="ui-block-a" style="width: 180px;">
+           <div data-role="controlgroup" style="min-width:385px;" data-type="horizontal" >
+            <select name="select-choice-0" id="SelectClient" data-theme="b">
+                <option value="" >Monoprix</option>
+                <option value="" >Monoprix</option>
+                <option value="" >Géant</option>
+                <option value="" >Magasin Général</option>
+                <option value="" >Carrefour</option>
+            </select>
+           </div> 
+        </div>
+           
+        <div class="ui-block-b" style="width: 180px;">   
+           <div data-role="controlgroup" style="min-width:385px;" data-type="horizontal" >
+            <select name="select-choice-0" id="SelectPV" data-theme="b">
+                <option value="" >Menzah 6</option>
+                <option value="" >Ariana</option>
+                <option value="" >Menzah 6</option>
+                <option value="" >10 Décembre</option>
+                <option value="" >Naser</option>
+            </select>
+           </div> 
+       </div>
+       
+       <div class="ui-block-c" style="width: 180px;">
+               <a href="#"  id="Add" data-role="button"  data-theme="c" class="show-page-loading-msg" data-textonly="false" data-textvisible="true" style="width: 194px;left: 185px;">Ajouter point Vente</a>
+       </div>
+       
+    </div>
+    
+     <div class="ui-grid-b">
+    
+      <form  style="    margin-bottom: 16px;">
+    	<fieldset id="fieldset" style="padding-right: 30px; width: 684px; padding-bottom: 3px; height: 139px;padding-top: 0px;margin-top: 15px;">
+          <legend id="legend" align="left">   
+			 <h3>Détail point vente </h3> 
+		   </legend>
+           
+           <div class="ui-grid-a">
+               <div class="ui-block-a">
+                 <!--  <strong><u> TG 1</u> </strong></br></br>-->
+                 </br>
+                   <strong> Nom société : </strong> Monoprix</br>
+                   <strong> Nom résponsable : </strong> Mohamed</br>
+                   <strong> Téléphone : </strong> 71777777</br>
+                   <strong> Point Vente : </strong> Menzah 6
+               </div>
+               <div class="ui-block-b" style="margin-left: 156px; width:260px;">
+                   </br>
+                   <strong> Adresse : </strong> Ariana, El menzah 6, 2091</br>
+                   <strong> Résponsable point vente : </strong> Zied</br>
+                   <strong> Téléphone point vente : </strong> 70787878</br>
+                   
+               </div>
+           </div>
+                 
+           <div class="ui-grid-a">
+            <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='page' data-theme='e' data-iconpos='notext' style="    width: 24px;    margin-left: 643px;">D&eacute;tails</a>
+           </div>
+        </fieldset>
+      </form>    
+     </div>
+     
+      <!--   grid c--->
+ 
+ <div class="ui-grid-a">
+     <div class="ui-block-a" style="width:50%;">
+          <form>
+            <fieldset id="fieldset" style="width: 320px;padding-top: 14px;padding-left: 15px;padding-right: 14px;padding-bottom: 11px;height: 265px;">
+              <legend> <h4> Espace promotionnel : </h4></legend>
+                 <div class="ui-grid-a">
+                    <form  style="    margin-bottom: 16px;">
+    	            <fieldset id="fieldset" style="padding-right: 30px; width: 250px; padding-bottom: 3px; height: 109px;padding-top: 12px;margin-top: 0px;border-top-width: 1px;">
+                     <legend id="legend" align="left">   
+			            <strong><u>TG 1</u></strong> 
+		              </legend>
+                      
+                      
+                       <div class="ui-grid-a">
+                       <strong> Nombre d'étagères : </strong> 8</br>
+                       <strong> Largeur tablette(m) : </strong> 1.5</br>
+                       <strong> Total(ML) : </strong> 12</br>
+                       </div>
+                       <div class="ui-grid-a" style="    margin-top: 0px;    margin-left: 161px;">
+                           <div class="ui-block-a">
+                        <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='delete' data-theme='e' data-iconpos='notext'>Delete</a>
+                           </div>
+                           <div class="ui-block-b">
+                           <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='page' data-theme='e' data-iconpos='notext'>D&eacute;tails</a>
+                           </div>
+                       </div>
+                       
+
+                       
+                       </fieldset>
+                   </form>
+                 </div>
+                 
+                   <div class="ui-grid-a">
+                         <form  style="    margin-bottom: 16px;">
+                           <fieldset id="fieldset" style="padding-right: 30px; width: 250px; padding-bottom: 3px; height: 109px;padding-top: 12px;margin-top: 0px;border-top-width: 1px;">
+                             <legend id="legend" align="left">   
+                                <strong><u>TG 2</u></strong> 
+                              </legend>
+                      <div class="ui-grid-a">       
+                       <strong> Nombre d'étagères : </strong> 8</br>
+                       <strong> Largeur tablette(m) : </strong> 1.5</br>
+                       <strong> Total(ML) : </strong> 12</br>
+                       </div>
+                        <div class="ui-grid-a" style="    margin-top: 0px;    margin-left: 161px;">
+                           <div class="ui-block-a">
+                        <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='delete' data-theme='e' data-iconpos='notext'>Delete</a>
+                         </div>
+                           <div class="ui-block-b">
+                           <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='page' data-theme='e' data-iconpos='notext'>D&eacute;tails</a>
+                         </div>
+                         </div>
+                           </fieldset>
+                       </form>
+                 </div>
+            </fieldset>
+         </form>   
+     </div>
+     <div class="ui-block-b" style="width:50%;">
+          <form>
+            <fieldset id="fieldset" style="width: 320px;padding-top: 14px;padding-left: 15px;padding-right: 14px;height: 247px;">
+              <legend> <h4> Linéaires : </h4></legend>
+                 <div class="ui-grid-a">
+                        <form  style="    margin-bottom: 16px;">
+                           <fieldset id="fieldset" style="padding-right: 30px; width: 250px; padding-bottom: 3px; height: 115px;padding-top: 12px;margin-top: 0px;border-top-width: 1px;">
+                             <legend id="legend" align="left">   
+                                <strong><u>Linéaire 1</u> </strong> 
+                              </legend>
+                        <div class="ui-grid-a">      
+                           <strong> Nombre d'étagères : </strong> 8</br>
+                           <strong> Largeur tablette(m) : </strong> 1.2</br>
+                           <strong> Nombre des tablettes : </strong> 13</br>
+                           <strong> Total linéaire(ML) : </strong> 142.5</br>
+                          </div>
+                        <div class="ui-grid-a" style="margin-left: 161px;">
+                           <div class="ui-block-a">  
+                           <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='delete' data-theme='e' data-iconpos='notext'>Delete</a>
+                           </div>
+                           <div class="ui-block-b">
+                           <a data-role='button' class='ui-icon-alt' data-inline='true' data-icon='page' data-theme='e' data-iconpos='notext'>D&eacute;tails</a>
+                           </div>
+                           </div>
+                           
+                           </fieldset>
+                       </form>
+                 </div>
+               
+            </fieldset>
+         </form> 
+     </div>
+     
+ </div>
+     <!-- fin -->
+     
+    <!--  <div class="ui-grid-a"> 
+          <div class="ui-block-a" style="width:27%;">
+              <div data-role="button" >Ajouter linéaire</div>
+          </div>
+          <div class="ui-block-b" style="width:27%;">
+            <div data-role="button"  ></div>  
+          </div>
+      </div>-->
+      
+      
+       </div>
+    <!----- fin content------->
+    
+      <!-- footer -->
+    <!-- footer -->
+ <div data-role="footer" data-position="fixed" data-theme="b">
+ <center>
+     <div class="ui-grid-a">
+          <div class="ui-block-a">
+               <a href="" align="right" onClick="AjoutLineaire()" id="" data-theme="c" style="width:177px; margin-left: 191px;" data-role="button" >Ajouter linéaire </a>
+          </div>
+          <div class="ui-block-b">
+               <a href="" align="right" onClick="AjoutEspacePromo()" id="" data-theme="c" style="width:177px; margin-right: 191px;" data-role="button" >Ajouter éspace promo </a>
+          </div>
+     
+     </div>    
+  </center>
+  </div>
+    
+    
+    
+  </div>
+  
+  
+  
+  </div>
+ 
+
+ <!-- popup lineaire-->
+ <div data-role="popup" id="popupLineaire" style="width: 488px;height: 331px"  class="ui-corner-all">              
+        
+          <form>
+             <fieldset id="fieldset" style="width:440px;height: 240px;padding-right: 0px;padding-left: 17px;margin-left: 15px;margin-top: 16px;margin-right: 7px;">
+                <legend><h3>Ajout linéaire :</h3> </legend>
+                <div style=" margin-left: 44px;">
+                
+                <div class="ui-grid-a">
+                   <div class="ui-block-a" style=" margin-top: 15px;">
+                         <label><strong>Désignation : </strong></label>
+                   </div>
+                   <div class="ui-block-b">
+                         <input   id="" value="Linéaire 2" type="text">
+                   </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style=" margin-top: 15px;">
+                        <label><strong>Nombre tablettes : </strong></label>
+                   </div>
+                   <div class="ui-block-b">
+                        <input   id="" value="" type="text">
+                   </div>
+                </div>
+                <div class="ui-grid-a">
+                     <div class="ui-block-a" style=" margin-top: 15px;">
+                         <label><strong>Nombre d'étagères : </strong></label>
+                   </div>
+                   <div class="ui-block-b">
+                          <input   id="" value="" type="text">
+                   </div>
+                </div>
+                <div class="ui-grid-a">
+                     <div class="ui-block-a" style=" margin-top: 15px;">
+                          <label><strong>Largeur tablette(m) : </strong></label>
+                   </div>
+                   <div class="ui-block-b">
+                          <input   id="" value="" type="text">
+                   </div>
+                </div>
+                
+                <div class="ui-grid-a" style="margin-top: 16px;margin-left: 30px;">
+                     <div class="ui-block-a" style=" width:133px;">
+                          <a href="" align="right" id="" data-theme="b" data-role="button" >Enregistrer </a>
+                   </div>
+                   <div class="ui-block-b" style="  width:133px; margin-left: 35px;">
+                          <a href="" align="right" id="" data-theme="b" data-role="button" >Annuler </a>
+                   </div>
+                </div>
+               
+               
+               </div> 
+              </fieldset>
+          </form>  
+          
+     </div>     
+          
+           <!-- popup espace promo-->
+ <div data-role="popup" id="popupEspacePromo" style="width: 556px;height: 397px;"  class="ui-corner-all">              
+        
+        
+          <form>
+             <fieldset id="fieldset"  style="width:500px;height: 356px;padding-top: 0px;padding-left: 15px;padding-right: 15px;margin-left: 12px;">
+                <legend><h3>Ajout éspace promotionnel :</h3> </legend>
+                   <div class="ui-grid-a" style="margin-top: 10px; margin-bottom: 9px;height: 114px;">
+                        <div  class="ui-grid-a" style="width:100%;margin-left: 0px;height: 114px;">
+                           <div class="ui-block-a coin-class" style="width:82px; height:93px;margin-right: 18px;margin-top: 7px;">
+                              <div style="margin-left: 14px;margin-top: 7px;">
+                                     <img  class=""  src="css/images/TG.png" />
+                              </div>
+                           </div>
+                           <div class="ui-block-b coin-class" style="width:82px; height:93px;margin-right: 7px;margin-top: 3px;">
+                              <div style="margin-left: 9px;margin-top: 12px;">
+                                     <img class=""  src="css/images/BP.png" />
+                              </div>
+                           </div>
+                           <div class="ui-block-c coin-class" style="width: 77px; height:93px;margin-right: 20px;margin-top: 8px;">
+                               <div style="margin-left: 14px;margin-top: 7px;">
+                                      <img class=""  src="css/images/Cheminee.png" />
+                               </div>
+                           </div>
+                           <div class="ui-block-d coin-class" style="width:82px; height:93px; margin-right: 25px;margin-top: 3px;">
+                               <div style="margin-left: 13px;margin-top: 12px;">
+                                       <img class=""  src="css/images/Mural.png" />
+                               </div>
+                           </div>
+                           <div class="ui-block-e coin-class" style="width:82px; height:93px; margin-right: 6px;margin-top: 4px;">
+                              <div style="margin-left: 2px;margin-top: 7px;">
+                                       <img class=""  src="css/images/ZoneSaisonniere.png" />
+                              </div>
+                           </div>
+                        </div>
+                   </div>
+                   <div class="ui-grid-a">
+                        <form>
+                          <fieldset id="fieldset" style="width:410px;height: 181px;margin-left: 13px;padding-top: 8px;">
+                               <legend><strong>TG :</strong> </legend>
+                               
+                               <div class="ui-grid-a" style="height: 143px;margin-bottom: 5px;">
+                                    <div style="width:100%;">
+                                         <div class="ui-grid-a">
+                                               <div class="ui-block-a" style=" margin-top: 15px;">
+                                                     <label><strong>Désignation : </strong></label>
+                                               </div>
+                                               <div class="ui-block-b">
+                                                     <input   id="" value="TG 3" type="text">
+                                               </div>
+                                            </div>
+                                            <div class="ui-grid-a">
+                                                <div class="ui-block-a" style=" margin-top: 15px;">
+                                                    <label><strong>Nombre d'étagères : </strong></label>
+                                               </div>
+                                               <div class="ui-block-b">
+                                                    <input   id="" value="" type="text">
+                                               </div>
+                                            </div>
+                                            <div class="ui-grid-a">
+                                                 <div class="ui-block-a" style=" margin-top: 15px;">
+                                                      <label><strong>Largeur tablettes(m) : </strong></label>
+                                               </div>
+                                               <div class="ui-block-b">
+                                                      <input   id="" value="" type="text">
+                                               </div>
+                                            </div>
+                                    
+                                    </div>
+                               </div>
+                               
+                               <div class="ui-grid-a" style=" margin-left: 61px;">
+                               <div class="ui-block-a" style=" width:133px;">
+                                      <a href="" align="right" id="" data-theme="b" data-role="button" >Enregistrer </a>
+                               </div>
+                               <div class="ui-block-b" style="  width:133px; margin-left: 35px;">
+                                      <a href="" align="right" id="" data-theme="b" data-role="button" >Annuler </a>
+                               </div>
+                               </div>
+                               
+                           </fieldset>
+                        </form>
+                   </div>
+                   
+              </fieldset>
+          </form>
+ </div>
+ 
+ 
+ 
+ 
+
+ 
+</body>
+</html>

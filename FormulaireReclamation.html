@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>Document sans nom</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/API/jquery.mobile-1.3.2.min.css"/>
+<link href="css/API/jqm-icon-pack-fa.css" rel="stylesheet" type="text/css" />
+
+
+
+
+
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Exception.js"></script>
+<script type="text/javascript" src="js/API/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/API/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/API/cordova.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Article.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.ArticleRequest.js"></script>
+<script type="text/javascript" src="js/Containers/DMS.Mobile.Famille.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.FamilleRequest.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.CreateBD.js"></script>
+<script type="text/javascript" src="js/ViewModel/DMS.Mobile.ReclamationViewModel.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Common.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Constante.js"></script>
+<script type="text/javascript" src="js/Common/DMS.Mobile.Notification.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Commande.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Mission.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Tournee.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.CommandeRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.LigneCommande.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.LigneCommandeRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.PointVente.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.TypeMission.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Ville.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.VilleRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Activite.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ActiviteRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.PointVenteRequest.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Reclamation.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ReclamationRequest.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.TypeMissionRequest.js"></script>
+<script type="text/javascript" src="js/Request/DMS.Mobile.PositionRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Position.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Containers/DMS.Mobile.Client.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.ClientRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.MissionRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Request/DMS.Mobile.TourneeRequest.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Common/DMS.Mobile.Constante.js"></script>
+
+        
+        <script type="text/javascript" charset="utf-8" src="js/API/SQLitePlugin.js"></script>
+        
+
+      
+
+
+<script type="text/JavaScript" charset="utf-8">
+
+            $(document).ready(function () {
+                $.mobile.ajaxEnabled = false;
+
+            });  
+        
+function InitPage(){
+       	
+	//	alert("initPage");
+		DMS.Mobile.BD.initConnection();
+		
+		DMS.Mobile.ReclamationViewModel.connexion = DMS.Mobile.BD.connexion;
+		DMS.Mobile.ReclamationViewModel.$textarea = $("#textarea");
+
+		DMS.Mobile.ReclamationViewModel.$popupBasic = $("#popupBasic");
+		
+		
+
+		DMS.Mobile.ReclamationViewModel.$selectClient = $("#listClient");
+		DMS.Mobile.ReclamationViewModel.$client=$("#client");
+		DMS.Mobile.ReclamationViewModel.$dtailsClient=$("#detailClient");
+		DMS.Mobile.ReclamationViewModel.$detailPointVente=$("#detailPointVente");
+
+		
+		DMS.Mobile.ReclamationViewModel.$SelectPointVente=$("#SelectPointVente");
+		DMS.Mobile.ReclamationViewModel.$selectPointVente = $("#listPointVente");
+		DMS.Mobile.ReclamationViewModel.$pointVente=$("#pointVente");
+		
+		DMS.Mobile.ReclamationViewModel.$envoyer=$("#submit");
+        DMS.Mobile.ReclamationViewModel.$annuler=$("#cancel");
+
+		
+		DMS.Mobile.ReclamationViewModel.$ButtonDetail=$("#ButtonDetail" );
+		DMS.Mobile.ReclamationViewModel.$btnSeDeconnecter=$("#btnSeDeconnecter" );
+		
+		
+		
+
+		DMS.Mobile.ReclamationViewModel.Init();
+			
+           } 
+           
+    </script>
+
+</head>
+
+<body>
+
+	
+
+
+
+<div data-role="page" id="formReclamation">
+
+<div data-role="popup" id="popupBasic">
+<p>This is a completely basic popup, no options set.<p> 
+ 
+</div>
+
+<!-- panel menu-->
+<div data-theme="c" data-display="overlay" data-position="left" id="panelmenu" data-role="panel" class="ui-panel ui-panel-position-left ui-panel-display-push ui-body-a ui-panel-animate ui-panel-open" 
+
+data-corners="false"  data-shadow="false" data-tolerance="0,0" >
+
+		<ul data-role="listview" data-theme="c" class="nav-search">
+            
+            <li data-icon="calendar"><a href="Calendrier2.html" class="menu">Calendrier</a></li>  
+            <li data-icon="lock"><a href="#" id="btnSeDeconnecter" class="menu">Se déconnecter</a></li>
+            
+		</ul>
+		</div><!-- /panel -->
+    
+  <div data-role="header" data-theme="b">
+    <h1>Reclamation</h1>
+    		<a href="#panelmenu" data-role="button" data-inline="true" data-mini="true" data-icon="home" data-iconpos="left">Menu</a>
+            
+             <a href="#panel" align="right" id="ButtonDetail" data-role="button" data-inline="true" data-mini="true" data-icon="info" data-iconpos="left">Détails </a>
+             
+  </div>
+  
+  
+  <div data-role="content">        
+           
+  <!--  <form  style=" text-align: center; margin: 10% auto;">
+    
+    <fieldset id="fieldset"> 
+    
+			<legend id="legend" align="left"> -->
+			<h4>Commentaire : </h4> 
+			<!--</legend>-->
+                       
+         
+     	   <textarea cols="40" rows="8" name="textarea" id="textarea" style=" height: height: 271px;"></textarea>
+        
+       
+	<!--	</fieldset>
+    </form>-->
+    
+  </div>
+  
+  
+  <!-- footer -->
+ <div data-role="footer" data-theme="b" id ="footer" data-tap-toggle="false" data-position="fixed">
+     
+<div class="ui-grid-a">
+                   
+<div class="ui-block-a" align="right">
+     <a href="#" id="submit"  style="width:125px" data-role="button" data-icon="check" data-theme="c">Envoyer</a>
+ </div>
+
+<div class="ui-block-b">
+     <a href="#" id="cancel"   style="width:125px" data-role="button" data-icon="delete" data-theme="c">Annuler</a> 
+</div>
+
+</div>
+     
+     
+     
+
+    
+    
+    <!--  panel detail client-->
+   <div data-theme="c" data-display="overlay" data-position="right" id="panel" data-role="panel" class="ui-panel ui-panel-position-right ui-panel-display-push ui-body-c ui-panel-animate ui-panel-open" >
+        
+  
+   <h4>Choisir un Client :</h4>  
+ <div id="SelectClient" data-role="collapsible-set" data-theme="b" data-content-theme="d">
+    <div data-role="collapsible" data-collapsed="true">
+        <h4 id="client">Clients</h4>
+        <ul data-role="listview" data-filter="true" id="listClient">
+           
+        </ul>
+    </div>
+ </div>
+ <h4>Choisir une point de vente :</h4>  
+ <div id="SelectPointVente" data-role="collapsible-set" class="ui-disabled" data-theme="b" data-content-theme="d">
+    <div data-role="collapsible" data-collapsed="true" >
+        <h4 id="pointVente">Point de Vente</h4>
+        <ul data-role="listview" data-filter="true" id="listPointVente">
+           
+           
+        </ul>
+    </div>
+ </div><!-- /panel -->
+ 
+ 
+ <div id="detailClient">
+ 
+ <!--<div data-role="fieldcontain">
+ <label for='name'>Adresse : </label>
+ <label for='name'>"+oPointVente.Adresse+"</label>
+</div>-->
+	
+
+ </div >
+ 
+ <div id="detailPointVente">
+ 
+
+ </div >
+ 
+ 
+ </div><!-- /panel -->
+
+
+</div>
+<!-- details article -->
+
+<script type="text/JavaScript" charset="utf-8">
+	
+	$(document).ready(function() {  
+	//alert("documentReady");
+	    //document.addEventListener("deviceready", InitPage , false);
+		InitPage();
+	});
+	
+	</script>
+</body>
+</html>

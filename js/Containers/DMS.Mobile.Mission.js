@@ -12,6 +12,7 @@ $.extend(DMS.Mobile.Mission.prototype,
 	EtatMission : null,
 	DateCreation : null,
 	HeureCreation : null,
+	Synch : null,
 	DegreUrgence : null,
 	DateCloture : null,
 	HeureCloture : null,
@@ -20,11 +21,11 @@ $.extend(DMS.Mobile.Mission.prototype,
 	Personnel : null,
 	BCKPersonnelID : null,
 	PointVenteID : null,
-	TourneeID : null,	
+	//TourneeID : null,	
 	PointVentes : null,
 	Tournees : null,
-	TypeMissions : null	
-	
+	ListFacture : [],
+	TypeMissions : null
 						
 
 	

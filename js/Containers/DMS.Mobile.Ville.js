@@ -11,6 +11,7 @@ $.extend(DMS.Mobile.Ville.prototype,
 	Designation : null,
 	Latitude : null,
 	Longitude : null,
+	Synch : null,
 	ZoneID : null,
 	Zones : null,
 	listPointVentes : []

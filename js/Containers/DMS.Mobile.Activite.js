@@ -9,6 +9,7 @@ $.extend(DMS.Mobile.Activite.prototype,
 {
 	ActiviteID : null,
 	Designation : null,
+	Synch : null,
 	listClient : []			
 	
 });

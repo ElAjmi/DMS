@@ -92,19 +92,12 @@ Dayformat : function(date){
 	},
 	
 SplitDate : function(date){
-	try
-	{
-		//var elem = date.split('/');
-		var elem = date.split(/[\/-]/);
-		jour = elem[0];
-		mois = elem[1];
-		annee = elem[2];
-		return ''+jour+'/'+mois+'/'+annee;//format yyyy-mm-dd
-		}
-	catch(err)
-	{
-		DMS.Mobile.Notification.ShowMessage(err.message+" : SplitDate in Dates",'alert','e'); 
-	}
+	//var elem = date.split('/');
+	var elem = date.split(/[\/-]/);
+	jour = elem[0];
+	mois = elem[1];
+	annee = elem[2];
+	return ''+mois+'/'+jour+'/'+annee;//format yyyy-mm-dd
 	},
 
 DateSpliting : function(date){

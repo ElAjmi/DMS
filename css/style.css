@@ -1,3 +1,45 @@
+
+
+.coin-class
+{
+	-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+/*  border raduis div   */
+.coin{
+	-webkit-border-top-left-radius: 20px;
+-webkit-border-top-right-radius: 20px;
+-moz-border-radius-topleft: 20px;
+-moz-border-radius-topright: 20px;
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+	
+	}
+.font{
+	font-size:40px;
+	
+	min-height: 1.1em;
+text-align: center;
+
+display: block;
+margin: .6em 30% .8em;
+padding: 0;
+text-overflow: ellipsis;
+overflow: hidden;
+white-space: nowrap;
+outline: 0!important;
+	
+	}
+
+/*Background image bouton*/
+.buttonBack
+            {
+            background-image: url'(css/images/left.png') no-repeat;
+            cursor:pointer;
+                        border: none;
+            }
+	
 	/* saisie commande */
 		.ui-table-columntoggle-btn {
 		display: none !important;

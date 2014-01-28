@@ -10,7 +10,9 @@ $.extend(DMS.Mobile.Configuration.prototype,
 	ConfigurationID : null,
 	Frequence : null,
 	Perimetre : null,
-	URL: null
+	Synch : null,
+	URL: null,
+	SeuilArticle : null,
 	
 	
 })

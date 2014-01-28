@@ -12,7 +12,9 @@ $.extend(DMS.Mobile.Gamme.prototype,
     Designation : null,
     ListFamilles: [],
     ListObjectifs : [],
-    ListPromotions: [],
+
+	Synch : null,
+
     ListRelevePresencePrixConcurrents : [],
     ListRelevePrix : []
     
