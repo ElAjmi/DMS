@@ -118,7 +118,7 @@ DMS.Mobile.Login =
 		
 		fonction1 : function(personnel,form)
 		{
-			alert("fonction1");
+			
 		  try
 		  {
 			if ( personnel == null)
@@ -251,7 +251,7 @@ DMS.Mobile.Login =
 		
 		fonction2 : function(personnel,form)
 		{
-			alert("fonction2");
+			
 			try
 			{
 			if ( personnel == null)

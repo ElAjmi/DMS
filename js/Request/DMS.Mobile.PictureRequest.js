@@ -26,7 +26,7 @@
 			
 			var Conf = JSON.parse(localStorage.getItem("Configuration"));
 			 
-			alert("get list picture Famille from server");
+			
 			 var methode = "GetFamillePicture?";
 			 var URL = Conf.URL+methode;
 			 
@@ -110,7 +110,7 @@
 		var form = this;
 		 try
 		 {
-		 alert("DownloadPictureFamille");
+		 
 		 
 		 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,function (fileSystem)
 		 {

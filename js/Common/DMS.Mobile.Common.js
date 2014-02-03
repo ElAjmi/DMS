@@ -407,7 +407,7 @@ if ( SessionConf != null)
 						//configurationDTO.URL = "http://192.168.1.111:80/ninject/Service1.svc/";
 					    //configurationDTO.URL = "http://scan-ingeniering.no-ip.biz:4000/Service1.svc/";
 					
-					 configurationDTO.URL = "http://192.168.1.100:4000/Service1.svc/";
+					 configurationDTO.URL = "http://192.168.1.100:4001/Service1.svc/";
 					
 					    //configurationDTO.URL = "http://41.227.44.224:4000/Service1.svc/";
 						//configurationDTO.URL = "http://localhost:1307/Service1.svc/";
