@@ -211,11 +211,8 @@ InsertPointVenteIntoLOCAL : function(pointVenteObject,synch,formReq,len,callback
 		    }
 			else
 			{
-				formReq.connexion.transaction(function(tx){ formReq.InsertIntoPointVente(tx, formReq,pointVenteObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoPointVente");},function(){
-							
-						formReq.insertPointVenteIntoArray(pointVenteObject,formReq,len,callbackViewModel);
-						
-						var exception = new DMS.Mobile.Exception();
+				formReq.connexion.transaction(function(tx){ formReq.InsertIntoPointVente(tx, formReq,pointVenteObject,synch); }, function(err){ DMS.Mobile.Common.errors(err,"InsertIntoPointVente");
+				var exception = new DMS.Mobile.Exception();
 						exception.FichierE = "PointVenteRequest";
 						exception.FonctionE = "InsertIntoPointVente";
 						exception.Exception = err.code;
@@ -224,7 +221,11 @@ InsertPointVenteIntoLOCAL : function(pointVenteObject,synch,formReq,len,callback
 						DMS.Mobile.Common.connexion = formReq.connexion;
 						DMS.Mobile.Common.InsertException(exception,function(){
 							callbackViewModel(formReq.ListPointVente);
-						});		
+						});		},function(){
+							
+						formReq.insertPointVenteIntoArray(pointVenteObject,formReq,len,callbackViewModel);
+						
+						
 							});
 							//formReq.insertPointVenteIntoArray(pointVenteObject,formReq,len,callbackViewModel)	;	
 			}	

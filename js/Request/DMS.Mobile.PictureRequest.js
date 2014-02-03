@@ -124,6 +124,7 @@
 			 fileSystem.getFile(
         picture.Name, {create: true, exclusive: false}, 
         function gotFileEntry(fileEntry) {
+        
             var sPath = fileEntry.fullPath.replace(picture.Name,"");
             var fileTransfer = new FileTransfer();
             fileEntry.remove();
@@ -133,11 +134,11 @@
                 sPath + picture.Name,
                 function(theFile) {
                     console.log("download complete: " + theFile.toURI());
-                    alert("image loaded");
+                    
 					callback(picture);
                 },
                 function(error) {
-                    alert("image failed " + error);
+                    
 					callback(picture);
                 }
             );
