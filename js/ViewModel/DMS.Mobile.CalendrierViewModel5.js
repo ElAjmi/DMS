@@ -15,7 +15,7 @@ DMS.Mobile.CalendrierViewModel =
 	Init : function ()
 	{
 	
-		//alert("Init");
+		//alert("init configuration");
 			var form = this;
 			
 			//DMS.Mobile.PositionRequest.InitializeGetPosition();
@@ -23,7 +23,6 @@ DMS.Mobile.CalendrierViewModel =
 			DMS.Mobile.TourneeRequest.connexion = this.connexion;
 			DMS.Mobile.TourneeRequest.SelectAll(function(listTournee){
 				//alert("listTournee length = "+listTournee.length);
-				//alert("SelectAllTournee");
 				form.ListTournee = listTournee;
 				form.initialize(form);});
 		
@@ -291,15 +290,14 @@ DMS.Mobile.CalendrierViewModel =
 		   +'</div>';
 		   //---------- fin page ----------//
 		$("body").append(calenderWeek);
-		//alert("55");
+		
 		
 		var currentDate = DMS.Mobile.Common.currentDate(); 
 		var current = new Date();
 		var curr = new Date();
 		var currentJour = new Date();
-		
 		for(var i=1;i<7;i++){
-	
+		
 			var day = DMS.Mobile.Common.formatDate(new Date(curr.setDate(curr.getDate() - curr.getDay()+i)));
 			var JourString = DMS.Mobile.Common.getJour(new Date(currentJour.setDate(currentJour.getDate() - currentJour.getDay()+i)));
 			var DateString = DMS.Mobile.Common.getDateCalender(new Date(current.setDate(current.getDate() - current.getDay()+i)));
@@ -422,14 +420,12 @@ DMS.Mobile.CalendrierViewModel =
 		 var gouver = adressePV[0];		
 
 		 detailClient = '<li style="margin-bottom:5px; background-color:#DFD8DB"><p class="parag"><h5>Code client : '+codeClient+'</br>Nom client : '+nomClient+'</h5></p></li>';
-		// alert("i = "+i);
 	       if (i == 1)
 	       {     
 		        $("#lundi ul").append(detailClient);
 	       }
 		    if (i == 2)
 	       {
-			  // alert("mardi")
 		        $("#mardi ul").append(detailClient);
 	       }
 		    if (i == 3)
@@ -657,7 +653,6 @@ DMS.Mobile.CalendrierViewModel =
 			  //fin page------------------------------------------------------------------------
 			  
 			//   try{
-				//alert("detail");
 				  $("body").append(page);
 				  form.InitButtonStartTournee(tournee,form,i);
 		/*	  }
@@ -672,7 +667,6 @@ DMS.Mobile.CalendrierViewModel =
 			var text ='';
 		   text = 'Semaine N° '+text1+' Du '+firstDayWeek+' au '+lastDayWeek ;
 	        $("#headerCalendar h1").append(text);
-			//alert("InitializeEvents function");
 		form.InitializeEvents(form);
 	$.mobile.changePage('#page'+form.currentPage);
 	  		
@@ -680,7 +674,7 @@ DMS.Mobile.CalendrierViewModel =
 	
 	InitButtonStartTournee : function (tournee,form,indexPage)
 	{
-		//alert("InitButtonStartTournee");
+		
 		//alert("tournee.EtatTournee " + tournee.EtatTournee + " index page " + indexPage);
 		if (tournee != null && tournee.EtatTournee == DMS.Mobile.Constante.EtatTournee.NonDemaree)
 		{
@@ -691,7 +685,6 @@ DMS.Mobile.CalendrierViewModel =
 	
 	InitializeEvents:function(form)
 	{
-		alert("InitializeEvents");
 		$(".reglement").click(function(){
             // var gg =$(this).parent().html();
 		  var indexTournee=   $(this).parent().find("input[type=hidden]:eq(0)").val();
@@ -763,7 +756,7 @@ DMS.Mobile.CalendrierViewModel =
 			
 			//headerList += '</div>';
 			
-			//alert("tt");
+			
 			$('.listArticle').append(headerList);
 			  $("#pageFacture").trigger('pagecreate');
 			  

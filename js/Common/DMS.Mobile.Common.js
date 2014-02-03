@@ -65,7 +65,7 @@ dateDiff : function(date1, date2){
 						
 						form.getAllDataFromServer(form,oPersonnel,function(){
 							    localStorage.setItem("Personnel", JSON.stringify(oPersonnel));
-								alert("succes de synchronisation");
+								alert("succès de synchronisation");
 								//DMS.Mobile.Common.RedirectToCalendrier();
 							    callback();
 							});
@@ -88,7 +88,7 @@ dateDiff : function(date1, date2){
 								      form.getAllDataFromServer(form,oPersonnel,function(){
 										  
 										  localStorage.setItem("Personnel", JSON.stringify(oPersonnel));
-										    alert("succes de synchronisation");
+										    alert("succès de synchronisation");
 											callback();
 											//DMS.Mobile.Common.RedirectToCalendrier();
 										});

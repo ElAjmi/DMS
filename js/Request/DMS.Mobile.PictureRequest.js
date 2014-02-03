@@ -26,13 +26,13 @@
 			
 			var Conf = JSON.parse(localStorage.getItem("Configuration"));
 			 
-		//	alert("get list picture Famille from server");
+			alert("get list picture Famille from server");
 			 var methode = "GetFamillePicture?";
 			 var URL = Conf.URL+methode;
 			 
 			 
 				DMS.Mobile.Common.CallService(function(Json,Form){
-			//		alert("CallService list picture Famille from server");
+					alert("CallService list picture Famille from server");
 					form.CreatePictureFamilleDTO(Json,Form,callbackViewModel);},URL,form);
 		}
 		catch(err)
@@ -110,7 +110,7 @@
 		var form = this;
 		 try
 		 {
-		// alert("DownloadPictureFamille");
+		 alert("DownloadPictureFamille");
 		 
 		 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,function (fileSystem)
 		 {
