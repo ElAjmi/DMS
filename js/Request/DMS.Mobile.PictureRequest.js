@@ -32,7 +32,7 @@
 			 
 			 
 				DMS.Mobile.Common.CallService(function(Json,Form){
-					alert("CallService list picture Famille from server");
+					
 					form.CreatePictureFamilleDTO(Json,Form,callbackViewModel);},URL,form);
 		}
 		catch(err)
