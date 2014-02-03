@@ -129,7 +129,7 @@
             fileEntry.remove();
 
             fileTransfer.download(
-                "http://192.168.1.100:4000/Images/Famille/"+picture.Name,
+                "http://192.168.1.100:4001/Images/Famille/"+picture.Name,
                 sPath + picture.Name,
                 function(theFile) {
                     console.log("download complete: " + theFile.toURI());
