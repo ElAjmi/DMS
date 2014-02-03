@@ -133,11 +133,11 @@
                 sPath + picture.Name,
                 function(theFile) {
                     console.log("download complete: " + theFile.toURI());
-                    
+                    alert("image loaded");
 					callback(picture);
                 },
                 function(error) {
-                    
+                    alert("image failed " + error);
 					callback(picture);
                 }
             );
