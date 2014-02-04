@@ -22,6 +22,7 @@
         version   = "2.0.0">
     <name>Hello Cordova</name>
 
+		<preference name="phonegap-version" value="2.9.0" />
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
